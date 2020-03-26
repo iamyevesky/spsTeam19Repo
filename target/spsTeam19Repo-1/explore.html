@@ -26,8 +26,36 @@
     </nav>
 
     <h2>Explore Page</h2>
+    <br></br>
+    
+    <div class="container">
+    <h3 style="margin-bottom: 40px">Search By<h3>
+    
     <form>
-      <input type="text" name="search" placeholder="Search for chats..">
+        <label for="uni">University</label>
+        <select id="uni" name="uni">
+            <option value="GeorgiaTech">Georgia Tech</option>
+            <option value="UMD">University of Maryland</option>
+            <option value="Columbia">Columbia University</option>
+        </select>
+    <br></br>
+        <label for="department">Department</label>
+        <select id="department" name="department">
+            <option value="ComputerScience">Computer Science</option>
+            <option value="Business">Business</option>
+        </select>
+    <br></br>
+        <label for="course">Course</label>
+        <select id="course" name="course">
+            <option value="allcourses">All courses</option>
+            <option value="cs1301">CS 1301</option>
+            <option value="cs1331">CS 1331</option>
+            <option value="cs1332">CS 1332</option>
+        </select>    
+    <br></br>
+        <input type="submit">
     </form>
+
+  </div>
   </body>
 </html>

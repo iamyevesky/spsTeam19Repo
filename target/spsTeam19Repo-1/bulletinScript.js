@@ -14,22 +14,19 @@ function getBulletinData() {
     
     var exampleBackend = [exampleData1, exampleData2];
 
-    //building li in html bulletin page
-    const bulletinPost = document.getElementById('bulletin-Container');
-    console.log(bulletinPost);
+    //building list of posts in html bulletin page
+    const bulletinContainer = document.getElementById('bulletin-Container');
 
-    var i;
+    var test = document.createElement("ul");
     for (i = 0; i < exampleBackend.length; i++) {
+        var test = document.createElement("ul")
         const currPost = exampleBackend[i];
         for (const property in currPost) {
-            bulletinPost.appendChild(createListElement(property, currPost[property]));
+            test.appendChild(createListElement(property, currPost[property]));
         }
+        bulletinContainer.appendChild(test)
+        bulletinContainer.appendChild(document.createElement("br"));
     }
-
-
-    // for (const property in exampleData) {
-    //     bulletinPost.appendChild(createListElement(property, exampleData1[property]));
-    // }
 }
 
 // Creates an <li> element containing text.

@@ -5,7 +5,7 @@ function getBulletinData() {
 
     //EXAMPLE DATA
     var exampleData1 = {Name:"Professor John", University:"Cornell", Department:"LMC",
-    Course:"LMC 1101", Title:"Testing 1", 
+    Course:"LMC 1101", Title:"singleBulletining 1", 
     Text:"I will give everyone an A for this class"};
 
     var exampleData2 = {Name:"Alan", University:"Georgia Tech", Department:"College of Computing",
@@ -17,14 +17,13 @@ function getBulletinData() {
     //building list of posts in html bulletin page
     const bulletinContainer = document.getElementById('bulletin-Container');
 
-    var test = document.createElement("ul");
     for (i = 0; i < exampleBackend.length; i++) {
-        var test = document.createElement("ul")
+        var singleBulletin = document.createElement("ul");
         const currPost = exampleBackend[i];
         for (const property in currPost) {
-            test.appendChild(createListElement(property, currPost[property]));
+            singleBulletin.appendChild(createListElement(property, currPost[property]));
         }
-        bulletinContainer.appendChild(test)
+        bulletinContainer.appendChild(singleBulletin)
         bulletinContainer.appendChild(document.createElement("br"));
     }
 }

@@ -4,30 +4,44 @@
     <meta charset="UTF-8">
     <title>Team 19</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
     <script src="bulletinScript.js"></script>
   </head>
   <body onload="getBulletinData()">
 
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-              <a class="navbar-brand">Team 19 Web Application</a>
-            </div>
-            <ul class="nav navbar-nav">
-            <li><a href="index.html">Chats</a></li>
-            <li><a href="explore.html">Explore</a></li>
-            <li class="active"><a href="bulletin.html">Bulletin Board</a></li>
-            <li><a href="profile.html">Profile</a></li>
-            </ul>
-        </div>
-    </nav>
-    <div class="container">
-    <h2>Bulletin Board</h2>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand">Team 19 Web Application</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="index.html">Chats</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="explore.html">Explore</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="bulletin.html">Bulletin Board<span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="profile.html">Profile</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<h2>Bulletin Board</h2>
+
+    <div class="container">
     <br></br>
     <h3>Create a post:</h3>
     <br></br>

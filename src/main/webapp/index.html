@@ -2,12 +2,31 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Web application for SPS 2020 - Team 19</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Team 19</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="script.js"></script>
   </head>
-  <body>
-    <h1>SPS Spring 2020 - Team 19 Web Application</h1>
-    <p>This is the website for SPS Spring 2020 - Team 19.</p>
+  <body onload="getLoginForm()">
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+              <a class="navbar-brand">Team 19 Web Application</a>
+            </div>
+            <ul class="nav navbar-nav">
+            <li class="active"><a href="index.html">Chats</a></li>
+            <li><a href="explore.html">Explore</a></li>
+            <li><a href="bulletin.html">Bulletin Board</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div id="creators">
     <h2>Creators</h2>
     <ul>
       <li><strong>Joshua Bartlett</strong> - Project Advisor/Manager.</li>
@@ -15,5 +34,8 @@
       <li><strong>John Gansallo</strong> - Developer.</li>
       <li><strong>Korron Shivers</strong> - Developer.</li>
       <li><strong>Sena Yevenyo</strong> - Developer.</li>
+    </ul>
+    </div>
+    <div id="loginSection"></div>
   </body>
 </html>

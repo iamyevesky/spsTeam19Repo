@@ -4,32 +4,44 @@
     <meta charset="UTF-8">
     <title>Team 19</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
   </head>
   <body>
 
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-              <a class="navbar-brand">Team 19 Web Application</a>
-            </div>
-            <ul class="nav navbar-nav">
-            <li><a href="index.html">Chats</a></li>
-            <li class="active"><a href="explore.html">Explore</a></li>
-            <li><a href="bulletin.html">Bulletin Board</a></li>
-            <li><a href="profile.html">Profile</a></li>
-            </ul>
-        </div>
-    </nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand">Team 19 Web Application</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-    <h2>Explore Page</h2>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="index.html">Chats</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="explore.html" style="color: #05728f">Explore<span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="bulletin.html">Bulletin Board</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="profile.html">Profile</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <h2 class="text-center" style="margin-top: 15px">Explore</h2>
     <br></br>
     
     <div class="container">
-    <h3 style="margin-bottom: 40px">Search By<h3>
+    <h4 style="margin-bottom: 40px">Search By<h4>
     
     <form>
         <label for="uni">University</label>

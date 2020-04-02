@@ -4,33 +4,170 @@
     <meta charset="UTF-8">
     <title>Team 19</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
   </head>
   <body>
 
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-              <a class="navbar-brand">Team 19 Web Application</a>
-            </div>
-            <ul class="nav navbar-nav">
-            <li class="active"><a href="index.html">Chats</a></li>
-            <li><a href="explore.html">Explore</a></li>
-            <li><a href="bulletin.html">Bulletin Board</a></li>
-            <li><a href="profile.html">Profile</a></li>
-            </ul>
-        </div>
-    </nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand">Team 19 Web Application</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-    <h2>Creators</h2>
-    <ul>
-      <li><strong>Joshua Bartlett</strong> - Project Advisor/Manager.</li>
-      <li><strong>Alan Matias</strong> - Developer.</li>
-      <li><strong>John Gansallo</strong> - Developer.</li>
-      <li><strong>Korron Shivers</strong> - Developer.</li>
-      <li><strong>Sena Yevenyo</strong> - Developer.</li>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="index.html" style="color: #05728f">Chats <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="explore.html">Explore</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="bulletin.html">Bulletin Board</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="profile.html">Profile</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+    
+<!-- Chat  -->
+<div class="downsize">
+<div class="messaging">
+      <div class="inbox_msg">
+        <div class="inbox_people">
+          <div class="headind_srch">
+            <div class="recent_heading">
+              <h4>Recent</h4>
+            </div>
+            <div class="srch_bar">
+              <div class="stylish-input-group">
+                <input type="text" class="search-bar"  placeholder="Search" >
+                <span class="input-group-addon">
+                <button type="button"> <i class="fa fa-search" aria-hidden="true"></i> </button>
+                </span> </div>
+            </div>
+          </div>
+          <div class="inbox_chat">
+            <div class="chat_list active_chat">
+              <div class="chat_people">
+                <div class="chat_ib">
+                  <h5>GT CS 1301 <span class="chat_date">Apr 1</span></h5>
+                  <p>When is the final exam?</p>
+                </div>
+              </div>
+            </div>
+            <div class="chat_list">
+              <div class="chat_people">
+                <div class="chat_ib">
+                  <h5>GT CS 1331 <span class="chat_date">Mar 25</span></h5>
+                  <p>How are office hours going to be conducted?.</p>
+                </div>
+              </div>
+            </div>
+            <div class="chat_list">
+              <div class="chat_people">
+                <div class="chat_ib">
+                  <h5>GT LMC 2500<span class="chat_date">Apr 3</span></h5>
+                  <p>Where is the zoom link</p>
+                </div>
+              </div>
+            </div>
+            <div class="chat_list">
+              <div class="chat_people">
+                <div class="chat_ib">
+                  <h5>GT Computer Science Department <span class="chat_date">Apr 28</span></h5>
+                  <p>New changes to grade mode and deadlines</p>
+                </div>
+              </div>
+            </div>
+            <div class="chat_list">
+              <div class="chat_people">
+                <div class="chat_ib">
+                  <h5>UGA CS 2001<span class="chat_date">Mar 5</span></h5>
+                  <p>Testing uga chat</p>
+                </div>
+              </div>
+            </div>
+            <div class="chat_list">
+              <div class="chat_people">
+                <div class="chat_ib">
+                  <h5>LMC 1101<span class="chat_date">Mar 28</span></h5>
+                  <p>Taking attendance in 10 minutes</p>
+                </div>
+              </div>
+            </div>
+            <div class="chat_list">
+              <div class="chat_people">
+                <div class="chat_ib">
+                  <h5>LMC 1200 <span class="chat_date">Apr 15</span></h5>
+                  <p>Uploading files to canvas</p>
+                </div>
+              </div>
+            </div>
+            <div class="chat_list">
+              <div class="chat_people">
+                <div class="chat_ib">
+                  <h5>GT 1001<span class="chat_date">Feb 27</span></h5>
+                  <p>Testing scrolling </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mesgs">
+          <div class="msg_history">
+            <div class="incoming_msg">
+              <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+              <div class="received_msg">
+                <div class="received_withd_msg">
+                  <p>Does anyone know how to do the CS hw</p>
+                  <span class="time_date"> 11:01 AM    |    Apr 1</span></div>
+              </div>
+            </div>
+            <div class="outgoing_msg">
+              <div class="sent_msg">
+                <p>I think so, just look it up on stack overflow</p>
+                <span class="time_date"> 11:10 AM    |    Apr 1</span> </div>
+            </div>
+            <div class="incoming_msg">
+              <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+              <div class="received_msg">
+                <div class="received_withd_msg">
+                  <p>Ok, I figured it out</p>
+                  <span class="time_date"> 11:11 AM    |    Apr 1</span></div>
+              </div>
+            </div>
+            <div class="outgoing_msg">
+              <div class="sent_msg">
+                <p>Ok if you need any help just dm me</p>
+                <span class="time_date"> 11:31 AM    |    Today</span> </div>
+            </div>
+            <div class="incoming_msg">
+              <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+              <div class="received_msg">
+                <div class="received_withd_msg">
+                  <p>When is the final exam?</p>
+                  <span class="time_date"> 11:51 AM    |    Today</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="type_msg">
+            <div class="input_msg_write">
+              <input type="text" class="write_msg" placeholder="Type a message" />
+              <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+            </div>
+          </div>
+        </div>
+          
+    </div></div>
+</div>
   </body>
 </html>

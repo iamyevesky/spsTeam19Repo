@@ -1,5 +1,9 @@
+body {
+  overflow: hidden; /* Hide scrollbars */
+}
+
 .downsize{
-    zoom: .86;
+    zoom: .865;
 }
 
 .container{max-width:1170px; margin:auto;}

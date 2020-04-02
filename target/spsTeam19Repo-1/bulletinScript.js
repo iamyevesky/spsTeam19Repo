@@ -5,7 +5,7 @@ function getBulletinData() {
 
     //EXAMPLE DATA
     var exampleData1 = {Name:"Professor John", University:"Cornell", Department:"LMC",
-    Course:"LMC 1101", Title:"singleBulletining 1", 
+    Course:"LMC 1101", Title:"Covid-19 announcement", 
     Text:"I will give everyone an A for this class"};
 
     var exampleData2 = {Name:"Alan", University:"Georgia Tech", Department:"College of Computing",

@@ -10,8 +10,9 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-
 import com.google.appengine.api.blobstore.BlobKey;
+
+import java.util.ArrayList;
 
 /*
  * This class represents a single user of the chatroom platform.
@@ -19,19 +20,36 @@ import com.google.appengine.api.blobstore.BlobKey;
  */
 public final class User{
     private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    private String email;
-    private String username;
-    private BlobKey displayImageKey;
+    private final String email;
+    private final String username;
     private final College college;
-    private final Key key;
-    private boolean updated; 
+    private final boolean isProf;
+    private Key key;
+    private BlobKey displayImageKey; 
     private float sentiment;
+    private int numOfSentimentUpdate;
+    private ArrayList<Key> classKeys;
+    private ArrayList<Key> departmentKeys;
 
-    private User(String email, String username, College college, boolean isProf){
+    private User(String email, String username, College college, boolean isProf, float sentiment, int numOfUpdates){
         this.email = email;
         this.username = username;
         this.college = college;
         this.isProf = isProf;
+        this.sentiment = sentiment;
+        this.numOfSentimentUpdate = numOfUpdates;
+    }
+
+    private void setKey(Key key){
+        this.key = key;
+    }
+
+    private void setClassKeys(ArrayList<Key> classKeys){
+        this.classKeys = classKeys;
+    }
+
+    private void setDepartmentKeys(ArrayList<Key> departmentKeys){
+        this.departmentKeys = departmentKeys;
     }
 
     /*
@@ -42,7 +60,7 @@ public final class User{
         return this.email;
     }
 
-        /*
+    /*
      * Returns the College object of the User object
      *
      */
@@ -62,28 +80,114 @@ public final class User{
      * Returns the BlobKey of the displayImage of a User object
      */
     public BlobKey getDisplayImageKey(){
+        return this.displayImageKey;
+    }
+
+    /*
+     * Returns the key of the User object in the Database
+     * 
+     */
+    public Key getKey(){
         return this.key;
     }
 
     /*
-     * Updates the email of a User object
+     * Returns the sentiment of the User object
+     * 
      */
-    public void updateEmail(String newEmail){
-        this.email = newEmail;
+    public float getSentiment(){
+        return this.sentiment;
+    }
+
+    /*
+     * Returns true if the User is a professor
+     * 
+     */
+    public boolean professor(){
+        return isProf;
+    }
+
+    /*
+     * Returns true if the User is a student
+     * 
+     */
+    public boolean student(){
+        return !isProf;
+    }
+
+    /*
+     * Returns an ArrayList of Class objects of User object
+     */
+    public ArrayList<Class> getClasses(){
+        ArrayList<Class> output = new ArrayList<Class>();
+        for(Key classKey : classKeys){
+            output.add(Class.getClass(classKey));
+        }
+        return output;
+    }
+
+    /*
+     * Returns an ArrayList of Department objects of User object
+     */
+    public ArrayList<Department> getDepartments(){
+        ArrayList<Department> output = new ArrayList<Department>();
+        for(Key departmentKey : departmentKeys){
+            output.add(Department.getDepartment(departmentKey));
+        }
+        return output;
+    }
+
+    /*
+     * Adds a new Class Key to User object
+     * 
+     */
+    public void addClassKey(Key classKey){
+        if (classKeys == null){
+            classKeys = new ArrayList<Key>();
+        }
+        classKeys.add(classKey);
         if (key == null) return;
         Entity user = datastore.get(this.key);
-        user.setProperty("email", this.email);
+        user.setProperty("classKeys", this.classKeys);
         datastore.put(user);
     }
 
     /*
-     * Updates the username of a User object
+     * Adds a new Department Key to User object
+     * 
      */
-    public void updateName(String newUsername){
-        this.username = newUsername;
+    public void addDepartmentKey(Key departmentKey){
+        if (departmentKeys == null){
+            departmentKeys = new ArrayList<Key>();
+        }
+        deparmentKeys.add(departmentKey);
         if (key == null) return;
         Entity user = datastore.get(this.key);
-        user.setProperty("username", this.username);
+        user.setProperty("departmentKeys", this.departmentKeys);
+        datastore.put(user);
+    }
+
+    /*
+     * Removes a Class Key to User object
+     * 
+     */
+    public void removeClassKey(Key classKey){
+        classKeys.remove(classKey);
+        if (key == null) return;
+        Entity user = datastore.get(this.key);
+        user.setProperty("classKeys", this.classKeys);
+        datastore.put(user);
+    }
+
+     /*
+     * Removes a Deparment Key to User object
+     * 
+     */
+    public void removeDepartment(Key departmentKey){
+        departmentKeys.remove(departmentKey));
+        if (key == null) return;
+        Entity user = datastore.get(this.key);
+        user.setProperty("departmentKeys", this.departmentKeys);
         datastore.put(user);
     }
 
@@ -98,11 +202,16 @@ public final class User{
         datastore.put(user);
     }
 
-    public void updateSentiment(int newSentiment){
-        this.sentiment = newSentiment;
+    /*
+     * Updates the sentiment of a User object
+     */
+    public void updateSentiment(float newSentiment){
+        this.sentiment = (this.numOfSentimentUpdate*this.sentiment + newSentiment)/(this.numOfSentimentUpdate + 1);
+        this.numOfSentimentUpdate++;
         if (key == null) return;
         Entity user = datastore.get(this.key);
         user.setProperty("sentiment", this.sentiment);
+        user.setProperty("sentimentUpdate", this.numOfSentimentUpdate);
         datastore.put(user);
     }
 
@@ -120,6 +229,10 @@ public final class User{
         user.setProperty("collegeID", this.college.getKey());
         user.setProperty("displayImageKey", this.displayImageKey);
         user.setProperty("isProf", this.isProf);
+        user.setProperty("sentiment", this.sentiment);
+        user.setProperty("sentimentUpdate", this.numOfSentimentUpdate);
+        user.setProperty("classKeys", this.classKeys);
+        user.setProperty("departmentKeys", this.departmentKeys);
         this.key = user.getKey();
         datastore.put(user);
     }
@@ -142,8 +255,32 @@ public final class User{
         User output = new User((String) entity.getProperty("email"), 
             (String) entity.getProperty("username"),
             College.getCollege((Key) entity.getProperty("collegeID")), 
-            (boolean) entity.getProperty("isProf"));
+            (boolean) entity.getProperty("isProf"),
+            (float) entity.getProperty("sentiment"),
+            (int) entity.getProperty("sentimentUpdate"));
         output.updateDisplayImageKey((BlobKey) entity.getProperty("displayImageKey"));
+        output.setKey((Key) entity.getKey());
+        output.setClassKeys((ArrayList<Key>) entity.getProperty("classKeys"));
+        output.setDepartmentKeys((ArrayList<Key>) entity.getProperty("departmentKeys"));
+        return output;
+    }
+
+    /*
+     * Returns a User object which already exists in the database system.
+     * Returns null if the User does not exist in the database.
+     */
+    public static User getUser(Key userKey){
+        Entity entity = datastore.get(userKey);
+        User output = new User((String) entity.getProperty("email"), 
+            (String) entity.getProperty("username"),
+            College.getCollege((Key) entity.getProperty("collegeID")), 
+            (boolean) entity.getProperty("isProf"),
+            (float) entity.getProperty("sentiment"),
+            (int) entity.getProperty("sentimentUpdate"));
+        output.updateDisplayImageKey((BlobKey) entity.getProperty("displayImageKey"));
+        output.setClassKeys((ArrayList<Key>) entity.getProperty("classKeys"));
+        output.setDepartmentKeys((ArrayList<Key>) entity.getProperty("departmentKeys"));
+        output.setKey((Key) entity.getKey());
         return output;
     }
 
@@ -166,6 +303,6 @@ public final class User{
             return null;
         }
 
-        return new User(email, username, college, isProfessor)
+        return new User(email, username, college, isProfessor, 0, 0);
     }
 } 

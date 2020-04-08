@@ -284,6 +284,27 @@ public final class User{
         return output;
     }
 
+    public static User getUser(String email){
+        Query emailQuery =
+        new Query("User")
+            .setFilter(new Query.FilterPredicate("email", Query.FilterOperator.EQUAL, email));
+        Entity entity = datastore.prepare(emailQuery).asSingleEntity()
+        if(entity == null){
+            return null;
+        }
+        User output = new User((String) entity.getProperty("email"), 
+            (String) entity.getProperty("username"),
+            College.getCollege((Key) entity.getProperty("collegeID")), 
+            (boolean) entity.getProperty("isProf"),
+            (float) entity.getProperty("sentiment"),
+            (int) entity.getProperty("sentimentUpdate"));
+        output.updateDisplayImageKey((BlobKey) entity.getProperty("displayImageKey"));
+        output.setClassKeys((ArrayList<Key>) entity.getProperty("classKeys"));
+        output.setDepartmentKeys((ArrayList<Key>) entity.getProperty("departmentKeys"));
+        output.setKey((Key) entity.getKey());
+        return output;
+    }
+
     /*
      * Returns a User object which does not exists in the database system.
      * Returns null if the User does exist in the database.

@@ -1,7 +1,3 @@
-body {
-  overflow: hidden; /* Hide scrollbars */
-}
-
 .downsize{
     zoom: .865;
 }
@@ -141,4 +137,10 @@ img{ max-width:100%;}
 .msg_history {
   height: 516px;
   overflow-y: auto;
+}
+
+.card {
+    max-width: 25rem;
+    margin: 0 auto;
+    margin-top: 30px;
 }

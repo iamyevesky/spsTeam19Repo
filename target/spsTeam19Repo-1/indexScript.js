@@ -104,7 +104,6 @@ function clearChatHistory() {
 
 function buildChatHistory(pastMessageData) {
     var outline = document.getElementById("msg-container");
-    console.log(pastMessageData);
     for (const msg of pastMessageData) {
         //create bootstrap outline
         var msgDiv = document.createElement("div");

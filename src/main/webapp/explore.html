@@ -4,30 +4,70 @@
     <meta charset="UTF-8">
     <title>Team 19</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
   </head>
   <body>
 
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-              <a class="navbar-brand">Team 19 Web Application</a>
-            </div>
-            <ul class="nav navbar-nav">
-            <li><a href="index.html">Chats</a></li>
-            <li class="active"><a href="explore.html">Explore</a></li>
-            <li><a href="bulletin.html">Bulletin Board</a></li>
-            <li><a href="profile.html">Profile</a></li>
-            </ul>
-        </div>
-    </nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand">Team 19 Web Application</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-    <h2>Explore Page</h2>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="index.html">Chats</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="explore.html" style="color: #05728f">Explore<span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="bulletin.html">Bulletin Board</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="profile.html">Profile</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <h2 class="text-center" style="margin-top: 15px">Explore</h2>
+    <br></br>
+    
+    <div class="container">
+    <h4 style="margin-bottom: 40px">Search By<h4>
+    
     <form>
-      <input type="text" name="search" placeholder="Search for chats..">
+        <label for="uni">University</label>
+        <select id="uni" name="uni">
+            <option value="GeorgiaTech">Georgia Tech</option>
+            <option value="UMD">University of Maryland</option>
+            <option value="Columbia">Columbia University</option>
+        </select>
+    <br></br>
+        <label for="department">Department</label>
+        <select id="department" name="department">
+            <option value="ComputerScience">Computer Science</option>
+            <option value="Business">Business</option>
+        </select>
+    <br></br>
+        <label for="course">Course</label>
+        <select id="course" name="course">
+            <option value="allcourses">All courses</option>
+            <option value="cs1301">CS 1301</option>
+            <option value="cs1331">CS 1331</option>
+            <option value="cs1332">CS 1332</option>
+        </select>    
+    <br></br>
+        <input type="submit">
     </form>
+
+  </div>
   </body>
 </html>

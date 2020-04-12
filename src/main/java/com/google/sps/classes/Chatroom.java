@@ -13,11 +13,8 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import java.util.ArrayList;
 
-/*
- * This class represents a single chatroom of the chatroom platform.
- *
- */
 public final class Chatroom{
+    /*
     private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private final String name;
     private final College college;
@@ -30,9 +27,7 @@ public final class Chatroom{
     private int numOfSentimentUpdate;
     private ArrayList<Key> userKeys;
 
-    private Chatroom(String name, boolean isDM, Key adminKey,
-        College college, Department department, Class class,
-        float sentiment, int numOfSentimentUpdate){
+    private Chatroom(String name, boolean isDM, Key adminKey, College college, Department department, Class class, float sentiment, int numOfSentimentUpdate){
         this.name = name;
         this.sentiment = sentiment;
         this.numOfSentimentUpdate = numOfSentimentUpdate;
@@ -57,33 +52,21 @@ public final class Chatroom{
         this.adminKeys = adminKeys;
     }
 
-    /*
-     * Returns the College object of the Chatroom object
-     * 
-     */
     public College getCollege(){
         return this.college;
     }
 
-    /*
-     * Returns the Department object of the Chatroom object
-     * 
-     */
+
     public Department getDepartment(){
         return this.department;
     }
 
-    /*
-     * Returns the Class object of the Chatroom object
-     * 
-     */
+
     public Class getClass(){
         return this.class;
     }
 
-    /*
-     * Returns an ArrayList of User objects of students of Chatroom object
-     */
+
     public ArrayList<User> getUsers(){
         ArrayList<User> output = new ArrayList<>();
         for(Key userKey : userKeys){
@@ -92,9 +75,6 @@ public final class Chatroom{
         return output;
     }
 
-    /*
-     * Returns an ArrayList of User admin objects of students of Chatroom object
-     */
     public ArrayList<User> getAdmins(){
         ArrayList<User> output = new ArrayList<>();
         for(Key adminKey : adminKeys){
@@ -103,17 +83,12 @@ public final class Chatroom{
         return output;
     }
 
-    /*
-     * Returns the sentiment of the Chatrrom object
-     * 
-     */
+
     public float getSentiment(){
         return this.sentiment;
     }
 
-    /*
-     * Updates the sentiment of a Chatroom object
-     */
+
     public void updateSentiment(float newSentiment){
         this.sentiment = (this.numOfSentimentUpdate*this.sentiment + newSentiment)/(this.numOfSentimentUpdate + 1);
         this.numOfSentimentUpdate++;
@@ -124,9 +99,6 @@ public final class Chatroom{
         datastore.put(chatroom);
     }
 
-    /*
-     * Saves Chatroom object to database. 
-     */
     public void saveToDatabase(){
         if(key != null){
             return;
@@ -149,6 +121,7 @@ public final class Chatroom{
             }else{
                 chatroom.setProperty("departmentID", this.department.getKey());
             }
+
             if(class == null){
                 chatroom.setProperty("classID", null);
             }else{
@@ -158,22 +131,10 @@ public final class Chatroom{
         this.key = chatroom.getKey();
         datastore.put(chatroom);
     }
-
-    /*
-     * Returns a Chatroom object which already exists in the database system.
-     * Returns null if the User does not exist in the database.
-     */
+    
     public static Chatroom getChatroom(Key chatroomKey){
         Entity chatroom = datastore.get(chatroomKey);
-        Chatroom output = new Chatroom((String) chatroom.getProperty("name"),
-        (boolean) chatroom.getProperty("isDM"),
-        null,
-        College.getCollege((Key) chatroom.getProperty("collegeID")),
-        Department.getDepartment((Key) chatroom.getProperty("departmentID")),
-        Class.getClass((Key) chatroom.getProperty("classID")),
-        (float) chatroom.getProperty("sentiment"),
-        (int) chatroom.getProperty("sentimentUpdate"),
-        );
+        Chatroom output = new Chatroom((String) chatroom.getProperty("name"), (boolean) chatroom.getProperty("isDM"), null, College.getCollege((Key) chatroom.getProperty("collegeID")), Department.getDepartment((Key) chatroom.getProperty("departmentID")), Class.getClass((Key) chatroom.getProperty("classID")), (float) chatroom.getProperty("sentiment"), (int) chatroom.getProperty("sentimentUpdate"));
         output.setUserKeys((ArrayList<Key>) chatroom.getProperty("userKeys"));
         output.setAdminKeys((ArrayList<Key>) chatroom.getProperty("adminKeys"));
         output.setKey(chatroom.getKey());
@@ -182,7 +143,8 @@ public final class Chatroom{
 
     
     public static Chatroom createNewChatroom(String name, College college, Department department, Class class, User admin){
-        return new Chatroom(name, false, admin.getKey(), college, department, class, 0, 0);
+        Chatroom output = new Chatroom(name, false, admin.getKey(), college, department, class, 0, 0);
+        return output;
     }
 
     public static Chatroom createDM(User first, User second){
@@ -194,4 +156,5 @@ public final class Chatroom{
         output.setAdminKeys(keys);
         return output;
     }
+    */
 }

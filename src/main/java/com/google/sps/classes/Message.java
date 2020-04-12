@@ -14,11 +14,8 @@ import com.google.appengine.api.blobstore.BlobKey;
 import java.util.ArrayList;
 import java.util.Date;
 
-/*
- * This class represents a single bulletin post of the chatroom platform.
- *
- */
 public final class Message{
+    /*
     private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private final Chatroom chat;
     private final User sender;
@@ -46,5 +43,6 @@ public final class Message{
     public static void addPMessageToDatabase(User user, Chatroom chatroom, String message){
         Message newPost = new Message(user, chatroom, message);
         newPost.saveToDataBase();
-    } 
+    }
+    */
 }

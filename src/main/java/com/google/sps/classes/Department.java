@@ -1,9 +1,10 @@
-package com.java.sps.classes;
+package com.google.sps.classes;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
@@ -19,135 +20,42 @@ import java.util.ArrayList;
  */
 public final class Department{
     private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    private final int id;
     private final String name;
     private final College college;
-    private BlobKey displayImageKey;
-    private String website;
-    private String description;
-    private Key key;
-    private float sentiment;
-    private int numOfSentimentUpdate;
-    private ArrayList<Key> professorKeys;
-    private ArrayList<Key> studentKeys;
+    private String key;
+    private ArrayList<User> professors;
+    private ArrayList<User> students;
 
-    private Department(String name, College college, int sentiment, int numOfUpdates){
+    private Department(String name, int collegeID, int departmentID){
         this.name = name;
-        this.college = college;
-        this.sentiment = sentiment;
-        this.numOfSentimentUpdate = numOfUpdates;
+        this.college = College.getCollege(collegeID);
+        this.id = departmentID;
     }
 
     private void setKey(Key key){
-        this.key = key;
+        this.key = KeyFactory.keyToString(key);
     }
 
-    private void setProfessorKeys(ArrayList<Key> professorKeys){
-        this.professorKeys = professorKeys;
+    private void setStudents(ArrayList<Key> studentKeys) throws EntityNotFoundException{
+        this.students = new ArrayList<>();
+        for(Key key : studentKeys){
+            this.students.add(User.getUser(key));
+        }
     }
 
-    private void setStudentKeys(ArrayList<Key> studentKeys){
-        this.studentKeys = studentKeys;
+    private void setProfessors(ArrayList<Key> professorKeys) throws EntityNotFoundException{
+        this.professors = new ArrayList<>();
+        for(Key key : professorKeys){
+            this.professors.add(User.getUser(key));
+        }
     }
 
-    private void setClassKeys(ArrayList<Key> classKeys){
-        this.classKeys = classKeys;
-    }
-
-    /*
-     * Returns the name of the Department object
-     * 
-     */
-    public String getName(){
-        return this.name;
-    }
-
-    /*
-     * Returns the description of the Department object
-     * 
-     */
-    public String getDescription(){
-        return this.description;
-    }
-
-    /*
-     * Returns the website of the Department object
-     * 
-     */
-    public String getWebsite(){
-        return this.website;
-    }
-
-    /*
-     * Returns the key of the Department object
-     * 
-     */
-    public Key getKey(){
+    public String getKey(){
         return this.key;
     }
 
     /*
-     * Returns the sentiment of the Department object
-     * 
-     */
-    public float getSentiment(){
-        return this.sentiment;
-    }
-
-    /*
-     * Returns the BlobKey of the displayImage of a Department object
-     */
-    public BlobKey getDisplayImageKey(){
-        return this.displayImageKey;
-    }
-
-    /*
-     * Updates the BlobKey of the displayImage of a Department object
-     */
-    public void updateDisplayImageKey(BlobKey newKey){
-        this.displayImageKey = newKey;
-        if (key == null) return;
-        Entity department = datastore.get(this.key);
-        department.setProperty("displayImageKey", this.displayImageKey);
-        datastore.put(department);
-    }
-
-    /*
-     * Updates the sentiment of a Department object
-     */
-    public void updateSentiment(float newSentiment){
-        this.sentiment = (this.numOfSentimentUpdate*this.sentiment + newSentiment)/(this.numOfSentimentUpdate + 1);
-        this.numOfSentimentUpdate++;
-        if (key == null) return;
-        Entity department = datastore.get(this.key);
-        department.setProperty("sentiment", this.sentiment);
-        department.setProperty("sentimentUpdate", this.numOfSentimentUpdate);
-        datastore.put(department);
-    }
-
-    /*
-     * Updates the description of the Department object
-     * 
-     */
-    public void updateDescription(String newDescription){
-        this.description = newDescription;
-        if (key == null) return;
-        Entity department = datastore.get(this.key);
-        department.setProperty("description", this.description);
-        datastore.put(department);
-    }
-
-    /*
-     * Updates the website address of the Department object
-     * 
-     */
-    public void updateWebsite(String newWebsite){
-        this.website = newWebsite;
-        if (key == null) return;
-        Entity department = datastore.get(this.key);
-        department.setProperty("website", this.website);
-        datastore.put(department);
-    }
-
     public static Department getDepartment(Key departmentKey){
         Entity department = datastore.get(departmentKey);
         Department output = new Department((String) department.getProperty("name"),
@@ -162,5 +70,14 @@ public final class Department{
         output.setProfessorKeys((ArrayList<Key>) department.getProperty("professorKeys"));
         output.setKey(department.getKey());
         return output;
+    }
+    */
+
+    public static Department getDepartment(Key key){
+        return null;
+    }
+
+    public static Department getDepartment(int collegeID, int departmentID){
+        return null;
     }
 }

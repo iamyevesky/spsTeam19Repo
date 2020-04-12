@@ -18,6 +18,7 @@ import java.util.ArrayList;
  *
  */
 public final class BulletinBoard{
+    /*
     private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private final Department department;
     private String description;
@@ -35,11 +36,12 @@ public final class BulletinBoard{
         return this.department;
     }
 
-    /*
-     *
-     */
     public String getDecription(){
         return this.description;
+    }
+
+    public Key getKey(){
+        return this.key;
     }
 
     public void setDescription(String newDescription){
@@ -66,8 +68,7 @@ public final class BulletinBoard{
         if (board == null){
             return null;
         }
-        BulletinBoard newBoard = new BulletinBoard(Department.getDepartment((Key)board.getProperty("departmentID")),
-        );
+        BulletinBoard newBoard = new BulletinBoard(Department.getDepartment((Key)board.getProperty("departmentID")));
         newBoard.setDescription((String) board.getProperty("description"));
         newBoard.setKey((Key) board.getKey());
     }
@@ -75,4 +76,5 @@ public final class BulletinBoard{
     public static BulletinBoard createNewBulletinBoard(Key departmentKey){
         return new BulletinBoard(Department.getDepartment(departmentKey));
     }
+    */
 }

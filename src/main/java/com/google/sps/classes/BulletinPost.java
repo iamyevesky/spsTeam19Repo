@@ -19,9 +19,10 @@ import java.util.Date;
  *
  */
 public final class BulletinPost{
+    /*
     private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private final String title;
-    private final BulletinPost board;
+    private final BulletinBoard board;
     private final User user;
     private final String body;
     private final Date date;
@@ -46,7 +47,8 @@ public final class BulletinPost{
     }
 
     public static void addPostToDatabase(User user, String title, String body, BulletinBoard board){
-        BulletinBoard newPost = new BulletinPost(user, title, body, board);
+        BulletinPost newPost = new BulletinPost(user, title, body, board);
         newPost.saveToDataBase();
     }
+    */
 }

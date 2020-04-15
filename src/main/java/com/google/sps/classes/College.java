@@ -12,6 +12,8 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.blobstore.BlobKey;
+import com.google.gson.Gson;
+import java.util.*;
 
 /*
  * This class represents a single college of the chatroom platform.
@@ -20,10 +22,10 @@ import com.google.appengine.api.blobstore.BlobKey;
 public final class College{
     private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private final String name;
-    private final int id;
+    private final long id;
     private String key; 
 
-    private College(String name, int id){
+    private College(String name, long id){
         this.name = name;
         this.id = id;
     }
@@ -32,11 +34,11 @@ public final class College{
         this.key = KeyFactory.keyToString(key);
     }
 
-    public int getID(){
+    public long getID(){
         return this.id;
     }
 
-    public static College getCollege(int id){
+    public static College getCollege(long id){
         Query query =
         new Query("College")
             .setFilter(new Query.FilterPredicate("collegeID", Query.FilterOperator.EQUAL, id));
@@ -51,7 +53,21 @@ public final class College{
         return output;
     }
 
-    public static College getCollegeTest(int id){
+    public static String getAllCollegesJSON(){
+        Query query = new Query("__Stat_Kind__");
+        query.addFilter("kind_name", Query.FilterOperator.EQUAL, "College");       
+        Entity entityStat = datastore.prepare(query).asSingleEntity();
+        long totalEntities = ((Long) entityStat.getProperty("count")).longValue();
+        
+        ArrayList<College> output = new ArrayList<>();
+        for (long i = 0; i < totalEntities; i++){
+            output.add(College.getCollege(i));
+        }
+        Gson gson = new Gson();
+        return gson.toJson(output);
+    }
+
+    public static College getCollegeTest(long id){
         College output = new College("AUniversity", id);
         return output;
     }

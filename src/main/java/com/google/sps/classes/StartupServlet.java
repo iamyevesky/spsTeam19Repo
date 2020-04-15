@@ -58,5 +58,6 @@ public class StartupServlet extends HttpServlet {
         out.println("<p>Your data has been registered in the database.</p>");
         out.println("<p>"+User.convertToJSON(user)+"</p>");
         out.println("<p>Log out <a href=\""+logoutUrl+"\">here</a>.</p>");
+        out.println("");
     }
 }

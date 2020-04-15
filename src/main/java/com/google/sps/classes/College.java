@@ -38,6 +38,22 @@ public final class College{
         return this.id;
     }
 
+    public String getAllDepartmentsJson() throws EntityNotFoundException{
+        Query query =
+        new Query("Department").setFilter(new Query.FilterPredicate("collegeID", Query.FilterOperator.EQUAL, this.id))
+        .addSort("departmentID", SortDirection.ASCENDING);
+        PreparedQuery result = datastore.prepare(query);
+
+        ArrayList<Department> deptList = new ArrayList<Department>();
+
+        for (Entity entity : results.asIterable()){
+            deptList.add(Department.getDepartment(entity.getKey()));    
+        }
+
+        Gson gson = new Gson();
+        return gson.toJson(deptList);
+    }
+
     public static College getCollege(long id){
         Query query =
         new Query("College")

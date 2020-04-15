@@ -20,17 +20,27 @@ import java.util.ArrayList;
  */
 public final class Department{
     private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    private final int id;
+    private final long id;
     private final String name;
     private final College college;
     private String key;
     private ArrayList<User> professors;
     private ArrayList<User> students;
 
-    private Department(String name, int collegeID, int departmentID){
+    private Department(String name, long collegeID, long departmentID){
         this.name = name;
         this.college = College.getCollege(collegeID);
         this.id = departmentID;
+        this.students = new ArrayList<>();
+        this.professors = new ArrayList<>();
+    }
+
+    private Department(String name, College college, long departmentID){
+        this.name = name;
+        this.college = college;
+        this.id = departmentID;
+        this.students = new ArrayList<>();
+        this.professors = new ArrayList<>();
     }
 
     private void setKey(Key key){
@@ -38,14 +48,16 @@ public final class Department{
     }
 
     private void setStudents(ArrayList<Key> studentKeys) throws EntityNotFoundException{
-        this.students = new ArrayList<>();
+        if (studentsKeys == null) return;
+
         for(Key key : studentKeys){
             this.students.add(User.getUser(key));
         }
     }
 
     private void setProfessors(ArrayList<Key> professorKeys) throws EntityNotFoundException{
-        this.professors = new ArrayList<>();
+        if (professorKeys == null) return;
+
         for(Key key : professorKeys){
             this.professors.add(User.getUser(key));
         }
@@ -55,29 +67,59 @@ public final class Department{
         return this.key;
     }
 
-    /*
-    public static Department getDepartment(Key departmentKey){
+    public String getAllClassesJson() throws EntityNotFoundException{
+        Query query =
+        new Query("ClassObject")
+        .setFilter(new Query.CompositeFilter(Query.CompositeFilterOperator.AND, Arrays
+        .asList(new Query.FilterPredicate("collegeID", Query.FilterOperator.EQUAL, collegeID),
+        new Query.FilterPredicate("departmentID", Query.FilterOperator.EQUAL, departmentID))))
+        .addSort("classID", SortDirection.ASCENDING);
+        PreparedQuery result = datastore.prepare(query);
+
+        ArrayList<ClassObject> classList = new ArrayList<ClassObject>();
+
+        for (Entity entity : results.asIterable()){
+            classList.add(ClassObject.getClassObject(entity.getKey()));    
+        }
+
+        Gson gson = new Gson();
+        return gson.toJson(classList);
+    }
+
+    public static Department getDepartment(Key key) throws EntityNotFoundException{
         Entity department = datastore.get(departmentKey);
-        Department output = new Department((String) department.getProperty("name"),
-        College.getCollege((Key) department.getProperty("collegeID")),
-        0,
-        0
-        );
-        output.updateWebsite((String) department.getProperty("website"));
-        output.updateDisplayImageKey((BlobKey) department.getProperty("displayImageKey"));
-        output.updateDescription((String) department.getProperty("description"));
+
+        if (department == null){
+            return null;
+        }
+
+        Department output = new Department((String) department.getProperty("name"), College.getCollege(((Long) department.getProperty("collegeID")).longValue()), ((Long) entity.getProperty("departmentID")).longValue());
         output.setStudentKeys((ArrayList<Key>) department.getProperty("studentKeys"));
         output.setProfessorKeys((ArrayList<Key>) department.getProperty("professorKeys"));
         output.setKey(department.getKey());
         return output;
     }
-    */
 
-    public static Department getDepartment(Key key){
-        return null;
+    public static Department getDepartment(long collegeID, long departmentID) throws EntityNotFoundException{
+        Query query = new Query("Department")
+        .setFilter(new Query.CompositeFilter(Query.CompositeFilterOperator.AND, Arrays
+        .asList(new Query.FilterPredicate("collegeID", Query.FilterOperator.EQUAL, collegeID),
+        new Query.FilterPredicate("departmentID", Query.FilterOperator.EQUAL, departmentID))));
+        PreparedQuery result = datastore.prepare(query);
+        Entity entity = result.asSingleEntity();
+        
+        if (entity == null){
+            return null;
+        }
+        
+        Department output = new Department((String) entity.getProperty("name"), College.getCollege(((Long) entity.getProperty("collegeID")).longValue()), ((Long) entity.getProperty("departmentID")).longValue());
+        output.setStudentKeys((ArrayList<Key>) entity.getProperty("studentKeys"));
+        output.setProfessorKeys((ArrayList<Key>) entity.getProperty("professorKeys"));
+        output.setKey(entity.getKey());
+        return output;
     }
 
-    public static Department getDepartment(int collegeID, int departmentID){
-        return null;
+    public static Department getDepartmentTest(long collegeID, long departmentID){
+        return new Department("aDepartment", College.getCollegeTest(collegeID), departmentID);
     }
 }

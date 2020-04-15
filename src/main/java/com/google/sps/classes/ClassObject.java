@@ -29,10 +29,17 @@ public final class ClassObject{
     private ArrayList<User> students;
     private User professor;
 
-    private ClassObject(String name, int classObjectID, int collegeID, int departmentID){
+    private ClassObject(String name, long collegeID, long departmentID, long classObjectID){
         this.name = name;
         this.college = College.getCollege(collegeID);
         this.department = Department.getDepartment(collegeID, departmentID);
+        this.id = classObjectID;
+    }
+
+    private ClassObject(String name, College college, Department department, long classObjectID){
+        this.name = name;
+        this.college = college;
+        this.department = department;
         this.id = classObjectID;
     }
 
@@ -42,7 +49,9 @@ public final class ClassObject{
 
     private void setStudents(ArrayList<Key> studentKeys) throws EntityNotFoundException{
         this.students = new ArrayList<>();
+
         if (studentKeys == null) return;
+
         for(Key key : studentKeys){
             this.students.add(User.getUser(key));
         }
@@ -50,11 +59,13 @@ public final class ClassObject{
 
     private void setProfessor(Key professorKey) throws EntityNotFoundException{
         if (professorKey == null) return;
+
         this.professor = User.getUser(key);
     }
 
     private ArrayList<Key> getKeys(ArrayList<User> users){
         if (users == null) return new ArrayList<Key>();
+
         ArrayList<Key> output = new ArrayList<>();
         for(User user : users){
             output.add(KeyFactory.stringToKey(user.getKey()));
@@ -96,7 +107,26 @@ public final class ClassObject{
         return output;
     }
 
-    public static ClassObject getClassObject(int collegeID, int departmentID, int classID){
-        return null;
+    public static ClassObject getClassObject(long collegeID, long departmentID, long classID){
+        Query query = new Query("ClassObject")
+        .setFilter(new Query.CompositeFilter(Query.CompositeFilterOperator.AND, Arrays
+        .asList(new Query.FilterPredicate("collegeID", Query.FilterOperator.EQUAL, collegeID),
+        new Query.FilterPredicate("departmentID", Query.FilterOperator.EQUAL, departmentID),
+        new Query.FilterPredicate("classID", Query.FilterOperator.EQUAL, classID))));
+        PreparedQuery result = datastore.prepare(query);
+        Entity entity = result.asSingleEntity();
+        
+        if (entity == null){
+            return null;
+        }
+        ClassObject output = new ClassObject((String) entity.getProperty("name"), (int) entity.getProperty("collegeID"), (int) entity.getProperty("departmentID"), (int) entity.getProperty("classID"));
+        output.setStudents((ArrayList<Key>) entity.getProperty("studentKeys"));
+        output.setProfessor((Key) entity.getProperty("professorKey"));
+        output.setKey(entity.getKey());
+        return output;
+    }
+
+    public static ClassObject getClassObjectTest(long collegeID, long departmentID, long classID){
+        return new ClassObject("aClass", College.getCollegeTest(collegeID), Department.getDepartmentTest(collegeID, departmentID), classID);
     }
 }

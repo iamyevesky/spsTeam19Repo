@@ -47,7 +47,7 @@
       </plugin>
     </plugins>
   </build>
-  -->
+  
 
 <!-- other pom  -->
 
@@ -101,7 +101,7 @@
                 </executions>
                 <configuration>
                     <descriptorRefs>
-                        <!-- This tells Maven to include all dependencies -->
+                       <!-- This tells Maven to include all dependencies -->
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <archive>
@@ -126,4 +126,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

@@ -19,32 +19,42 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.util.*;
-@WebServlet("/createAccount")
-public class CreateAccountServlet extends HttpServlet {
+@WebServlet("/addDepartment")
+public class AddDepartmentAndClassServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
 
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        long departmentID = Long.parseLong(request.getParameter("department"));
+        long classID = Long.parseLong(request.getParameter("class"));
+
         if(!userService.isUserLoggedIn()){
             response.sendRedirect("/startup");
             return;
         }
-        out.println("<p>Hello!</p>");
-        out.println("<p>Enter details below.</p>");
-        out.println("<form action = \"/createAccount\" method = \"POST\">"+
-        "<label for = \"username\">Name:</label>"+
-        "<input type=\"text\" name=\"username\" autofocus>"+
-        "<input type = \"submit\">"+
-        "</form>");
+
+        try
+        {
+            User user = user.getUser(userService.getCurrentUser().getEmail());
+        }
+        catch(EntityNotFoundException e)
+        {
+            response.sendRedirect("/startup");
+            return;
+        }
+        Department department = Department.getDepartmentTest(0, 0);
+        ClassObject classObject = ClassObject.getClassObjectTest(0, 0, 0);
+        configure(user, department, classObject);
+        response.sendRedirect("/startup");
     }
 
-    @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
-        String name = request.getParameter("username");
-        User newUser = User.createUserTest(userService.getCurrentUser().getEmail(), name, 0, false);
-        newUser.saveToDatabase();
-        response.sendRedirect("/startup");
+    private void configure(User user, Department department, ClassObject classObject){
+        user.addDepartment(department);
+        user.addClassObject(classObject);
+        department.addStudent(user);
+        classObject.addStudent(user);
+        user.updateDatabase();
+        department.updateDatabase();
+        classObject.updateDatabase();
     }
 }

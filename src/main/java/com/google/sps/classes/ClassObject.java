@@ -34,6 +34,7 @@ public final class ClassObject{
         this.college = College.getCollege(collegeID);
         this.department = Department.getDepartment(collegeID, departmentID);
         this.id = classObjectID;
+        this.students = new ArrayList<>();
     }
 
     private ClassObject(String name, College college, Department department, long classObjectID){
@@ -48,7 +49,6 @@ public final class ClassObject{
     }
 
     private void setStudents(ArrayList<Key> studentKeys) throws EntityNotFoundException{
-        this.students = new ArrayList<>();
 
         if (studentKeys == null) return;
 
@@ -64,13 +64,15 @@ public final class ClassObject{
     }
 
     private ArrayList<Key> getKeys(ArrayList<User> users){
-        if (users == null) return new ArrayList<Key>();
-
         ArrayList<Key> output = new ArrayList<>();
         for(User user : users){
             output.add(KeyFactory.stringToKey(user.getKey()));
         }
         return output;
+    }
+
+    public void addStudent(User user){
+        this.students.add(user);
     }
 
     public String getKey(){
@@ -87,6 +89,13 @@ public final class ClassObject{
         classObject.setProperty("professorKey", KeyFactory.stringToKey(this.professor.getKey()));
         datastore.put(classObject);
         this.key = KeyFactory.keyToString(classObject.getKey());
+    }
+
+    public void updateDatabase() throws EntityNotFoundException{
+        if (key == null) return;
+        Entity entity = datastore.get(KeyFactory.stringToKey(this.key));
+        entity.setProperty("studentKeys", getKeys(this.students));
+        classObject.setProperty("professorKey", KeyFactory.stringToKey(this.professor.getKey()));
     }
     
     //Not needed for now. Will implement when necessary
@@ -127,6 +136,8 @@ public final class ClassObject{
     }
 
     public static ClassObject getClassObjectTest(long collegeID, long departmentID, long classID){
-        return new ClassObject("aClass", College.getCollegeTest(collegeID), Department.getDepartmentTest(collegeID, departmentID), classID);
+        ClassObject output = new ClassObject("aClass", College.getCollegeTest(collegeID), Department.getDepartmentTest(collegeID, departmentID), classID);
+        output.saveToDatabase();
+        return output;
     }
 }

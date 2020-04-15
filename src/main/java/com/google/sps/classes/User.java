@@ -126,6 +126,14 @@ public final class User{
         datastore.put(user);
     }
 
+    public void addClassObject(ClassObject classObject){
+        this.classes.add(classObject);
+    }
+
+    public void addDepartment(Department department){
+        this.departments.add(department);
+    }
+
     public static String convertToJSON(User user){
         Gson gson = new Gson();
         return gson.toJson(user);

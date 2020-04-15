@@ -42,7 +42,7 @@ public class StartupServlet extends HttpServlet {
 
         try
         {
-            user = User.getUserTest(email);
+            user = User.getUser(email);
         }
         catch(EntityNotFoundException e)
         {
@@ -59,5 +59,10 @@ public class StartupServlet extends HttpServlet {
         out.println("<p>"+User.convertToJSON(user)+"</p>");
         out.println("<p>Log out <a href=\""+logoutUrl+"\">here</a>.</p>");
         out.println("");
+        out.println("<form action = \"/addDepartment\" method = \"POST\">"+
+        "<input type=\"hidden\" name = \"department\" value = \"0\">"+
+        "<input type=\"hidden\" name = \"class\" value = \"0\">"+
+        "<button type=\"submit\">Add Department & Class</button>"+
+        "</form>");
     }
 }

@@ -63,8 +63,40 @@ public final class Department{
         }
     }
 
+    private ArrayList<Key> getKeys(ArrayList<User> users){
+        if (users == null) return new ArrayList<Key>();
+
+        ArrayList<Key> output = new ArrayList<>();
+        for(User user : users){
+            output.add(KeyFactory.stringToKey(user.getKey()));
+        }
+        return output;
+    }
+
+    public void saveToDatabase(){
+        Entity entity = new Entity("Department");
+        entity.setProperty("name", this.name);
+        entity.setProperty("collegeID", this.collegeID);
+        entity.setProperty("departmentID", this.departmentID);
+        entity.setProperty("studentKeys", getKeys(this.students));
+        entity.setProperty("professorKeys", getKeys(this.professors));
+        datastore.put(entity);
+        this.key = KeyFactory.keyToString(entity.getKey());
+    }
+
+    public void updateDatabase() throws EntityNotFoundException{
+        if (key == null) return;
+        Entity entity = datastore.get(KeyFactory.stringToKey(this.key));
+        entity.setProperty("studentKeys", getKeys(this.students));
+        entity.setProperty("professorKeys", getKeys(this.professors));
+    }
+
     public String getKey(){
         return this.key;
+    }
+
+    public void addStudent(User user){
+        this.students.add(user);
     }
 
     public String getAllClassesJson() throws EntityNotFoundException{
@@ -120,6 +152,8 @@ public final class Department{
     }
 
     public static Department getDepartmentTest(long collegeID, long departmentID){
-        return new Department("aDepartment", College.getCollegeTest(collegeID), departmentID);
+        Department output = new Department("aDepartment", College.getCollegeTest(collegeID), departmentID);
+        output.saveToDatabase();
+        return output;
     }
 }

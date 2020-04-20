@@ -1,3 +1,5 @@
+var jsonObject;
+
 var exampleClasses = [
     "LMC 2500",
     "GT Computer Science Department",
@@ -21,28 +23,46 @@ function loadProfileData() {
 }
 
 function loadProfile() {
-    var profileContainer = document.getElementById("profile-container");
+    fetch("/getInfo").then(response => response.json()).then(object =>
+    {
+        console.log(object);
+        jsonObject = object;
+        console.log(jsonObject);
+        setUpUserPage(jsonObject);
+    });
 
-    //create html elements and populate with data from user
+    
+}
+
+function setUpUserPage(jsonData){
     var name = document.createElement("h3");
-    name.innerText = userProfile.Name;
+    name.innerText = String(jsonData.username);
     var uni = document.createElement("h6");
-    uni.innerText = userProfile.College;
+    uni.innerText = jsonData.college.name;
     var classification = document.createElement("h6");
-    classification.innerText = userProfile.Classification;
+    
+    if (jsonData.isProf)
+    {
+        classification.innerText = "Professor";
+    }
+    else
+    {
+        classification.innerText = "Student";
+    }
     var email = document.createElement("h6");
-    email.innerText = userProfile.Email;
+    email.innerText = String(jsonData.email);
     var spacer = document.createElement("BR");
 
     //change nickname link
     var changeNicknameP = document.createElement("p");
-    changeNicknameP.innerText = "Change your nickname: "
+    changeNicknameP.innerText = "Change your nickname: ";
     var anchor = document.createElement("A");
     var link = document.createTextNode("here");
     anchor.setAttribute("href", "#");
     anchor.appendChild(link);
     changeNicknameP.appendChild(anchor);
 
+    var profileContainer = document.getElementById("profile-container");
     profileContainer.appendChild(name);
     profileContainer.appendChild(uni);
     profileContainer.appendChild(classification);

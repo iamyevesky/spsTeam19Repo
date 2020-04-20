@@ -29,8 +29,8 @@ public class StartupServlet extends HttpServlet {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
         String loginUrl = userService.createLoginURL("/startup");
+        String logoutUrl = userService.createLogoutURL("/startup");
         String createAccountUrl = userService.createLoginURL("/createAccount");
-
         if(!userService.isUserLoggedIn()){
             out.println("<p>You are not logged in. Log in to post comments.</p>");
             out.println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
@@ -39,7 +39,6 @@ public class StartupServlet extends HttpServlet {
         }
         String email = userService.getCurrentUser().getEmail();
         User user = null;
-
         try
         {
             user = User.getUser(email);
@@ -48,12 +47,16 @@ public class StartupServlet extends HttpServlet {
         {
 
         }
-        if(user == null){
-            response.sendRedirect("/createAccount");
-            return;
+        catch(ClassCastException f){
+            user = null;
         }
 
-        String logoutUrl = userService.createLogoutURL("/startup");
+        if(user == null){
+            out.println("<p>Welcome User: "+ email+".</p>");
+            out.println("<p>Create an account <a href=\"" + createAccountUrl + "\">here</a>.</p>");
+            out.println("<p>Log out <a href=\""+logoutUrl+"\">here</a>.</p>");
+            return;
+        }
         out.println("<p>Welcome User: "+ email+".</p>");
         out.println("<p>Your data has been registered in the database.</p>");
         out.println("<p>"+User.convertToJSON(user)+"</p>");

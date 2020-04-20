@@ -30,19 +30,8 @@ public final class User{
     private ArrayList<ClassObject> classes;
     private ArrayList<Department> departments;
 
-    private User(String email, String username, long collegeID, boolean isProf){
-        this.email = email;
-        this.username = username;
-        this.college = College.getCollege(collegeID);
-        this.isProf = isProf;
-        this.classes = new ArrayList<ClassObject>();
-        this.departments = new ArrayList<Department>();
-    }
+    //START OF PRODUCTION CODE
 
-    /*
-     * Second declaration is used to enable implementation of User class on Dev Server.
-     * Reason: Dev Server run cannot access preloaded entities in Datastore.
-     */
     private User(String email, String username, College college, boolean isProf){
         this.email = email;
         this.username = username;
@@ -100,6 +89,11 @@ public final class User{
         return this.key;
     }
 
+    public College getCollege(){
+        return this.college;
+    }
+
+    /*
     public void saveToDatabase(){
         if (key != null) return;
         Entity user = new Entity("User");
@@ -115,12 +109,36 @@ public final class User{
     }
 
     public void updateDatabase() throws EntityNotFoundException{
-        if (key == null) return;
+        if (this.key == null) return;
         Entity user = datastore.get(KeyFactory.stringToKey(this.key));
         user.setProperty("username", this.username);
         user.setProperty("email", this.email);
         user.setProperty("collegeID", this.college.getID());
         user.setProperty("isProf", this.isProf);
+        user.setProperty("classObjectKeys", getKeysClasses(this.classes));
+        user.setProperty("departmentKeys", getKeysDepartments(this.departments));
+        datastore.put(user);
+    }
+    */
+
+    public void saveToDatabase(){
+        if (key != null) return;
+        Entity user = new Entity("User");
+        user.setProperty("username", this.username);
+        user.setProperty("email", this.email);
+        user.setProperty("collegeID", KeyFactory.stringToKey(this.college.getKey()));
+        user.setProperty("isProf", this.isProf);
+        user.setProperty("sentiment", 0.0);
+        user.setProperty("classObjectKeys", getKeysClasses(this.classes));
+        user.setProperty("departmentKeys", getKeysDepartments(this.departments));
+        datastore.put(user);
+        this.key = KeyFactory.keyToString(user.getKey());
+    }
+
+    public void updateDatabase() throws EntityNotFoundException{
+        if (this.key == null) return;
+        Entity user = datastore.get(KeyFactory.stringToKey(this.key));
+        user.setProperty("username", this.username);
         user.setProperty("classObjectKeys", getKeysClasses(this.classes));
         user.setProperty("departmentKeys", getKeysDepartments(this.departments));
         datastore.put(user);
@@ -150,7 +168,7 @@ public final class User{
             return null;
         }
 
-        User output = new User((String) entity.getProperty("email"), (String) entity.getProperty("username"), ((Long) entity.getProperty("collegeID")).longValue(), (boolean) entity.getProperty("isProf"));
+        User output = new User((String) entity.getProperty("email"), (String) entity.getProperty("username"), College.getCollege((Key) entity.getProperty("collegeID")), (boolean) entity.getProperty("isProf"));
         output.setKey((Key) entity.getKey());
         output.setClasses((ArrayList<Key>) entity.getProperty("classObjectKeys"));
         output.setDepartments((ArrayList<Key>) entity.getProperty("departmentKeys"));
@@ -159,59 +177,29 @@ public final class User{
 
     public static User getUser(Key key) throws EntityNotFoundException{
         Entity entity = datastore.get(key);
-        
         if(entity == null){
             return null;
         }
-
-        User output = new User((String) entity.getProperty("email"), (String) entity.getProperty("username"), ((Long) entity.getProperty("collegeID")).longValue(), (boolean) entity.getProperty("isProf"));
+        User output = new User((String) entity.getProperty("email"), (String) entity.getProperty("username"), College.getCollege((Key) entity.getProperty("collegeID")), (boolean) entity.getProperty("isProf"));
         output.setKey((Key) entity.getKey());
-        output.setClasses((ArrayList<Key>) entity.getProperty("classKeys"));
+        output.setClasses((ArrayList<Key>) entity.getProperty("classObjectKeys"));
         output.setDepartments((ArrayList<Key>) entity.getProperty("departmentKeys"));
         return output;
     }
 
-    public static User getUserTest(String email) throws EntityNotFoundException{
-        Query query =
-        new Query("User")
-            .setFilter(new Query.FilterPredicate("email", Query.FilterOperator.EQUAL, email));
-        PreparedQuery result = datastore.prepare(query);
-        Entity entity = result.asSingleEntity();
-        
-        if(entity == null){
-            return null;
-        }
-
-        User output = new User((String) entity.getProperty("email"), (String) entity.getProperty("username"), College.getCollegeTest(((Long) entity.getProperty("collegeID")).longValue()), (boolean) entity.getProperty("isProf"));
-        output.setKey((Key) entity.getKey());
-        output.setClasses((ArrayList<Key>) entity.getProperty("classKeys"));
-        output.setDepartments((ArrayList<Key>) entity.getProperty("departmentKeys"));
-        return output;
-    }
-
-    public static User createUser(String email, String username, long collegeID, boolean isProfessor){
+    public static User createUser(String email, String username, College college, boolean isProfessor){
         Query emailQuery =
         new Query("User").setFilter(new Query.FilterPredicate("email", Query.FilterOperator.EQUAL, email));
-
         PreparedQuery result = datastore.prepare(emailQuery);
         Entity emailEntity = result.asSingleEntity();
         if(emailEntity != null){
             return null;
         }
-        return new User(email, username, collegeID, isProfessor);
+        return new User(email, username, college, isProfessor);
     }
+    //END OF PRODUCTION CODE
 
 
-    //This method is used when testing out features on Dev Server
-    //Reason: Dev Server cannot access entities in Datastore on Dev Server run
-    public static User createUserTest(String email, String username, long collegeID, boolean isProfessor){
-        Query emailQuery = new Query("User").setFilter(new Query.FilterPredicate("email", Query.FilterOperator.EQUAL, email));
-
-        PreparedQuery result = datastore.prepare(emailQuery);
-        Entity emailEntity = result.asSingleEntity();
-        if(emailEntity != null){
-            return null;
-        }
-        return new User(email, username, College.getCollegeTest(collegeID), isProfessor);
-    }
+    //START OF DEVELOPMENT CODE
+    //END OF DEVELOPMENT CODE
 } 

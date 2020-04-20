@@ -12,8 +12,10 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.blobstore.BlobKey;
-
 import java.util.ArrayList;
+import java.util.Arrays;
+
+//START OF PRODUCTION CODE
 
 /*
  * This class represents a single Class of the chatroom platform.
@@ -24,24 +26,15 @@ public final class ClassObject{
     private final String name;
     private final College college;
     private final Department department;
-    private final int id;
     private String key;
-    private ArrayList<User> students;
-    private User professor;
+    private transient ArrayList<String> students;
+    private transient String professor;
 
-    private ClassObject(String name, long collegeID, long departmentID, long classObjectID){
-        this.name = name;
-        this.college = College.getCollege(collegeID);
-        this.department = Department.getDepartment(collegeID, departmentID);
-        this.id = classObjectID;
-        this.students = new ArrayList<>();
-    }
-
-    private ClassObject(String name, College college, Department department, long classObjectID){
+    private ClassObject(String name, College college, Department department){
         this.name = name;
         this.college = college;
         this.department = department;
-        this.id = classObjectID;
+        this.students = new ArrayList<String>();
     }
 
     private void setKey(Key key){
@@ -49,30 +42,27 @@ public final class ClassObject{
     }
 
     private void setStudents(ArrayList<Key> studentKeys) throws EntityNotFoundException{
-
         if (studentKeys == null) return;
-
         for(Key key : studentKeys){
-            this.students.add(User.getUser(key));
+            this.students.add(KeyFactory.keyToString(key));
         }
     }
 
     private void setProfessor(Key professorKey) throws EntityNotFoundException{
         if (professorKey == null) return;
-
-        this.professor = User.getUser(key);
+        this.professor = KeyFactory.keyToString(professorKey);
     }
 
-    private ArrayList<Key> getKeys(ArrayList<User> users){
+    private ArrayList<Key> getKeys(ArrayList<String> users){
         ArrayList<Key> output = new ArrayList<>();
-        for(User user : users){
-            output.add(KeyFactory.stringToKey(user.getKey()));
+        for(String user : users){
+            output.add(KeyFactory.stringToKey(user));
         }
         return output;
     }
 
     public void addStudent(User user){
-        this.students.add(user);
+        this.students.add(user.getKey());
     }
 
     public String getKey(){
@@ -82,11 +72,14 @@ public final class ClassObject{
     public void saveToDatabase(){
         Entity classObject = new Entity("classObject");
         classObject.setProperty("name", this.name);
-        classObject.setProperty("collegeID", this.college.getID());
-        classObject.setProperty("classID", this.id);
+        classObject.setProperty("collegeID", KeyFactory.stringToKey(this.college.getKey()));
+        classObject.setProperty("departmentID", KeyFactory.stringToKey(this.department.getKey()));
         classObject.setProperty("sentiment", 0.0);
         classObject.setProperty("studentKeys", getKeys(this.students));
-        classObject.setProperty("professorKey", KeyFactory.stringToKey(this.professor.getKey()));
+
+        if (this.professor != null){
+            classObject.setProperty("professorKey", KeyFactory.stringToKey(this.professor));
+        }
         datastore.put(classObject);
         this.key = KeyFactory.keyToString(classObject.getKey());
     }
@@ -95,7 +88,10 @@ public final class ClassObject{
         if (key == null) return;
         Entity entity = datastore.get(KeyFactory.stringToKey(this.key));
         entity.setProperty("studentKeys", getKeys(this.students));
-        classObject.setProperty("professorKey", KeyFactory.stringToKey(this.professor.getKey()));
+        if (this.professor != null){
+            entity.setProperty("professorKey", KeyFactory.stringToKey(this.professor));
+        }
+        datastore.put(entity);
     }
     
     //Not needed for now. Will implement when necessary
@@ -107,37 +103,20 @@ public final class ClassObject{
 
     public static ClassObject getClassObject(Key key) throws EntityNotFoundException{
         Entity classObject = datastore.get(key);
-        
         if (classObject == null) return null;
-        ClassObject output = new ClassObject((String) classObject.getProperty("name"), (int) classObject.getProperty("collegeID"), (int) classObject.getProperty("departmentID"), (int) classObject.getProperty("classID"));
+        ClassObject output = new ClassObject((String)classObject.getProperty("name"), College.getCollege((Key)classObject.getProperty("collegeID")), Department.getDepartment((Key)classObject.getProperty("departmentID")));
         output.setStudents((ArrayList<Key>) classObject.getProperty("studentKeys"));
         output.setProfessor((Key) classObject.getProperty("professorKey"));
         output.setKey(classObject.getKey());
         return output;
     }
+    //END OF PRODUCTION CODE
 
-    public static ClassObject getClassObject(long collegeID, long departmentID, long classID){
-        Query query = new Query("ClassObject")
-        .setFilter(new Query.CompositeFilter(Query.CompositeFilterOperator.AND, Arrays
-        .asList(new Query.FilterPredicate("collegeID", Query.FilterOperator.EQUAL, collegeID),
-        new Query.FilterPredicate("departmentID", Query.FilterOperator.EQUAL, departmentID),
-        new Query.FilterPredicate("classID", Query.FilterOperator.EQUAL, classID))));
-        PreparedQuery result = datastore.prepare(query);
-        Entity entity = result.asSingleEntity();
-        
-        if (entity == null){
-            return null;
-        }
-        ClassObject output = new ClassObject((String) entity.getProperty("name"), (int) entity.getProperty("collegeID"), (int) entity.getProperty("departmentID"), (int) entity.getProperty("classID"));
-        output.setStudents((ArrayList<Key>) entity.getProperty("studentKeys"));
-        output.setProfessor((Key) entity.getProperty("professorKey"));
-        output.setKey(entity.getKey());
-        return output;
-    }
-
-    public static ClassObject getClassObjectTest(long collegeID, long departmentID, long classID){
-        ClassObject output = new ClassObject("aClass", College.getCollegeTest(collegeID), Department.getDepartmentTest(collegeID, departmentID), classID);
+    //START OF DEVELOPMENT CODE
+    public static ClassObject getClassObjectTest(College college, Department department){
+        ClassObject output = new ClassObject("aClass", college, department);
         output.saveToDatabase();
         return output;
     }
+    //END OF DEVELOPMENT CODE
 }

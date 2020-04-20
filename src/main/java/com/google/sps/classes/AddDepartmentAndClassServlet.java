@@ -25,30 +25,38 @@ public class AddDepartmentAndClassServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
-        long departmentID = Long.parseLong(request.getParameter("department"));
-        long classID = Long.parseLong(request.getParameter("class"));
-
         if(!userService.isUserLoggedIn()){
             response.sendRedirect("/startup");
             return;
         }
 
+        User user = null;
         try
         {
-            User user = user.getUser(userService.getCurrentUser().getEmail());
+            user = user.getUser(userService.getCurrentUser().getEmail());
         }
         catch(EntityNotFoundException e)
         {
             response.sendRedirect("/startup");
+            System.out.println("No user found in /addDepartment");
             return;
         }
-        Department department = Department.getDepartmentTest(0, 0);
-        ClassObject classObject = ClassObject.getClassObjectTest(0, 0, 0);
-        configure(user, department, classObject);
+
+        Department dept = Department.getDepartmentTest(user.getCollege());
+        ClassObject classObject = ClassObject.getClassObjectTest(user.getCollege(), dept);
+
+        try
+        {
+            configure(user, dept, classObject);
+        }
+        catch(EntityNotFoundException e)
+        {
+            response.sendRedirect("/startup");
+        }
         response.sendRedirect("/startup");
     }
 
-    private void configure(User user, Department department, ClassObject classObject){
+    private void configure(User user, Department department, ClassObject classObject) throws EntityNotFoundException{
         user.addDepartment(department);
         user.addClassObject(classObject);
         department.addStudent(user);

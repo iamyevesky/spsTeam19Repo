@@ -22,69 +22,66 @@ import java.util.*;
 public final class College{
     private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private final String name;
-    private final long id;
     private String key; 
 
-    private College(String name, long id){
+    //START OF PRODUCTION CODE
+
+    private College(String name){
         this.name = name;
-        this.id = id;
     }
 
     private void setKey(Key key){
         this.key = KeyFactory.keyToString(key);
     }
 
-    public long getID(){
-        return this.id;
+    public String getKey(){
+        return this.key;
     }
 
     public String getAllDepartmentsJson() throws EntityNotFoundException{
         Query query =
-        new Query("Department").setFilter(new Query.FilterPredicate("collegeID", Query.FilterOperator.EQUAL, this.id))
-        .addSort("departmentID", SortDirection.ASCENDING);
+        new Query("Department").setFilter(new Query.FilterPredicate("collegeID", Query.FilterOperator.EQUAL, this.key));
         PreparedQuery result = datastore.prepare(query);
-
         ArrayList<Department> deptList = new ArrayList<Department>();
-
-        for (Entity entity : results.asIterable()){
+        for (Entity entity : result.asIterable()){
             deptList.add(Department.getDepartment(entity.getKey()));    
         }
-
         Gson gson = new Gson();
         return gson.toJson(deptList);
     }
 
-    public static College getCollege(long id){
-        Query query =
-        new Query("College")
-            .setFilter(new Query.FilterPredicate("collegeID", Query.FilterOperator.EQUAL, id));
-        PreparedQuery result = datastore.prepare(query);
-        Entity college = result.asSingleEntity();
-        
-        if(college == null){
-            return null;
-        }
-        College output = new College((String) college.getProperty("name"), id);
-        output.setKey(college.getKey());
+    public static College getCollege(Key key) throws EntityNotFoundException{
+        Entity entity = datastore.get(key);
+        College output = new College((String) entity.getProperty("name"));
+        output.setKey(entity.getKey());
         return output;
     }
 
-    public static String getAllCollegesJSON(){
-        Query query = new Query("__Stat_Kind__");
-        query.addFilter("kind_name", Query.FilterOperator.EQUAL, "College");       
-        Entity entityStat = datastore.prepare(query).asSingleEntity();
-        long totalEntities = ((Long) entityStat.getProperty("count")).longValue();
-        
-        ArrayList<College> output = new ArrayList<>();
-        for (long i = 0; i < totalEntities; i++){
-            output.add(College.getCollege(i));
+    public static String getAllCollegesJSON() throws EntityNotFoundException{
+        Query query = new Query("College");
+        PreparedQuery result = datastore.prepare(query);
+        ArrayList<College> output = new ArrayList<College>();
+        for (Entity entity : result.asIterable()){
+            output.add(College.getCollege(entity.getKey()));    
         }
         Gson gson = new Gson();
         return gson.toJson(output);
     }
+    //END OF PRODUCTION CODE
 
-    public static College getCollegeTest(long id){
-        College output = new College("AUniversity", id);
+    //START OF DEVELOPMENT CODE
+    
+    public College(String name, int id){
+        this.name = name;
+        Entity entity = new Entity("College");
+        entity.setProperty("name", name);
+        datastore.put(entity);
+        this.key = KeyFactory.keyToString(entity.getKey());
+    }
+
+    public static College getCollegeTest(){
+        College output = new College("NewUniversity", 0);
         return output;
     }
+    //END OF DEVELOPMENT CODE
 }

@@ -13,6 +13,8 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import java.util.ArrayList;
+import java.util.Arrays;
+import com.google.gson.Gson;
 
 /*
  * This class represents a single department of the chatroom platform.
@@ -20,27 +22,19 @@ import java.util.ArrayList;
  */
 public final class Department{
     private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    private final long id;
     private final String name;
     private final College college;
     private String key;
-    private ArrayList<User> professors;
-    private ArrayList<User> students;
+    private transient ArrayList<String> professors;
+    private transient ArrayList<String> students;
 
-    private Department(String name, long collegeID, long departmentID){
-        this.name = name;
-        this.college = College.getCollege(collegeID);
-        this.id = departmentID;
-        this.students = new ArrayList<>();
-        this.professors = new ArrayList<>();
-    }
+    //START OF PRODUCTION CODE
 
-    private Department(String name, College college, long departmentID){
+    private Department(String name, College college){
         this.name = name;
         this.college = college;
-        this.id = departmentID;
-        this.students = new ArrayList<>();
-        this.professors = new ArrayList<>();
+        this.students = new ArrayList<String>();
+        this.professors = new ArrayList<String>();
     }
 
     private void setKey(Key key){
@@ -48,10 +42,10 @@ public final class Department{
     }
 
     private void setStudents(ArrayList<Key> studentKeys) throws EntityNotFoundException{
-        if (studentsKeys == null) return;
+        if (studentKeys == null) return;
 
         for(Key key : studentKeys){
-            this.students.add(User.getUser(key));
+            this.students.add(KeyFactory.keyToString(key));
         }
     }
 
@@ -59,16 +53,14 @@ public final class Department{
         if (professorKeys == null) return;
 
         for(Key key : professorKeys){
-            this.professors.add(User.getUser(key));
+            this.professors.add(KeyFactory.keyToString(key));
         }
     }
 
-    private ArrayList<Key> getKeys(ArrayList<User> users){
-        if (users == null) return new ArrayList<Key>();
-
+    private ArrayList<Key> getKeys(ArrayList<String> users){
         ArrayList<Key> output = new ArrayList<>();
-        for(User user : users){
-            output.add(KeyFactory.stringToKey(user.getKey()));
+        for(String user : users){
+            output.add(KeyFactory.stringToKey(user));
         }
         return output;
     }
@@ -76,8 +68,8 @@ public final class Department{
     public void saveToDatabase(){
         Entity entity = new Entity("Department");
         entity.setProperty("name", this.name);
-        entity.setProperty("collegeID", this.collegeID);
-        entity.setProperty("departmentID", this.departmentID);
+        entity.setProperty("collegeID", KeyFactory.stringToKey(this.college.getKey()));
+        entity.setProperty("departmentID", this.key);
         entity.setProperty("studentKeys", getKeys(this.students));
         entity.setProperty("professorKeys", getKeys(this.professors));
         datastore.put(entity);
@@ -89,6 +81,7 @@ public final class Department{
         Entity entity = datastore.get(KeyFactory.stringToKey(this.key));
         entity.setProperty("studentKeys", getKeys(this.students));
         entity.setProperty("professorKeys", getKeys(this.professors));
+        datastore.put(entity);
     }
 
     public String getKey(){
@@ -96,64 +89,44 @@ public final class Department{
     }
 
     public void addStudent(User user){
-        this.students.add(user);
+        this.students.add(user.getKey());
+    }
+
+    public void addProfessor(User user){
+        this.professors.add(user.getKey());
     }
 
     public String getAllClassesJson() throws EntityNotFoundException{
         Query query =
-        new Query("ClassObject")
-        .setFilter(new Query.CompositeFilter(Query.CompositeFilterOperator.AND, Arrays
-        .asList(new Query.FilterPredicate("collegeID", Query.FilterOperator.EQUAL, collegeID),
-        new Query.FilterPredicate("departmentID", Query.FilterOperator.EQUAL, departmentID))))
-        .addSort("classID", SortDirection.ASCENDING);
+        new Query("ClassObject").setFilter(new Query.FilterPredicate("departmentID", Query.FilterOperator.EQUAL, this.key));
         PreparedQuery result = datastore.prepare(query);
-
         ArrayList<ClassObject> classList = new ArrayList<ClassObject>();
-
-        for (Entity entity : results.asIterable()){
+        for (Entity entity : result.asIterable()){
             classList.add(ClassObject.getClassObject(entity.getKey()));    
         }
-
         Gson gson = new Gson();
         return gson.toJson(classList);
     }
 
     public static Department getDepartment(Key key) throws EntityNotFoundException{
-        Entity department = datastore.get(departmentKey);
-
+        Entity department = datastore.get(key);
         if (department == null){
             return null;
         }
-
-        Department output = new Department((String) department.getProperty("name"), College.getCollege(((Long) department.getProperty("collegeID")).longValue()), ((Long) entity.getProperty("departmentID")).longValue());
-        output.setStudentKeys((ArrayList<Key>) department.getProperty("studentKeys"));
-        output.setProfessorKeys((ArrayList<Key>) department.getProperty("professorKeys"));
+        Department output = new Department((String) department.getProperty("name"), College.getCollege((Key) department.getProperty("collegeID")));
+        output.setStudents((ArrayList<Key>) department.getProperty("studentKeys"));
+        output.setProfessors((ArrayList<Key>) department.getProperty("professorKeys"));
         output.setKey(department.getKey());
         return output;
     }
+    //END OF PRODUCTION CODE
 
-    public static Department getDepartment(long collegeID, long departmentID) throws EntityNotFoundException{
-        Query query = new Query("Department")
-        .setFilter(new Query.CompositeFilter(Query.CompositeFilterOperator.AND, Arrays
-        .asList(new Query.FilterPredicate("collegeID", Query.FilterOperator.EQUAL, collegeID),
-        new Query.FilterPredicate("departmentID", Query.FilterOperator.EQUAL, departmentID))));
-        PreparedQuery result = datastore.prepare(query);
-        Entity entity = result.asSingleEntity();
-        
-        if (entity == null){
-            return null;
-        }
-        
-        Department output = new Department((String) entity.getProperty("name"), College.getCollege(((Long) entity.getProperty("collegeID")).longValue()), ((Long) entity.getProperty("departmentID")).longValue());
-        output.setStudentKeys((ArrayList<Key>) entity.getProperty("studentKeys"));
-        output.setProfessorKeys((ArrayList<Key>) entity.getProperty("professorKeys"));
-        output.setKey(entity.getKey());
-        return output;
-    }
+    //START OF DEVELOPMENT CODE
 
-    public static Department getDepartmentTest(long collegeID, long departmentID){
-        Department output = new Department("aDepartment", College.getCollegeTest(collegeID), departmentID);
+    public static Department getDepartmentTest(College college){
+        Department output = new Department("aDepartment", college);
         output.saveToDatabase();
         return output;
     }
+    //END OF DEVELOPMENT CODE
 }

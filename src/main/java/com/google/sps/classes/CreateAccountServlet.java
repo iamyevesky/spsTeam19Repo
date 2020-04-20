@@ -43,8 +43,11 @@ public class CreateAccountServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
         String name = request.getParameter("username");
-        User newUser = User.createUserTest(userService.getCurrentUser().getEmail(), name, 0, false);
-        newUser.saveToDatabase();
+        College college = College.getCollegeTest();
+        User newUser = User.createUser(userService.getCurrentUser().getEmail(), name, college, false);
+        if (newUser != null){
+            newUser.saveToDatabase();
+        }
         response.sendRedirect("/startup");
     }
 }

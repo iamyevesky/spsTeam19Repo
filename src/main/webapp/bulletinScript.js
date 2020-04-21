@@ -1,6 +1,5 @@
-
-
 function getBulletinDataNiceFormat() {
+
     //EXAMPLE DATA
     var exampleData1 = {Title:"Covid-19 announcement", Name:"Professor John", University:"Cornell",
     Department:"LMC", Text:"I will give everyone an A for this class"};

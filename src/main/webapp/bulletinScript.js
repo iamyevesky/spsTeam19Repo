@@ -3,12 +3,10 @@
 function getBulletinDataNiceFormat() {
     //EXAMPLE DATA
     var exampleData1 = {Title:"Covid-19 announcement", Name:"Professor John", University:"Cornell",
-    Department:"LMC", Course:"LMC 1101",  
-    Text:"I will give everyone an A for this class"};
+    Department:"LMC", Text:"I will give everyone an A for this class"};
 
     var exampleData2 = {Title:"Chatroom Office Hours", Name:"Professor Elliot", University:"Georgia Tech",
-    Department:"College of Computing", Course:"CS 1301",  
-    Text:"I will be online to answer any chats in the CS 1301 chatroom M-F from 11:00 am to 3:00 pm"};
+    Department:"College of Computing", Text:"I will be online to answer any chats in the CS 1301 chatroom M-F from 11:00 am to 3:00 pm"};
 
     var exampleBackend = [exampleData1, exampleData2];
 
@@ -28,27 +26,35 @@ function getBulletinDataNiceFormat() {
         singleCard.appendChild(cardBody);
 
         const currPost = exampleBackend[i];
-        for (const property in currPost) {
-            cardBody.appendChild(createPostElement(property, currPost[property]));
-        }
+        createBody(cardBody, currPost);
         bulletinContainer.appendChild(singleCard)
     }
 }
+function createBody(bodyOutline, currPost) {
+    var title = document.createElement("h5");
+    title.className = "card-title";
+    title.innerText = currPost.Title;
 
-// Creates an html element depending on its property
-function createPostElement(property, text) {
-    var lineItem;
-    if (property == "Title") {
-        lineItem = document.createElement("h5");
-        lineItem.className = "card-title";
-    } else if (property == "Text"){
-        lineItem = document.createElement("p");
-        lineItem.className = "card-text";
-        lineItem.style.textAlign = "center";
-    } else {
-        lineItem= document.createElement("h6");
-        lineItem.className = "card-subtitle mb-2 text-muted";
-    }
-    lineItem.innerText = text;
-    return lineItem;
+    var name = document.createElement("h6");
+    name.className = "card-subtitle mb-2 text-muted";
+    name.innerText = currPost.Name;
+
+    var uni = document.createElement("h6");
+    uni.className = "card-subtitle mb-2 text-muted";
+    uni.innerText = currPost.University;
+
+    var department = document.createElement("h6");
+    department.className = "card-subtitle mb-2 text-muted";
+    department.innerText = currPost.Department;
+
+    var text = document.createElement("p");
+    text.className = "card-text";
+    text.style.textAlign = "center";
+    text.innerText = currPost.Text;
+
+    bodyOutline.appendChild(title);
+    bodyOutline.appendChild(name);
+    bodyOutline.appendChild(uni);
+    bodyOutline.appendChild(department);
+    bodyOutline.appendChild(text);
 }

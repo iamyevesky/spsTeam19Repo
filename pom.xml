@@ -42,8 +42,6 @@
         <artifactId>google-cloud-core</artifactId>
         <version>1.93.4</version>
     </dependency>
-
-    
   </dependencies>
 
   <build>

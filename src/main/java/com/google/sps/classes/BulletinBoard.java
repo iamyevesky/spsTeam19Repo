@@ -18,7 +18,6 @@ import java.util.ArrayList;
  *
  */
 public final class BulletinBoard{
-    /*
     private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private final Department department;
     private String description;

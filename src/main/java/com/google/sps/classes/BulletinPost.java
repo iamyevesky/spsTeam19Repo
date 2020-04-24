@@ -11,24 +11,22 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.blobstore.BlobKey;
+import com.google.cloud.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 
 /*
  * This class represents a single bulletin post of the chatroom platform.
  *
  */
 public final class BulletinPost{
-    /*
     private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private final String title;
-    private final BulletinBoard board;
+    private final Department department;
     private final User user;
     private final String body;
-    private final Date date;
     private Key key;
 
-    private BulletinPost(User user, String title, String body, BulletinBoard board){
+    private BulletinPost(User user, String title, String body, Department department){
         this.title = title;
         this.user = user;
         this.board = board;

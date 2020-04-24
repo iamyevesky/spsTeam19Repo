@@ -1,4 +1,41 @@
+var course1 = {
+    name: "CS 1301",
+    department: "College of Computing",
+    college: "Georgia Tech",
+};
+
+var course2 = {
+    name: "CS 1331",
+    department: "College of Computing",
+    college: "Georgia Tech",
+};
+var course3 = {
+    name: "Math 2550",
+    department: "Mathematics",
+    college: "Georgia Tech",
+};
+var course4 = {
+    name: "LMC 1301",
+    department: "Arts",
+    college: "UGA",
+};
+
+var course5 = {
+    name: "LMC 3000",
+    department: "Arts",
+    college: "UGA",
+};
+var course6 = {
+    name: "Film 2120",
+    department: "Film",
+    college: "UGA",
+};
+
+var exampleBackend = [course1, course2, course3, course4, course5, course6];
+
+
 function getBulletinDataNiceFormat() {
+    createUniOptions();
 
     //EXAMPLE DATA
     var exampleData1 = {Title:"Covid-19 announcement", Name:"Professor John", University:"Cornell",
@@ -56,4 +93,52 @@ function createBody(bodyOutline, currPost) {
     bodyOutline.appendChild(uni);
     bodyOutline.appendChild(department);
     bodyOutline.appendChild(text);
+}
+
+function load_departments(uniID, depID) {
+
+    //load departments based on college name
+    var universityValue = document.getElementById(uniID).value;
+    var arrDepartments = getDepartments(universityValue);
+    var string="<option></option>";       
+    for(i = 0; i < arrDepartments.length; i++) {
+        string += "<option value='" + arrDepartments[i] + "'>" + arrDepartments[i] + "</option>";
+    }
+    document.getElementById(depID).innerHTML = string;
+}
+
+function getDepartments(uniName) {
+
+    var allDepartments = [];
+    for (i = 0; i < exampleBackend.length; i++) {
+        //only check departments of same college
+        if (exampleBackend[i].college == uniName) {
+            currDepName = exampleBackend[i].department;
+
+            //check to see if curr department name has already been added to list
+            if (!allDepartments.includes(currDepName)) {
+                allDepartments.push(currDepName);
+            }
+        }
+        
+    }
+    return allDepartments;
+}
+
+//load based on backend 
+function createUniOptions() {
+    var uniDropdown = document.getElementById("universitySelection");
+    var universityStrings = "";
+    var allUniversities = [];
+    for (i = 0; i < exampleBackend.length; i++) {
+        currUniName = exampleBackend[i].college;
+
+        //check to see if curr university name has already been added to dropdown
+        if (!allUniversities.includes(currUniName)) {
+            allUniversities.push(currUniName);
+            universityStrings += "<option value='" + currUniName + "'>" + currUniName + "</option>";
+        }
+        
+    }
+    uniDropdown.innerHTML += universityStrings;
 }

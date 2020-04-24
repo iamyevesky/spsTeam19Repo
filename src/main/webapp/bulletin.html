@@ -51,22 +51,21 @@
     </div>
     <div class="form-group">
         <label for="universitySelection">University</label>
-        <select class="form-control" id="universitySelection">
-            <option>Georgia Tech</option>
+
+        <select class="form-control" id="universitySelection" 
+        onchange="load_departments('universitySelection', 'departmentSelection')">
+            <option></option>
         </select>
+
     </div>
     <div class="form-group">
         <label for="departmentSelection">Department</label>
+
         <select class="form-control" id="departmentSelection">
-            <option>College of Computing</option>
+            <option></option>
         </select>
     </div>
-    <div class="form-group">
-        <label for="courseSelection">Course</label>
-        <select class="form-control" id="courseSelection">
-            <option>CS 1301</option>
-        </select>
-    </div>
+
     <div class="form-group">
         <label for="title">Title</label>
         <input type="text" class="form-control form-control-lg" id="title">

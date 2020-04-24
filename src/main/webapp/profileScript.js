@@ -70,7 +70,8 @@ function createSingleCourseCard(course) {
 
     var courseTextInside = document.createElement("h5");
     courseTextInside.className = "card-title";
-    courseTextInside.innerText = "Sentiment Score: " + "replace";
+    //TODO: incorporate real sentiment score here
+    courseTextInside.innerText = "Sentiment Score: ";
 
     textOuterBox.appendChild(courseTextInside);
     outerBox.appendChild(coursename);

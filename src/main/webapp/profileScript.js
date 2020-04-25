@@ -1,37 +1,13 @@
 var jsonObject;
 
-var exampleClasses = [
-    "LMC 2500",
-    "GT Computer Science Department",
-    "UGA CS 2001",
-    "GT CS 1331"
-]
-
-
-var userProfile = {
-    Name : "Alan Matias",
-    College: "Georgia Tech",
-    Classification: "student",
-    Email: "10alanm@gmail.com",
-    ClassList: exampleClasses
-}
-
-
-function loadProfileData() {
-    loadProfile();
-    loadClasses();
-}
-
 function loadProfile() {
     fetch("/getInfo").then(response => response.json()).then(object =>
     {
-        console.log(object);
         jsonObject = object;
         console.log(jsonObject);
         setUpUserPage(jsonObject);
+        loadClasses();
     });
-
-    
 }
 
 function setUpUserPage(jsonData){
@@ -40,6 +16,7 @@ function setUpUserPage(jsonData){
     var uni = document.createElement("h6");
     uni.innerText = jsonData.college.name;
     var classification = document.createElement("h6");
+    console.log(jsonData.classes);
     
     if (jsonData.isProf)
     {
@@ -73,25 +50,31 @@ function setUpUserPage(jsonData){
 
 function loadClasses() {
     var classContainer = document.getElementById("classes-container");
+    console.log(jsonObject);
+    var classArray = jsonObject.classes;
+    for (i = 0; i < classArray.length; i++) {
+        classContainer.append(createSingleCourseCard(classArray[i]));
+    }
+}
 
+function createSingleCourseCard(course) {
     var outerBox = document.createElement("div");
     outerBox.classList.add("card", "mb-3");
 
     var coursename = document.createElement("div");
     coursename.className = "card-header";
-    coursename.innerText = "Testing";
+    coursename.innerText = course.name;
 
     var textOuterBox = document.createElement("div");
     textOuterBox.classList.add("card-body", "text-secondary");
 
     var courseTextInside = document.createElement("h5");
     courseTextInside.className = "card-title";
-    courseTextInside.innerText = "Sentiment Score: Test";
+    //TODO: incorporate real sentiment score here
+    courseTextInside.innerText = "Sentiment Score: ";
 
     textOuterBox.appendChild(courseTextInside);
     outerBox.appendChild(coursename);
     outerBox.appendChild(textOuterBox);
-    console.log(outerBox);
-    classContainer.append(outerBox);
-
+    return outerBox;
 }

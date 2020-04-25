@@ -19,8 +19,8 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.util.*;
-@WebServlet("/departmentPost")
-public class DepartmentPostServlet extends HttpServlet {
+@WebServlet("/departmentPostTest")
+public class DepartmentPostServletTest extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
 
     @Override
@@ -52,17 +52,17 @@ public class DepartmentPostServlet extends HttpServlet {
         }
         catch(EntityNotFoundException e)
         {
-            response.sendRedirect("/bulletin.html");
+            response.sendRedirect("/startup");
             System.out.println("No department found in /departmentPost");
             return;
         }
         BulletinPost.addPostToDatabase(user, title, body, department);
-        response.sendRedirect("/bulletin.html");
+        response.sendRedirect("/departmentPostTest?departmentID="+department.getKey());
     }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("application/json; charset=utf-8");
+        response.setContentType("text/html");
         Department department = null;
         try
         {

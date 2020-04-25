@@ -108,6 +108,11 @@ public final class Department{
         return gson.toJson(classList);
     }
 
+    public String getPostsJson() throws EntityNotFoundException{
+        Gson gson = new Gson();
+        return gson.toJson(BulletinPost.getPosts(this));
+    }
+
     public static Department getDepartment(Key key) throws EntityNotFoundException{
         Entity department = datastore.get(key);
         if (department == null){

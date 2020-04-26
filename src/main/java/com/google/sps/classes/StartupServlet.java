@@ -67,11 +67,16 @@ public class StartupServlet extends HttpServlet {
         "<input type=\"hidden\" name = \"class\" value = \"0\">"+
         "<button type=\"submit\">Add Department & Class</button>"+
         "</form>");
-        out.println("<form action = \"/departmentPost\" method = \"POST\">"+
-        "<label for = \"username\">Name:</label>"+
+        out.println("<form action = \"/departmentPostTest\" method = \"POST\">"+
+        "<label for = \"username\">Title:</label>"+
         "<input type=\"text\" name=\"title\" autofocus>"+
+        "<br>"+
+        "<label for = \"username\">Body:</label>"+
         "<input type=\"text\" name=\"body\" >"+
+        "<br>"+
+        "<label for = \"username\">DepartmentID:</label>"+
         "<input type=\"text\" name=\"departmentID\">"+
+        "<br>"+
         "<input type = \"submit\">"+
         "</form>");
     }

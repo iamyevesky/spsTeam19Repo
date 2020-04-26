@@ -11,7 +11,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
     <script src="bulletinScript.js"></script>
   </head>
-  <body onload="getBulletinDataNiceFormat()">
+  <body onload="loadBulletinPage()">
 
     <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -40,49 +40,14 @@
 
 <h2 class="text-center" style="margin-top: 15px">Bulletin Board</h2>
 
+    <br></br>
     <div class="container" style="zoom: .94">
-    <br></br>
-    <h3>Create a post:</h3>
-    <br></br>
-    <form style="margin-left: 40px">
-    <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" class="form-control" id="name">
-    </div>
-    <div class="form-group">
-        <label for="universitySelection">University</label>
-
-        <select class="form-control" id="universitySelection" 
-        onchange="load_departments('universitySelection', 'departmentSelection')">
-            <option></option>
-        </select>
-
-    </div>
-    <div class="form-group">
-        <label for="departmentSelection">Department</label>
-
-        <select class="form-control" id="departmentSelection">
-            <option></option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="title">Title</label>
-        <input type="text" class="form-control form-control-lg" id="title">
-    </div>
-    <div class="form-group">
-        <label for="bulletinText">Text:</label>
-        <textarea class="form-control" id="bulletinText" placeholder="Write something here..." rows="3"></textarea>
-    </div>
-    <input type="submit" value="Submit" onClick=console.log()>
-    </form>
-    <br></br>
-
     <h3>Your Bulletin Posts By Department:</h3>
+    <br></br>
 
     <div id="bulletin-new-container"></div>
 
     </br>
-    </div >
+    </div>
   </body>
 </html>

@@ -35,7 +35,6 @@ var exampleBackend = [course1, course2, course3, course4, course5, course6];
 
 
 function getBulletinDataNiceFormat() {
-    createUniOptions();
 
     //EXAMPLE DATA
     var exampleData1 = {Title:"Covid-19 announcement", Name:"Professor John", University:"Cornell",

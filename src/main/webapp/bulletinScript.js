@@ -12,49 +12,78 @@ function loadDepartments() {
     console.log(departmentsArr);
     const bulletinContainer = document.getElementById('bulletin-new-container');
     for (i = 0; i < departmentsArr.length; i++) {
+        //title
         var departmentTitle = document.createElement("h4");
         departmentTitle.innerHTML = departmentsArr[i].name;
+        //departmentTitle.style.marginTop = "70px";
         console.log(departmentsArr[i]);
         bulletinContainer.appendChild(departmentTitle);
+        //posts
         createDepartmentPosts(departmentsArr[i], departmentTitle);
+        bulletinContainer.appendChild(document.createElement("BR"));
+        //form
+        var header = document.createElement("h5");
+        header.innerHTML = "Create a post in " + departmentsArr[i].name;
+        bulletinContainer.appendChild(header);
+        bulletinContainer.appendChild(document.createElement("BR"))
         bulletinContainer.appendChild(createPostLink(departmentsArr[i]));
-        var spacer = document.createElement("BR");
+        //spacer
+        var spacer = document.createElement("hr");
+        spacer.style.marginTop = "40px";
+        spacer.style.marginBottom = "40px";
         bulletinContainer.appendChild(spacer);
-
     }
 }
 function createPostLink(currDepartment) {
+
     var f = document.createElement("form");
     f.setAttribute('method',"POST");
     f.setAttribute('action',"/departmentPostTest");
 
-    var i = document.createElement("input"); //input element, text
-    i.setAttribute('type',"text");
-    i.setAttribute('name',"title");
-    i.setAttribute('placeholder', "Title");
+    //title
+    var titleDiv = document.createElement("div");
+    titleDiv.setAttribute('class',"form-group");
 
-    var i2 = document.createElement("input"); //input element, text
-    i2.setAttribute('type',"text");
-    i2.setAttribute('name',"body");
-    i2.setAttribute('placeholder', "body");
+    var titleLabel = document.createElement("label");
+    titleLabel.innerHTML = "Title";
+    titleDiv.appendChild(titleLabel);
 
-    var i3 = document.createElement("input"); //input element, text
-    i3.setAttribute('type',"hidden");
-    i3.setAttribute('name',"departmentID");
-    i3.setAttribute('value',currDepartment.key);
+    var titleEntry = document.createElement("input"); //input element, text
+    titleEntry.setAttribute('type',"text");
+    titleEntry.setAttribute('name',"title");
+    titleEntry.setAttribute('class',"form-control");
+    titleEntry.setAttribute('placeholder', "Title");
+    titleDiv.appendChild(titleEntry);
+
+    //body
+    var bodyDiv = document.createElement("div");
+    bodyDiv.setAttribute('class',"form-group");
+
+    var bodyLabel = document.createElement("label");
+    bodyLabel.innerHTML = "Text:";
+    bodyDiv.appendChild(bodyLabel);
+
+    var bodyEntry = document.createElement("input"); //input element, text
+    bodyEntry.setAttribute('type',"text");
+    bodyEntry.setAttribute('name',"body");
+    bodyEntry.setAttribute('placeholder', "body");
+    bodyEntry.setAttribute('class',"form-control");
+    bodyDiv.appendChild(bodyEntry);
+
+    //hidden department entry with key already set as value
+    var departmentEntry = document.createElement("input"); //input element, text
+    departmentEntry.setAttribute('type',"hidden");
+    departmentEntry.setAttribute('name',"departmentID");
+    departmentEntry.setAttribute('value',currDepartment.key);
 
     var s = document.createElement("input"); //input element, Submit button
     s.setAttribute('type',"submit");
     s.setAttribute('value',"Submit");
 
-    f.appendChild(i);
-    f.appendChild(i2);
-    f.appendChild(i3);
+    f.appendChild(titleDiv);
+    f.appendChild(bodyDiv);
+    f.appendChild(departmentEntry);
     f.appendChild(s);
-    // var link = document.createElement("h6");
-    // var str = "Create a bulletin post for " + currDepartment.name;
-    // var result = str.link("/createPost.html");
-    // link.innerHTML = result;
     return f;
 }
 function createDepartmentPosts(departmentObject, departmentContainer) {    

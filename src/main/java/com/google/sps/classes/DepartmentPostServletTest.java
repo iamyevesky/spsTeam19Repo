@@ -57,7 +57,9 @@ public class DepartmentPostServletTest extends HttpServlet {
             return;
         }
         BulletinPost.addPostToDatabase(user, title, body, department);
-        response.sendRedirect("/departmentPostTest?departmentID="+department.getKey());
+        response.sendRedirect("/bulletin.html");
+        //TODO: does this affect anything?
+        //response.sendRedirect("/departmentPostTest?departmentID="+department.getKey());
     }
 
     @Override

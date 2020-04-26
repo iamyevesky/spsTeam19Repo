@@ -1,37 +1,3 @@
-var course1 = {
-    name: "CS 1301",
-    department: "College of Computing",
-    college: "Georgia Tech",
-};
-
-var course2 = {
-    name: "CS 1331",
-    department: "College of Computing",
-    college: "Georgia Tech",
-};
-var course3 = {
-    name: "Math 2550",
-    department: "Mathematics",
-    college: "Georgia Tech",
-};
-var course4 = {
-    name: "LMC 1301",
-    department: "Arts",
-    college: "UGA",
-};
-
-var course5 = {
-    name: "LMC 3000",
-    department: "Arts",
-    college: "UGA",
-};
-var course6 = {
-    name: "Film 2120",
-    department: "Film",
-    college: "UGA",
-};
-
-var exampleBackend = [course1, course2, course3, course4, course5, course6];
 var jsonObject;
 
 function loadBulletinPage() {
@@ -49,11 +15,47 @@ function loadDepartments() {
         var departmentTitle = document.createElement("h4");
         departmentTitle.innerHTML = departmentsArr[i].name;
         console.log(departmentsArr[i]);
-        createDepartmentPosts(departmentsArr[i], departmentTitle);
         bulletinContainer.appendChild(departmentTitle);
+        createDepartmentPosts(departmentsArr[i], departmentTitle);
+        bulletinContainer.appendChild(createPostLink(departmentsArr[i]));
         var spacer = document.createElement("BR");
         bulletinContainer.appendChild(spacer);
+
     }
+}
+function createPostLink(currDepartment) {
+    var f = document.createElement("form");
+    f.setAttribute('method',"POST");
+    f.setAttribute('action',"/departmentPostTest");
+
+    var i = document.createElement("input"); //input element, text
+    i.setAttribute('type',"text");
+    i.setAttribute('name',"title");
+    i.setAttribute('placeholder', "Title");
+
+    var i2 = document.createElement("input"); //input element, text
+    i2.setAttribute('type',"text");
+    i2.setAttribute('name',"body");
+    i2.setAttribute('placeholder', "body");
+
+    var i3 = document.createElement("input"); //input element, text
+    i3.setAttribute('type',"hidden");
+    i3.setAttribute('name',"departmentID");
+    i3.setAttribute('value',currDepartment.key);
+
+    var s = document.createElement("input"); //input element, Submit button
+    s.setAttribute('type',"submit");
+    s.setAttribute('value',"Submit");
+
+    f.appendChild(i);
+    f.appendChild(i2);
+    f.appendChild(i3);
+    f.appendChild(s);
+    // var link = document.createElement("h6");
+    // var str = "Create a bulletin post for " + currDepartment.name;
+    // var result = str.link("/createPost.html");
+    // link.innerHTML = result;
+    return f;
 }
 function createDepartmentPosts(departmentObject, departmentContainer) {    
     fetch("/departmentPostTest?departmentID="+departmentObject.key).then(response => response.json()).then(object =>

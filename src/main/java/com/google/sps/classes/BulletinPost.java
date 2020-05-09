@@ -22,15 +22,15 @@ import java.util.ArrayList;
 public final class BulletinPost{
     private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private final String title;
-    private final Department department;
+    private final College college;
     private final User user;
     private final String body;
     private final Timestamp date;
 
-    private BulletinPost(User user, String title, String body, Department department){
+    private BulletinPost(User user, String title, String body){
         this.title = title;
         this.user = user;
-        this.department = department;
+        this.college = user.getCollege();
         this.body = body;
         this.date = Timestamp.now();
     }
@@ -40,25 +40,27 @@ public final class BulletinPost{
         post.setProperty("title", this.title);
         post.setProperty("body", this.body);
         post.setProperty("timestamp", this.date.toDate());
-        post.setProperty("departmentID", KeyFactory.stringToKey(this.department.getKey()));
+        post.setProperty("collegeID", KeyFactory.stringToKey(this.college.getKey()));
         post.setProperty("userID", KeyFactory.stringToKey(this.user.getKey()));
         datastore.put(post);
     }
 
     private static BulletinPost getPost(Entity entity) throws EntityNotFoundException{
-        return new BulletinPost(User.getUser((Key) entity.getProperty("userID")), (String) entity.getProperty("title"), (String) entity.getProperty("body"), Department.getDepartment((Key) entity.getProperty("departmentID")));
+        return new BulletinPost(User.getUser((Key) entity.getProperty("userID")), 
+        (String) entity.getProperty("title"), 
+        (String) entity.getProperty("body"));
     }
 
-    public static void addPostToDatabase(User user, String title, String body, Department department){
-        BulletinPost newPost = new BulletinPost(user, title, body, department);
+    public static void addPostToDatabase(User user, String title, String body){
+        BulletinPost newPost = new BulletinPost(user, title, body);
         newPost.saveToDataBase();
     }
 
-    public static ArrayList<BulletinPost> getPosts(Department department) throws EntityNotFoundException{
+    public static ArrayList<BulletinPost> getPosts(College college) throws EntityNotFoundException{
         Query query = 
         new Query("BulletinPost")
         .setFilter(new Query.
-        FilterPredicate("departmentID", Query.FilterOperator.EQUAL, KeyFactory.stringToKey(department.getKey())))
+        FilterPredicate("collegeID", Query.FilterOperator.EQUAL, KeyFactory.stringToKey(college.getKey())))
         .addSort("timestamp", SortDirection.ASCENDING);
         
         PreparedQuery result = datastore.prepare(query);

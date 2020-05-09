@@ -19,14 +19,15 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.util.*;
-@WebServlet("/addDepartment")
-public class AddDepartmentAndClassServlet extends HttpServlet {
+@WebServlet("/collegePost")
+public class CollegePostServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
-        if(!userService.isUserLoggedIn()){
-            response.sendRedirect("/startup");
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (!userService.isUserLoggedIn())
+        {
+            response.sendRedirect("/index.html");
             return;
         }
 
@@ -37,32 +38,39 @@ public class AddDepartmentAndClassServlet extends HttpServlet {
         }
         catch(EntityNotFoundException e)
         {
-            response.sendRedirect("/startup");
-            System.out.println("No user found in /addDepartment");
+            response.sendRedirect("/index.html");
+            System.out.println("No user found in /collegePost");
             return;
         }
+        String title = request.getParameter("title");
+        String body = request.getParameter("body");
+        BulletinPost.addPostToDatabase(user, title, body);
+        response.sendRedirect("/bulletin.html");
+    }
 
-        Department dept = Department.getDepartmentTest(user.getCollege());
-        ClassObject classObject = ClassObject.getClassObjectTest(user.getCollege(), dept);
-
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json; charset=utf-8");
+        College college = null;
         try
         {
-            configure(user, dept, classObject);
+            college = College.getCollege(KeyFactory.stringToKey(request.getParameter("collegeID")));
         }
         catch(EntityNotFoundException e)
         {
-            response.sendRedirect("/startup");
+            response.sendRedirect("/bulletin.html");
+            System.out.println("No college found in /collegePost");
+            return;
         }
-        response.sendRedirect("/startup");
+        
+        try
+        {
+            response.getWriter().println(college.getPostsJson());
+        }
+        catch(EntityNotFoundException e)
+        {
+            System.out.println("Failure getting posts");
+        }
     }
 
-    private void configure(User user, Department department, ClassObject classObject) throws EntityNotFoundException{
-        user.addDepartment(department);
-        user.addClassObject(classObject);
-        department.addStudent(user);
-        classObject.addStudent(user);
-        user.updateDatabase();
-        department.updateDatabase();
-        classObject.updateDatabase();
-    }
 }

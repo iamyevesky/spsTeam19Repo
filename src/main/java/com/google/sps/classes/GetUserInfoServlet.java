@@ -25,14 +25,13 @@ public class GetUserInfoServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
         response.setContentType("application/json; charset=utf-8");
         PrintWriter out = response.getWriter();
         if(!userService.isUserLoggedIn()){
             Gson gson = new Gson();
-            User _user = User.createUser("doesnotexist@gmail.com", "N/A", College.getCollegeTest(), false);
+            User _user = User.createUser("doesnotexist@gmail.com", "N/A", College.getCollegeTest());
             out.println(gson.toJson(_user));
             return;
         }
@@ -52,7 +51,7 @@ public class GetUserInfoServlet extends HttpServlet {
 
         if(user == null){
             Gson gson = new Gson();
-            User _user = User.createUser("doesnotexist@gmail.com", "N/A", College.getCollegeTest(), false);
+            User _user = User.createUser("doesnotexist@gmail.com", "N/A", College.getCollegeTest());
             out.println(gson.toJson(_user));
             return;
         }

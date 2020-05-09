@@ -38,16 +38,10 @@ public final class College{
         return this.key;
     }
 
-    public String getAllDepartmentsJson() throws EntityNotFoundException{
-        Query query =
-        new Query("Department").setFilter(new Query.FilterPredicate("collegeID", Query.FilterOperator.EQUAL, this.key));
-        PreparedQuery result = datastore.prepare(query);
-        ArrayList<Department> deptList = new ArrayList<Department>();
-        for (Entity entity : result.asIterable()){
-            deptList.add(Department.getDepartment(entity.getKey()));    
-        }
+    public String getPostsJson() throws EntityNotFoundException{
         Gson gson = new Gson();
-        return gson.toJson(deptList);
+        ArrayList<BulletinPost> list = BulletinPost.getPosts(this);
+        return gson.toJson(list);
     }
 
     public static College getCollege(Key key) throws EntityNotFoundException{
@@ -57,7 +51,7 @@ public final class College{
         return output;
     }
 
-    public static String getAllCollegesJSON() throws EntityNotFoundException{
+    public static String getAllCollegesJson() throws EntityNotFoundException{
         Query query = new Query("College");
         PreparedQuery result = datastore.prepare(query);
         ArrayList<College> output = new ArrayList<College>();
@@ -66,6 +60,12 @@ public final class College{
         }
         Gson gson = new Gson();
         return gson.toJson(output);
+    }
+
+    public static void saveCollege(String name){
+        Entity entity = new Entity("College");
+        entity.setProperty("name", name);
+        datastore.put(entity);
     }
     //END OF PRODUCTION CODE
 

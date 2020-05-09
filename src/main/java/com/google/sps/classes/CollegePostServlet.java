@@ -19,8 +19,8 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.util.*;
-@WebServlet("/departmentPostTest")
-public class DepartmentPostServletTest extends HttpServlet {
+@WebServlet("/collegePost")
+public class CollegePostServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
 
     @Override
@@ -38,47 +38,34 @@ public class DepartmentPostServletTest extends HttpServlet {
         }
         catch(EntityNotFoundException e)
         {
-            response.sendRedirect("/startup");
-            System.out.println("No user found in /departmentPost");
+            response.sendRedirect("/index.html");
+            System.out.println("No user found in /collegePost");
             return;
         }
-
-        Department department = null;
         String title = request.getParameter("title");
         String body = request.getParameter("body");
-        try
-        {
-            department = Department.getDepartment(KeyFactory.stringToKey(request.getParameter("departmentID")));
-        }
-        catch(EntityNotFoundException e)
-        {
-            response.sendRedirect("/startup");
-            System.out.println("No department found in /departmentPost");
-            return;
-        }
-        BulletinPost.addPostToDatabase(user, title, body, department);
+        BulletinPost.addPostToDatabase(user, title, body);
         response.sendRedirect("/bulletin.html");
-        //TODO: does this affect anything?
-        //response.sendRedirect("/departmentPostTest?departmentID="+department.getKey());
     }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("text/html");
-        Department department = null;
+        response.setContentType("application/json; charset=utf-8");
+        College college = null;
         try
         {
-            department = Department.getDepartment(KeyFactory.stringToKey(request.getParameter("departmentID")));
+            college = College.getCollege(KeyFactory.stringToKey(request.getParameter("collegeID")));
         }
         catch(EntityNotFoundException e)
         {
             response.sendRedirect("/bulletin.html");
-            System.out.println("No department found in /departmentPost");
+            System.out.println("No college found in /collegePost");
             return;
         }
+        
         try
         {
-            response.getWriter().println(department.getPostsJson());
+            response.getWriter().println(college.getPostsJson());
         }
         catch(EntityNotFoundException e)
         {

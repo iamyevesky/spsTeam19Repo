@@ -26,6 +26,7 @@ public class StartupServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        LoadCollege.loadColleges();
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
         String loginUrl = userService.createLoginURL("/startup");
@@ -34,7 +35,7 @@ public class StartupServlet extends HttpServlet {
         if(!userService.isUserLoggedIn()){
             out.println("<p>You are not logged in. Log in to post comments.</p>");
             out.println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
-            out.println("<p>Create an account <a href=\"" + createAccountUrl + "\">here</a>.</p>");
+            out.println("<p>Create an account <a href=\"/createAccount\">here</a>.</p>");
             return;
         }
         String email = userService.getCurrentUser().getEmail();
@@ -59,25 +60,29 @@ public class StartupServlet extends HttpServlet {
         }
         out.println("<p>Welcome User: "+ email+".</p>");
         out.println("<p>Your data has been registered in the database.</p>");
-        out.println("<p>"+User.convertToJSON(user)+"</p>");
+        out.println("<p>"+user.convertToJson()+"</p>");
         out.println("<p>Log out <a href=\""+logoutUrl+"\">here</a>.</p>");
-        out.println("");
-        out.println("<form action = \"/addDepartment\" method = \"POST\">"+
-        "<input type=\"hidden\" name = \"department\" value = \"0\">"+
-        "<input type=\"hidden\" name = \"class\" value = \"0\">"+
-        "<button type=\"submit\">Add Department & Class</button>"+
-        "</form>");
-        out.println("<form action = \"/departmentPostTest\" method = \"POST\">"+
+        out.println("<p>Post comments below</p>");
+        out.println("<form action = \"/collegePostTest\" method = \"POST\">"+
         "<label for = \"username\">Title:</label>"+
         "<input type=\"text\" name=\"title\" autofocus>"+
         "<br>"+
         "<label for = \"username\">Body:</label>"+
         "<input type=\"text\" name=\"body\" >"+
         "<br>"+
-        "<label for = \"username\">DepartmentID:</label>"+
-        "<input type=\"text\" name=\"departmentID\">"+
-        "<br>"+
-        "<input type = \"submit\">"+
+        "<input type=\"submit\">"+
         "</form>");
+        String outString = "";
+        /*
+        try
+        {
+            outString = College.getAllCollegesJson();
+        }
+        catch(EntityNotFoundException e)
+        {
+
+        }
+        */
+        out.println("<p>"+outString+"</p>");
     }
 }

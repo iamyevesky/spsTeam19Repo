@@ -1,144 +1,124 @@
-var course1 = {
-    name: "CS 1301",
-    department: "College of Computing",
-    college: "Georgia Tech",
-};
+var jsonObject;
 
-var course2 = {
-    name: "CS 1331",
-    department: "College of Computing",
-    college: "Georgia Tech",
-};
-var course3 = {
-    name: "Math 2550",
-    department: "Mathematics",
-    college: "Georgia Tech",
-};
-var course4 = {
-    name: "LMC 1301",
-    department: "Arts",
-    college: "UGA",
-};
-
-var course5 = {
-    name: "LMC 3000",
-    department: "Arts",
-    college: "UGA",
-};
-var course6 = {
-    name: "Film 2120",
-    department: "Film",
-    college: "UGA",
-};
-
-var exampleBackend = [course1, course2, course3, course4, course5, course6];
-
-
-function getBulletinDataNiceFormat() {
-    createUniOptions();
-
-    //EXAMPLE DATA
-    var exampleData1 = {Title:"Covid-19 announcement", Name:"Professor John", University:"Cornell",
-    Department:"LMC", Text:"I will give everyone an A for this class"};
-
-    var exampleData2 = {Title:"Chatroom Office Hours", Name:"Professor Elliot", University:"Georgia Tech",
-    Department:"College of Computing", Text:"I will be online to answer any chats in the CS 1301 chatroom M-F from 11:00 am to 3:00 pm"};
-
-    var exampleBackend = [exampleData1, exampleData2];
-
-    //building list of posts in html bulletin page
+function loadBulletinPage() {
+    fetch("/getInfo").then(response => response.json()).then(object =>
+    {
+        jsonObject = object;
+        loadDepartments();
+    });
+}
+function loadDepartments() {
+    var departmentsArr = jsonObject.departments;
+    console.log(departmentsArr);
     const bulletinContainer = document.getElementById('bulletin-new-container');
-
-    for (i = 0; i < exampleBackend.length; i++) {
-        var singleCard = document.createElement("div");
-        singleCard.className = "card";
-        singleCard.style.width = "50rem";
-        singleCard.style.margin = "0 auto";
-        singleCard.style.marginTop = "30px";
-
-        var cardBody = document.createElement("div");
-        cardBody.className = "card-body";
-        
-        singleCard.appendChild(cardBody);
-
-        const currPost = exampleBackend[i];
-        createBody(cardBody, currPost);
-        bulletinContainer.appendChild(singleCard)
+    for (i = 0; i < departmentsArr.length; i++) {
+        //title
+        var departmentTitle = document.createElement("h4");
+        departmentTitle.innerHTML = departmentsArr[i].name;
+        //departmentTitle.style.marginTop = "70px";
+        console.log(departmentsArr[i]);
+        bulletinContainer.appendChild(departmentTitle);
+        //posts
+        createDepartmentPosts(departmentsArr[i], departmentTitle);
+        bulletinContainer.appendChild(document.createElement("BR"));
+        //form
+        var header = document.createElement("h5");
+        header.innerHTML = "Create a post in " + departmentsArr[i].name;
+        bulletinContainer.appendChild(header);
+        bulletinContainer.appendChild(document.createElement("BR"))
+        bulletinContainer.appendChild(createPostLink(departmentsArr[i]));
+        //spacer
+        var spacer = document.createElement("hr");
+        spacer.style.marginTop = "40px";
+        spacer.style.marginBottom = "40px";
+        bulletinContainer.appendChild(spacer);
     }
 }
+function createPostLink(currDepartment) {
+
+    var f = document.createElement("form");
+    f.setAttribute('method',"POST");
+    f.setAttribute('action',"/departmentPostTest");
+
+    //title
+    var titleDiv = document.createElement("div");
+    titleDiv.setAttribute('class',"form-group");
+
+    var titleLabel = document.createElement("label");
+    titleLabel.innerHTML = "Title";
+    titleDiv.appendChild(titleLabel);
+
+    var titleEntry = document.createElement("input"); //input element, text
+    titleEntry.setAttribute('type',"text");
+    titleEntry.setAttribute('name',"title");
+    titleEntry.setAttribute('class',"form-control");
+    titleEntry.setAttribute('placeholder', "Title");
+    titleDiv.appendChild(titleEntry);
+
+    //body
+    var bodyDiv = document.createElement("div");
+    bodyDiv.setAttribute('class',"form-group");
+
+    var bodyLabel = document.createElement("label");
+    bodyLabel.innerHTML = "Text:";
+    bodyDiv.appendChild(bodyLabel);
+
+    var bodyEntry = document.createElement("input"); //input element, text
+    bodyEntry.setAttribute('type',"text");
+    bodyEntry.setAttribute('name',"body");
+    bodyEntry.setAttribute('placeholder', "body");
+    bodyEntry.setAttribute('class',"form-control");
+    bodyDiv.appendChild(bodyEntry);
+
+    //hidden department entry with key already set as value
+    var departmentEntry = document.createElement("input"); //input element, text
+    departmentEntry.setAttribute('type',"hidden");
+    departmentEntry.setAttribute('name',"departmentID");
+    departmentEntry.setAttribute('value',currDepartment.key);
+
+    var s = document.createElement("input"); //input element, Submit button
+    s.setAttribute('type',"submit");
+    s.setAttribute('value',"Submit");
+
+    f.appendChild(titleDiv);
+    f.appendChild(bodyDiv);
+    f.appendChild(departmentEntry);
+    f.appendChild(s);
+    return f;
+}
+function createDepartmentPosts(departmentObject, departmentContainer) {    
+    fetch("/departmentPostTest?departmentID="+departmentObject.key).then(response => response.json()).then(object =>
+    {
+        console.log(object);
+        for (i = 0; i < object.length; i++) {
+            var singleCard = document.createElement("div");
+            singleCard.className = "card";
+            singleCard.style.width = "50rem";
+            singleCard.style.margin = "0 auto";
+            singleCard.style.marginTop = "30px";
+
+            var cardBody = document.createElement("div");
+            cardBody.className = "card-body";
+        
+            singleCard.appendChild(cardBody);
+
+            const currPost = object[i];
+            createBody(cardBody, currPost);
+            departmentContainer.appendChild(singleCard);
+        }
+    });
+}
+
 function createBody(bodyOutline, currPost) {
     var title = document.createElement("h5");
     title.className = "card-title";
-    title.innerText = currPost.Title;
-
-    var name = document.createElement("h6");
-    name.className = "card-subtitle mb-2 text-muted";
-    name.innerText = currPost.Name;
-
-    var uni = document.createElement("h6");
-    uni.className = "card-subtitle mb-2 text-muted";
-    uni.innerText = currPost.University;
-
-    var department = document.createElement("h6");
-    department.className = "card-subtitle mb-2 text-muted";
-    department.innerText = currPost.Department;
+    title.innerText = currPost.title;
 
     var text = document.createElement("p");
     text.className = "card-text";
     text.style.textAlign = "center";
-    text.innerText = currPost.Text;
+    text.innerText = currPost.body;
 
     bodyOutline.appendChild(title);
-    bodyOutline.appendChild(name);
-    bodyOutline.appendChild(uni);
-    bodyOutline.appendChild(department);
     bodyOutline.appendChild(text);
-}
-
-function load_departments(uniID, depID) {
-
-    //load departments based on college name
-    var universityValue = document.getElementById(uniID).value;
-    var arrDepartments = getDepartments(universityValue);
-    var string="<option></option>";       
-    for(i = 0; i < arrDepartments.length; i++) {
-        string += "<option value='" + arrDepartments[i] + "'>" + arrDepartments[i] + "</option>";
-    }
-    document.getElementById(depID).innerHTML = string;
-}
-
-function getDepartments(uniName) {
-
-    var allDepartments = [];
-    for (i = 0; i < exampleBackend.length; i++) {
-        //only check departments of same college
-        if (exampleBackend[i].college == uniName) {
-            currDepName = exampleBackend[i].department;
-
-            //check to see if curr department name has already been added to list
-            if (!allDepartments.includes(currDepName)) {
-                allDepartments.push(currDepName);
-            }
-        }
-        
-    }
-    return allDepartments;
-}
-
-//load based on backend 
-function createUniOptions() {
-    var uniDropdown = document.getElementById("universitySelection");
-    var universityStrings = "";
-    var allUniversities = [];
-    for (i = 0; i < exampleBackend.length; i++) {
-        currUniName = exampleBackend[i].college;
-
-        //check to see if curr university name has already been added to dropdown
-        if (!allUniversities.includes(currUniName)) {
-            allUniversities.push(currUniName);
-            universityStrings += "<option value='" + currUniName + "'>" + currUniName + "</option>";
-        }
-        
-    }
-    uniDropdown.innerHTML += universityStrings;
 }

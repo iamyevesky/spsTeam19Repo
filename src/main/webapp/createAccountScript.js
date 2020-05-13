@@ -3,7 +3,7 @@ function getInfo(){
     {
         var infoSection = document.getElementById("infoSection");
         buildList(infoSection, object);
-    })
+    });
 }
 
 function buildList(htmlObject, jsonObject){

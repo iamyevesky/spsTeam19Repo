@@ -28,12 +28,31 @@ public class CreateAccountServlet extends HttpServlet {
         response.setContentType("application/json; charset=utf-8");
         PrintWriter out = response.getWriter();
         if(!userService.isUserLoggedIn()){
-            ArrayList<String> array = new ArrayList<>();
-            Gson gson = new Gson();
-            out.println(gson.toJson(array));
+            response.sendRedirect("/index.html");
+            return;
         }
         else
         {
+            String email = userService.getCurrentUser().getEmail();
+            User user = null;
+            try
+            {
+                user = User.getUser(email);
+            }
+            catch(EntityNotFoundException e)
+            {
+
+            }
+            catch(ClassCastException f)
+            {
+                user = null;
+            }
+
+            if(user != null)
+            {
+                response.sendRedirect("/chat.html");
+                return;
+            }
             try
             {
                 out.println(College.getAllCollegesJson());
@@ -62,6 +81,6 @@ public class CreateAccountServlet extends HttpServlet {
         if (newUser != null){
             newUser.saveToDatabase();
         }
-        response.sendRedirect("/startup");
+        response.sendRedirect("/chat.html");
     }
 }

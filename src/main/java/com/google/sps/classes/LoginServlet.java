@@ -21,20 +21,20 @@ import com.google.appengine.api.users.UserServiceFactory;
 import java.util.*;
 
 @WebServlet("/login")
-public class LoginServelt extends HttpServlet {
+public class LoginServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
-        LoadCollege.loadCollege();
+        LoadCollege.loadColleges();
         response.setContentType("application/json; charset=utf-8");
         PrintWriter out = response.getWriter();
         if(!userService.isUserLoggedIn()){
             Gson gson = new Gson();
-            ArrayList<String> loginStrings = ArrayList<>();
+            ArrayList<String> loginStrings = new ArrayList<>();
             String loginUrl = userService.createLoginURL("/chat.html");
-            String createURL = userService.createLogoutURL("/createAccount.html");
+            String createURL = userService.createLoginURL("/createAccount.html");
             loginStrings.add(loginUrl);
             loginStrings.add(createURL);
             out.println(gson.toJson(loginStrings));

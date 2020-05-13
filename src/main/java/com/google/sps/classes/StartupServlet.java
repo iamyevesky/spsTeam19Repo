@@ -31,11 +31,11 @@ public class StartupServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         String loginUrl = userService.createLoginURL("/startup");
         String logoutUrl = userService.createLogoutURL("/startup");
-        String createAccountUrl = userService.createLoginURL("/createAccount");
+        String createAccountUrl = userService.createLoginURL("/createAccount.html");
         if(!userService.isUserLoggedIn()){
             out.println("<p>You are not logged in. Log in to post comments.</p>");
             out.println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
-            out.println("<p>Create an account <a href=\"/createAccount\">here</a>.</p>");
+            out.println("<p>Create an account <a href=\"/createAccount.html\">here</a>.</p>");
             return;
         }
         String email = userService.getCurrentUser().getEmail();
@@ -54,7 +54,7 @@ public class StartupServlet extends HttpServlet {
 
         if(user == null){
             out.println("<p>Welcome User: "+ email+".</p>");
-            out.println("<p>Create an account <a href=\"/createAccount\">here</a>.</p>");
+            out.println("<p>Create an account <a href=\"/createAccount.html\">here</a>.</p>");
             out.println("<p>Log out <a href=\""+logoutUrl+"\">here</a>.</p>");
             return;
         }

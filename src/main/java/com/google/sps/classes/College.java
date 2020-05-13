@@ -60,6 +60,7 @@ public final class College{
 
     public static String getAllCollegesJson() throws EntityNotFoundException{
         Query query = new Query("College");
+        query.addSort("name", Query.SortDirection.ASCENDING);
         PreparedQuery result = datastore.prepare(query);
         ArrayList<College> output = new ArrayList<College>();
         for (Entity entity : result.asIterable()){

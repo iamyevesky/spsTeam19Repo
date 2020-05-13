@@ -34,7 +34,14 @@ public class CreateAccountServlet extends HttpServlet {
         }
         else
         {
-            out.println(College.getAllCollegesJson());
+            try
+            {
+                out.println(College.getAllCollegesJson());
+            }
+            catch(EntityNotFoundException e)
+            {
+
+            }
         }
     }
     

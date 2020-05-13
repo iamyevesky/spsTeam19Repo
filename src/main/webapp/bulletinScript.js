@@ -4,7 +4,40 @@ function loadBulletinPage() {
     fetch("/getInfo").then(response => response.json()).then(object =>
     {
         jsonObject = object;
-        loadDepartments();
+        loadCollegePosts();
+    });
+}
+function loadCollegePosts() {
+    var collegeKey = jsonObject.college.key;
+    const bulletinContainer = document.getElementById('bulletin-new-container');
+    var collegeHeader = document.createElement("h3");
+    collegeHeader.innerHTML = jsonObject.college.name;
+    collegeHeader.style.marginTop = "25px";
+    collegeHeader.style.marginBottom = "25px";
+    collegeHeader.style.textAlign = "center";
+    bulletinContainer.appendChild(collegeHeader);
+
+
+    fetch("/collegePostTest?collegeID="+collegeKey).then(response => response.json()).then(object =>
+    {
+        console.log(object);
+        for (i = 0; i < object.length; i++) {
+            var singleCard = document.createElement("div");
+            singleCard.className = "card";
+            singleCard.style.width = "50rem";
+            singleCard.style.margin = "0 auto";
+            singleCard.style.marginTop = "30px";
+
+            var cardBody = document.createElement("div");
+            cardBody.className = "card-body";
+        
+            singleCard.appendChild(cardBody);
+
+            const currPost = object[i];
+            createBody(cardBody, currPost);
+            bulletinContainer.appendChild(singleCard);
+        }
+        
     });
 }
 function loadDepartments() {
@@ -85,28 +118,6 @@ function createPostLink(currDepartment) {
     f.appendChild(departmentEntry);
     f.appendChild(s);
     return f;
-}
-function createDepartmentPosts(departmentObject, departmentContainer) {    
-    fetch("/departmentPostTest?departmentID="+departmentObject.key).then(response => response.json()).then(object =>
-    {
-        console.log(object);
-        for (i = 0; i < object.length; i++) {
-            var singleCard = document.createElement("div");
-            singleCard.className = "card";
-            singleCard.style.width = "50rem";
-            singleCard.style.margin = "0 auto";
-            singleCard.style.marginTop = "30px";
-
-            var cardBody = document.createElement("div");
-            cardBody.className = "card-body";
-        
-            singleCard.appendChild(cardBody);
-
-            const currPost = object[i];
-            createBody(cardBody, currPost);
-            departmentContainer.appendChild(singleCard);
-        }
-    });
 }
 
 function createBody(bodyOutline, currPost) {

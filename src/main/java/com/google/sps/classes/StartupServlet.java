@@ -54,7 +54,7 @@ public class StartupServlet extends HttpServlet {
 
         if(user == null){
             out.println("<p>Welcome User: "+ email+".</p>");
-            out.println("<p>Create an account <a href=\"" + createAccountUrl + "\">here</a>.</p>");
+            out.println("<p>Create an account <a href=\"/createAccount\">here</a>.</p>");
             out.println("<p>Log out <a href=\""+logoutUrl+"\">here</a>.</p>");
             return;
         }
@@ -72,17 +72,5 @@ public class StartupServlet extends HttpServlet {
         "<br>"+
         "<input type=\"submit\">"+
         "</form>");
-        String outString = "";
-        /*
-        try
-        {
-            outString = College.getAllCollegesJson();
-        }
-        catch(EntityNotFoundException e)
-        {
-
-        }
-        */
-        out.println("<p>"+outString+"</p>");
     }
 }

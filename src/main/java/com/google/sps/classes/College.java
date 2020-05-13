@@ -51,6 +51,13 @@ public final class College{
         return output;
     }
 
+    public static College getCollege(String key) throws EntityNotFoundException{
+        Entity entity = datastore.get(KeyFactory.stringToKey(key));
+        College output = new College((String) entity.getProperty("name"));
+        output.setKey(entity.getKey());
+        return output;
+    }
+
     public static String getAllCollegesJson() throws EntityNotFoundException{
         Query query = new Query("College");
         PreparedQuery result = datastore.prepare(query);

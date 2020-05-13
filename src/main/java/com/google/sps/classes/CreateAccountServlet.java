@@ -25,25 +25,32 @@ public class CreateAccountServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("text/html");
+        response.setContentType("application/json; charset=utf-8");
         PrintWriter out = response.getWriter();
         if(!userService.isUserLoggedIn()){
-            response.sendRedirect("/startup");
-            return;
+            ArrayList<String> array = new ArrayList<>();
+            Gson gson = new Gson();
+            out.println(gson.toJson(array));
         }
-        out.println("<p>Hello!</p>");
-        out.println("<p>Enter details below.</p>");
-        out.println("<form action = \"/createAccount\" method = \"POST\">"+
-        "<label for = \"username\">Name:</label>"+
-        "<input type=\"text\" name=\"username\" autofocus>"+
-        "<input type = \"submit\">"+
-        "</form>");
+        else
+        {
+            out.println(College.getAllCollegesJson());
+        }
     }
-
+    
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
         String name = request.getParameter("username");
-        College college = College.getCollegeTest();
+        String key =  request.getParameter("collegeList");
+        College college = null;
+        try
+        {
+            college = College.getCollege(key);
+        }
+        catch(EntityNotFoundException e)
+        {
+            response.sendRedirect("/createAccount.html");
+        }
         User newUser = User.createUser(userService.getCurrentUser().getEmail(), name, college);
         if (newUser != null){
             newUser.saveToDatabase();

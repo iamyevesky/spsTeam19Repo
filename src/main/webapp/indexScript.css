@@ -1,52 +1,35 @@
-.login-container{
-    margin-top: 5%;
-    margin-bottom: 5%;
+:root {
+  --input-padding-x: 1.5rem;
+  --input-padding-y: .75rem;
 }
-.login-form-1{
-    padding: 5%;
-    box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
+
+body {
+  background: #ebf0f0;
 }
-.login-form-1 h3{
-    text-align: center;
-    color: #333;
+
+.card-signin {
+  border: 0;
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
 }
-.login-form-2{
-    padding: 5%;
-    background: #05728f;
-    box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
+
+.card-signin .card-title {
+  margin-bottom: 2rem;
+  font-weight: 300;
+  font-size: 1.5rem;
 }
-.login-form-2 h3{
-    text-align: center;
-    color: #fff;
+
+.card-signin .card-body {
+  padding: 2rem;
 }
-.login-container form{
-    padding: 10%;
+
+.btn-google {
+  color: white;
+  background-color: #ce5146;
+  border-radius: 20px;
 }
-.btnSubmit
-{
-    width: 50%;
-    border-radius: 1rem;
-    padding: 1.5%;
-    border: none;
-    cursor: pointer;
-}
-.login-form-1 .btnSubmit{
-    font-weight: 600;
-    color: #fff;
-    background-color: #05728f;
-}
-.login-form-2 .btnSubmit{
-    font-weight: 600;
-    color: #05728f;
-    background-color: #fff;
-}
-.login-form-2 .ForgetPwd{
-    color: #fff;
-    font-weight: 600;
-    text-decoration: none;
-}
-.login-form-1 .ForgetPwd{
-    color: #05728f;
-    font-weight: 600;
-    text-decoration: none;
+.btn-create {
+  color: white;
+  background-color: #468fc0;
+  border-radius: 20px;
 }

@@ -38,10 +38,9 @@ public final class College{
         return this.key;
     }
 
-    public String getPostsJson() throws EntityNotFoundException{
-        Gson gson = new Gson();
+    public ArrayList<BulletinPost> getPosts() throws EntityNotFoundException{
         ArrayList<BulletinPost> list = BulletinPost.getPosts(this);
-        return gson.toJson(list);
+        return list;
     }
 
     public static College getCollege(Key key) throws EntityNotFoundException{

@@ -3,6 +3,13 @@ package com.google.sps.classes;
 import java.io.IOException;
 import java.io.PrintWriter;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonNull;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,15 +26,18 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.util.*;
-@WebServlet("/collegePost")
+@WebServlet("/getInfoPost")
 public class CollegePostServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
+    Gson gson;
+    JsonObject object;
+    String logout;
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!userService.isUserLoggedIn())
         {
-            response.sendRedirect("/index.html");
+            response.sendRedirect("/bulletin.html");
             return;
         }
 
@@ -38,8 +48,7 @@ public class CollegePostServlet extends HttpServlet {
         }
         catch(EntityNotFoundException e)
         {
-            response.sendRedirect("/index.html");
-            System.out.println("No user found in /collegePost");
+            response.sendRedirect("/bulletin.html");
             return;
         }
         String title = request.getParameter("title");
@@ -51,26 +60,61 @@ public class CollegePostServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json; charset=utf-8");
-        College college = null;
+        gson = new GsonBuilder().setPrettyPrinting().create();
+        object = new JsonObject();
+        logout = userService.createLogoutURL("/index.html");
+        object.addProperty("redirect", "/index.html");
+        object.addProperty("logout", logout);
+
+        if (!userService.isUserLoggedIn())
+        {
+            object.addProperty("status", false);
+            object.addProperty("register", false);
+            object.add("user", JsonNull.INSTANCE);
+            object.add("posts", JsonNull.INSTANCE);
+            response.getWriter().println(gson.toJson(object));
+            return;
+        }
+
+        User user = null;
         try
         {
-            college = College.getCollege(KeyFactory.stringToKey(request.getParameter("collegeID")));
+            user = user.getUser(userService.getCurrentUser().getEmail());
         }
         catch(EntityNotFoundException e)
         {
-            response.sendRedirect("/bulletin.html");
-            System.out.println("No college found in /collegePost");
+            object.addProperty("status", true);
+            object.addProperty("register", false);
+            object.add("user", JsonNull.INSTANCE);
+            object.add("posts", JsonNull.INSTANCE);
+            response.getWriter().println(gson.toJson(object));
             return;
         }
+
+        College college = user.getCollege();
         
         try
         {
-            response.getWriter().println(college.getPostsJson());
+            ArrayList<BulletinPost> array  = college.getPosts();
+            Type type = new TypeToken<ArrayList<BulletinPost>>(){}.getType();
+            JsonArray arrayJson = gson.toJsonTree(array, type).getAsJsonArray();
+            JsonObject userJson = gson.toJsonTree(user, User.class).getAsJsonObject();
+            object.addProperty("status", true);
+            object.addProperty("register", true);
+            object.add("user", userJson);
+            object.add("posts", arrayJson);
+            response.getWriter().println(gson.toJson(object));
+            return;
         }
         catch(EntityNotFoundException e)
         {
-            System.out.println("Failure getting posts");
+            JsonObject userJson = gson.toJsonTree(user, User.class).getAsJsonObject();
+            object.addProperty("status", true);
+            object.addProperty("register", true);
+            object.add("user", userJson);
+            object.add("posts", JsonNull.INSTANCE);
+            response.getWriter().println(gson.toJson(object));
+            return;
         }
     }
-
 }

@@ -27,55 +27,36 @@ public class CreateAccountServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json; charset=utf-8");
         PrintWriter out = response.getWriter();
-        if(!userService.isUserLoggedIn()){
-            response.sendRedirect("/index.html");
-            return;
-        }
-        else
+         try
         {
-            String email = userService.getCurrentUser().getEmail();
-            User user = null;
-            try
-            {
-                user = User.getUser(email);
-            }
-            catch(EntityNotFoundException e)
-            {
+            out.println(College.getAllCollegesJson());
+        }
+        catch(EntityNotFoundException e)
+        {
 
-            }
-            catch(ClassCastException f)
-            {
-                user = null;
-            }
-
-            if(user != null)
-            {
-                response.sendRedirect("/chat.html");
-                return;
-            }
-            try
-            {
-                out.println(College.getAllCollegesJson());
-            }
-            catch(EntityNotFoundException e)
-            {
-
-            }
         }
     }
-    
+
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
         String name = request.getParameter("username");
-        String key =  request.getParameter("collegeList");
+        String key =  request.getParameter("college");
         College college = null;
+
+        if (!userService.isUserLoggedIn())
+        {
+            response.sendRedirect("/index.html");
+            return;
+        }
+
         try
         {
             college = College.getCollege(key);
         }
         catch(EntityNotFoundException e)
         {
-            response.sendRedirect("/createAccount.html");
+            response.sendRedirect("/index.html");
+            return;
         }
         User newUser = User.createUser(userService.getCurrentUser().getEmail(), name, college);
         if (newUser != null){

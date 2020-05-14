@@ -5,6 +5,9 @@ import java.io.PrintWriter;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
@@ -25,30 +28,34 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.util.*;
 
-@WebServlet("/login")
+@WebServlet("/getInfoIndex")
 public class LoginServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    String login;
+    String logout;
+    Gson gson;
+    JsonObject object;
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
         LoadCollege.loadColleges();
         response.setContentType("application/json; charset=utf-8");
-        ArrayList<String> loginStrings = new ArrayList<>();
-        String loginUrl = userService.createLoginURL("/index.html");
-        String createURL = userService.createLoginURL("/index.html");
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Type type = new TypeToken<ArrayList<String>>(){}.getType();
-        JsonElement jsonElement = gson.toJsonTree(loginStrings, type);
-        loginStrings.add(loginUrl);
-        loginStrings.add(createURL);
+
+        login = userService.createLoginURL("/index.html");
+        logout = userService.createLogoutURL("/index.html");
+        gson = new GsonBuilder().setPrettyPrinting().create();
+        object = new JsonObject(); 
+
         PrintWriter out = response.getWriter();
         if(!userService.isUserLoggedIn()){
-            jsonElement.getAsJsonArray().add(true);
-            jsonElement.getAsJsonArray().add(true);
-            jsonElement.getAsJsonArray().add(loginUrl);
-            jsonElement.getAsJsonArray().add(createURL);
-            out.println(gson.toJson(jsonElement));
+            object.add("login", new JsonPrimitive(login));
+            object.add("logout", new JsonPrimitive(""));
+            object.add("status", new JsonPrimitive(false));
+            object.add("register", new JsonPrimitive(false));
+            object.add("user", JsonNull.INSTANCE);
+            object.add("continue", new JsonPrimitive(""));
+            out.println(gson.toJson(object));
             return;
         }
         String email = userService.getCurrentUser().getEmail();
@@ -59,26 +66,33 @@ public class LoginServlet extends HttpServlet {
         }
         catch(EntityNotFoundException e)
         {
-
+            object.add("login", new JsonPrimitive(""));
+            object.add("logout", new JsonPrimitive(logout));
+            object.add("status", new JsonPrimitive(true));
+            object.add("register", new JsonPrimitive(false));
+            object.add("user", JsonNull.INSTANCE);
+            object.add("continue", new JsonPrimitive(""));
+            out.println(gson.toJson(object));
+            return;
         }
         catch(ClassCastException f){
-            user = null;
+            object.add("login", new JsonPrimitive(""));
+            object.add("logout", new JsonPrimitive(logout));
+            object.add("status", new JsonPrimitive(true));
+            object.add("register", new JsonPrimitive(false));
+            object.add("user", JsonNull.INSTANCE);
+            object.add("continue", new JsonPrimitive(""));
+            out.println(gson.toJson(object));
+            return;
         }
 
-        if(user == null){
-            jsonElement.getAsJsonArray().add(false);
-            jsonElement.getAsJsonArray().add(true);
-            jsonElement.getAsJsonArray().add(loginUrl);
-            jsonElement.getAsJsonArray().add(createURL);
-            out.println(gson.toJson(jsonElement));
-        }
-        else
-        {
-            jsonElement.getAsJsonArray().add(false);
-            jsonElement.getAsJsonArray().add(false);
-            jsonElement.getAsJsonArray().add(loginUrl);
-            jsonElement.getAsJsonArray().add(createURL);
-            out.println(gson.toJson(jsonElement));
-        }
+        JsonObject userJson = gson.toJsonTree(user, User.class).getAsJsonObject();
+        object.add("login", new JsonPrimitive(""));
+        object.add("logout", new JsonPrimitive(logout));
+        object.add("status", new JsonPrimitive(true));
+        object.add("register", new JsonPrimitive(true));
+        object.add("user", userJson);
+        object.add("continue", new JsonPrimitive("/profile.html"));
+        out.println(gson.toJson(object));
     }
 }

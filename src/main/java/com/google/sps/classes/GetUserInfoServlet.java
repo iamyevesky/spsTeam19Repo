@@ -3,6 +3,13 @@ package com.google.sps.classes;
 import java.io.IOException;
 import java.io.PrintWriter;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonNull;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,19 +27,26 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.util.*;
 
-@WebServlet("/getInfo")
+@WebServlet("/getUserInfo")
 public class GetUserInfoServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    Gson gson;
+    JsonObject object;
+    String logout;
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
         response.setContentType("application/json; charset=utf-8");
         PrintWriter out = response.getWriter();
+        logout = userService.createLogoutURL("/index.html");
+        object.addProperty("redirect", "/index.html");
+        object.addProperty("logout", logout);
         if(!userService.isUserLoggedIn()){
-            Gson gson = new Gson();
-            User _user = User.createUser("doesnotexist@gmail.com", "N/A", College.getCollegeTest());
-            out.println(gson.toJson(_user));
+            object.addProperty("status", false);
+            object.addProperty("register", false);
+            object.add("user", JsonNull.INSTANCE);
+            response.getWriter().println(gson.toJson(object));
             return;
         }
         String email = userService.getCurrentUser().getEmail();
@@ -43,19 +57,25 @@ public class GetUserInfoServlet extends HttpServlet {
         }
         catch(EntityNotFoundException e)
         {
-
-        }
-        catch(ClassCastException f){
-            user = null;
-        }
-
-        if(user == null){
-            Gson gson = new Gson();
-            User _user = User.createUser("doesnotexist@gmail.com", "N/A", College.getCollegeTest());
-            out.println(gson.toJson(_user));
+            object.addProperty("status", true);
+            object.addProperty("register", false);
+            object.add("user", JsonNull.INSTANCE);
+            response.getWriter().println(gson.toJson(object));
             return;
         }
-        Gson gson = new Gson();
-        out.println(gson.toJson(user));
+        catch(ClassCastException f){
+            object.addProperty("status", true);
+            object.addProperty("register", false);
+            object.add("user", JsonNull.INSTANCE);
+            response.getWriter().println(gson.toJson(object));
+            return;
+        }
+
+        JsonObject userJson = gson.toJsonTree(user, User.class).getAsJsonObject();
+        object.addProperty("status", true);
+        object.addProperty("register", true);
+        object.add("user", userJson);
+        response.getWriter().println(gson.toJson(object));
+        return;
     }
 }

@@ -63,7 +63,7 @@ public class StartupServlet extends HttpServlet {
         out.println("<p>"+user.convertToJson()+"</p>");
         out.println("<p>Log out <a href=\""+logoutUrl+"\">here</a>.</p>");
         out.println("<p>Post comments below</p>");
-        out.println("<form action = \"/collegePostTest\" method = \"POST\">"+
+        out.println("<form action = \"/getInfoPost\" method = \"POST\">"+
         "<label for = \"username\">Title:</label>"+
         "<input type=\"text\" name=\"title\" autofocus>"+
         "<br>"+

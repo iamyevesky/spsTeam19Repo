@@ -4,79 +4,31 @@
     <meta charset="UTF-8">
     <title>Team 19</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="style.css">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="script.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
-    <script src="indexScript.js"></script>
+    <link rel="stylesheet" href="indexScript.css">
   </head>
-  <body onload="loadChats()" style="overflow: hidden">
-
-    <!-- Navigation Bar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand">Team 19 Web Application</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="index.html" style="color: #05728f">Chats <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="explore.html">Explore</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="bulletin.html">Bulletin Board</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="profile.html">Profile</a>
-      </li>
-    </ul>
+    <div class="container">
+     <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" style="top: 50%; margin-top: 75px">
+        <div class="card card-signin my-5">
+          <div class="card-body">
+            <h5 class="card-title text-center">Sign In</h5>
+            <button class="btn btn-lg btn-google btn-block" type="submit" id="signIn" onclick="login()"> Sign in with Google</button>
+            <hr class="my-4">
+            <button class="btn btn-lg btn-create btn-block" type="submit" id="signUp" onclick="signUp()">Create an account</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</nav>
+
+  <body onload = "loadPage()">
+
     
-<!-- Chat  -->
-<div class="downsize">
-<div class="messaging">
-      <div class="inbox_msg">
-        <div class="inbox_people">
-          <div class="headind_srch">
-            <div class="recent_heading">
-              <h4>Recent</h4>
-            </div>
-          </div>
-          <div id="chat-container" class="inbox_chat">
-          </div>
-        </div>
-        <div class="mesgs">
-          <div class="msg_history" id="msg-container">
-            <!-- HOW TO FORMAT MESSAGES: -->
-            <!-- <div class="incoming_msg">
-              <div class="received_msg">
-                <div class="received_withd_msg">
-                  <p>Does anyone know how to do the CS hw</p>
-                </div>
-              </div>
-            </div>
-            <div class="outgoing_msg">
-              <div class="sent_msg">
-                <p>I think so, just look it up on stack overflow</p>
-              </div>
-            </div> -->
-          </div>
-          <div class="type_msg">
-            <div class="input_msg_write">
-              <input type="text" class="write_msg" placeholder="Type a message" />
-              <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
-            </div>
-          </div>
-        </div>
-          
-    </div></div>
-</div>
   </body>
 </html>

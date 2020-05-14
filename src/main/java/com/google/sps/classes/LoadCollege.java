@@ -30,7 +30,7 @@ public class LoadCollege{
         try
         {
             String path = "";
-            path = path.concat("/home/yevesky2020/spsTeam19Repo/src/main/java/com/google/sps/classes/usCollege.csv");
+            path = path.concat("/home/yevesky2020/spsTeam19Repo/src/main/java/com/google/sps/classes/newCollegeNamesList.txt");
             Scanner scanner = new Scanner(new File(path));
             while (scanner.hasNextLine())
             {

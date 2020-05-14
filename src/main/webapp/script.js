@@ -1,22 +1,31 @@
+var loginArrayURL;
 function loadPage(){
     fetch("/login").then(response => response.json()).then(object =>
     {
         console.log(object);
-        buildList();
+        loginArrayURL = object;
+        control(object);
     });
 }
 
-function buildList(){
-    var loginButton = document.getElementById("signIn");
-    var signUpButton =  document.getElementById("signUp");
-    loginButton.onclick = function(){login()};
-    signUpButton.onclick = function(){signUp()};
+function control(object){
+    if (!object[0] && !object[1]){
+        location.replace("/chat.html");
+    }
+    else if(!object[0] && object[1])
+    {
+        location.replace("/createAccount.html");
+    }
+    else if(object[0])
+    {
+        //do nothing
+    }
 }
 
 function login(){
-    windows.location.replace(loginArrayURL[0]);
+    location.replace(loginArrayURL[2]);
 }
 
 function signUp(){
-    windows.location.replace(loginArray[1]);
+    location.replace(loginArrayURL[3]);
 }

@@ -3,6 +3,11 @@ package com.google.sps.classes;
 import java.io.IOException;
 import java.io.PrintWriter;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonArray;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,15 +34,21 @@ public class LoginServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
         LoadCollege.loadColleges();
         response.setContentType("application/json; charset=utf-8");
+        ArrayList<String> loginStrings = new ArrayList<>();
+        String loginUrl = userService.createLoginURL("/index.html");
+        String createURL = userService.createLoginURL("/index.html");
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Type type = new TypeToken<ArrayList<String>>(){}.getType();
+        JsonElement jsonElement = gson.toJsonTree(loginStrings, type);
+        loginStrings.add(loginUrl);
+        loginStrings.add(createURL);
         PrintWriter out = response.getWriter();
         if(!userService.isUserLoggedIn()){
-            Gson gson = new Gson();
-            ArrayList<String> loginStrings = new ArrayList<>();
-            String loginUrl = userService.createLoginURL("/chat.html");
-            String createURL = userService.createLoginURL("/createAccount.html");
-            loginStrings.add(loginUrl);
-            loginStrings.add(createURL);
-            out.println(gson.toJson(loginStrings));
+            jsonElement.getAsJsonArray().add(true);
+            jsonElement.getAsJsonArray().add(true);
+            jsonElement.getAsJsonArray().add(loginUrl);
+            jsonElement.getAsJsonArray().add(createURL);
+            out.println(gson.toJson(jsonElement));
             return;
         }
         String email = userService.getCurrentUser().getEmail();
@@ -55,11 +66,19 @@ public class LoginServlet extends HttpServlet {
         }
 
         if(user == null){
-            response.sendRedirect("/createAccount.html");
+            jsonElement.getAsJsonArray().add(false);
+            jsonElement.getAsJsonArray().add(true);
+            jsonElement.getAsJsonArray().add(loginUrl);
+            jsonElement.getAsJsonArray().add(createURL);
+            out.println(gson.toJson(jsonElement));
         }
         else
         {
-            response.sendRedirect("/chat.html");
+            jsonElement.getAsJsonArray().add(false);
+            jsonElement.getAsJsonArray().add(false);
+            jsonElement.getAsJsonArray().add(loginUrl);
+            jsonElement.getAsJsonArray().add(createURL);
+            out.println(gson.toJson(jsonElement));
         }
     }
 }

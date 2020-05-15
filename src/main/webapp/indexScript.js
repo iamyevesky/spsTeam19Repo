@@ -26,6 +26,7 @@ function createPageHTML() {
     } else {
         loginButton.innerHTML = "Log in with Google account"
     }
+    controlButtonDisplay();
 }
 
 function login() {
@@ -51,4 +52,34 @@ function contToAccount() {
     if (status && registered) {
         location.replace(contToAccount);
     }
+}
+
+// 1. If user is not logged in, -> show only login button
+// 2. if user is logged in, but not registered -> show only logout & create Account buttons
+// 3. if user is logged i and registered -> show only logout & continue to account buttons
+
+function controlButtonDisplay() {
+    var status = jsonObject.status;
+    var registered = jsonObject.register;
+    var login = jsonObject.login;
+    var logout = jsonObject.logout;
+    var user = jsonObject.user;
+    var contToAccount = jsonObject.continue;
+    var signUpButton = document.getElementById("signUp");
+    var contAccButton = document.getElementById("contToAccount");
+
+    if (!status) {
+        //Case 1.
+        signUpButton.style.display = "none";
+        contAccButton.style.display = "none";
+    } else {
+        if (!registered) {
+            //Case 2.
+            contAccButton.style.display = "none";
+        } else {
+            //Case 3.
+            signUpButton.style.display = "none";
+        }
+    }
+
 }

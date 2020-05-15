@@ -3,14 +3,31 @@
   <head>
     <meta charset="UTF-8">
     <title>Create Account</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="indexScript.css">
     <script src="createAccountScript.js"></script>
   </head>
 
   <body onload = "getInfo()">
-      <p>Welcome!</p>
-      <p>Please enter account details below.</p>
-      <br>
-      <br>
-      <div id = "infoSection"></div>
+    <div class="container">
+     <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" style="top: 50%">
+        <div class="card card-signin my-5">
+          <div class="card-body">
+
+            <h6 class="card-title text-center">Welcome</h6>
+            <h5 class="card-title text-center">Please Enter your details below</h5>
+            <br>
+            <div id = "infoSection"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

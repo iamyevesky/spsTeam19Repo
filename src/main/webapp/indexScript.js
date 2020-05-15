@@ -42,6 +42,7 @@ function login() {
     
 }
 function signUp() {
+    location.assign("createAccount.html");
 
 }
 function contToAccount() {

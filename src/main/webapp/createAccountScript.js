@@ -24,19 +24,44 @@ function createForm(jsonObject){
     form.innerHTML = '';
     
     //name label and input
-    let nameLabel = document.createElement("LABEL");
-    let username = document.createElement("INPUT");
+    //create row first
+    var row1 = document.createElement("div");
+    row1.classList.add("form-group", "row");
+    var inputDiv = document.createElement("div");
+    inputDiv.classList.add("col-sm-9");
+
+    var nameLabel = document.createElement("LABEL");
+    var username = document.createElement("INPUT");
     username.setAttribute("type", "text");
     username.setAttribute("placeholder", "Your name here");
     username.setAttribute("autofocus", true);
+    username.setAttribute("id", "username");
     username.setAttribute("name", "username");
     nameLabel.htmlFor = "username";
     nameLabel.innerText = "Name: ";
+    nameLabel.classList.add('col-sm-3', 'col-form-label');
+    username.classList.add("form-control");
+    inputDiv.appendChild(username);
+    row1.appendChild(nameLabel);
+    row1.appendChild(inputDiv);
 
     //college label and input
-    let listLabel = document.createElement("label");
-    let list = document.createElement("select");
+    var row2 = document.createElement("div");
+    row2.classList.add("form-group", "row");
+    var selectDiv = document.createElement("div");
+    selectDiv.classList.add("col-sm-9");
+
+    var listLabel = document.createElement("label");
+    var list = document.createElement("select");
     list.setAttribute("name", "college")
+    listLabel.htmlFor = "college";
+    listLabel.innerText = "College: ";
+    listLabel.classList.add('col-sm-3', 'col-form-label');
+    list.classList.add("form-control");
+    selectDiv.appendChild(list);
+    row2.appendChild(listLabel);
+    row2.appendChild(selectDiv);
+
 
     var i;
     //add college option from list to select tag
@@ -47,21 +72,9 @@ function createForm(jsonObject){
         list.appendChild(singleCollegeOption);
     }
 
-    // list.setAttribute("name", "college");
-    // list.setAttribute("multiple", false);
-    // listLabel.htmlFor = "college";
-    // listLabel.innerText = "College: ";
-    // //list.setAttribute("length", 5);
-    // var i;
-    // for (i = 0; i < jsonObject.length; i++){
-    //     var option = new Option(jsonObject[i].name, jsonObject[i].key);
-    //     list.options.add(option);
-    // }
-    form.appendChild(nameLabel);
-    form.appendChild(username);
+    form.appendChild(row1);
     form.appendChild(document.createElement("br"));
-    form.appendChild(listLabel);
-    form.appendChild(list);
+    form.appendChild(row2);
     form.appendChild(document.createElement("br"));
     form.appendChild(generateSubmitElement());
     return form;
@@ -71,5 +84,9 @@ function generateSubmitElement(){
     var element = document.createElement("input");
     element.type = "submit";
     element.value = "Create Account";
-    return element;
+    element.classList.add("btn", "btn-success");
+    var ediv = document.createElement("div");
+    ediv.classList.add("col", "text-center");
+    ediv.appendChild(element);
+    return ediv;
 }

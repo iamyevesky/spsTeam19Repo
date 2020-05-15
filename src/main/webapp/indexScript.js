@@ -62,17 +62,15 @@ function contToAccount() {
 function controlButtonDisplay() {
     var status = jsonObject.status;
     var registered = jsonObject.register;
-    var login = jsonObject.login;
-    var logout = jsonObject.logout;
-    var user = jsonObject.user;
-    var contToAccount = jsonObject.continue;
     var signUpButton = document.getElementById("signUp");
     var contAccButton = document.getElementById("contToAccount");
     var block1 = document.getElementById("block1");
     var block2 = document.getElementById("block2");
+    var mainTitle = document.getElementById("mainTitle");
 
     if (!status) {
         //Case 1.
+        mainTitle.innerHTML = "Sign In"
         block1.style.display = "none";
         signUpButton.style.display = "none";
         block2.style.display = "none";
@@ -80,10 +78,17 @@ function controlButtonDisplay() {
     } else {
         if (!registered) {
             //Case 2.
+            var subtitle = document.createElement("h5");
+            subtitle.innerHTML = "Create an account to get started" 
+            subtitle.classList.add("card-title", "text-center");
+            mainTitle.appendChild(subtitle);
             block2.style.display = "none";
             contAccButton.style.display = "none";
         } else {
+            var user = jsonObject.user;
+            var name = user.username;
             //Case 3.
+            mainTitle.innerHTML = "Welcome " + name ;
             block1.style.display = "none";
             signUpButton.style.display = "none";
         }

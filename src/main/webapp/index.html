@@ -8,27 +8,29 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="script.js"></script>
+    <script src="indexScript.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="indexScript.css">
   </head>
+  <body onload="loadPage()">
+
     <div class="container">
      <div class="row">
       <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" style="top: 50%; margin-top: 75px">
         <div class="card card-signin my-5">
           <div class="card-body">
+
             <h5 class="card-title text-center">Sign In</h5>
-            <button class="btn btn-lg btn-google btn-block" type="submit" id="signIn" onclick="login()"> Sign in with Google</button>
+            <button class="btn btn-lg btn-google btn-block" type="submit" id="signIn" onclick="login()"></button>
             <hr class="my-4">
             <button class="btn btn-lg btn-create btn-block" type="submit" id="signUp" onclick="signUp()">Create an account</button>
+            <hr class="my-4">
+            <button class="btn btn-lg btn-cont btn-block" type="submit" id="contToAccount" onclick="contToAccount()">Continue to account</button>
+          
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <body onload = "loadPage()">
-
-    
   </body>
 </html>

@@ -57,7 +57,7 @@ function contToAccount() {
 
 // 1. If user is not logged in, -> show only login button
 // 2. if user is logged in, but not registered -> show only logout & create Account buttons
-// 3. if user is logged i and registered -> show only logout & continue to account buttons
+// 3. if user is logged in and registered -> show only logout & continue to account buttons
 
 function controlButtonDisplay() {
     var status = jsonObject.status;
@@ -68,17 +68,23 @@ function controlButtonDisplay() {
     var contToAccount = jsonObject.continue;
     var signUpButton = document.getElementById("signUp");
     var contAccButton = document.getElementById("contToAccount");
+    var block1 = document.getElementById("block1");
+    var block2 = document.getElementById("block2");
 
     if (!status) {
         //Case 1.
+        block1.style.display = "none";
         signUpButton.style.display = "none";
+        block2.style.display = "none";
         contAccButton.style.display = "none";
     } else {
         if (!registered) {
             //Case 2.
+            block2.style.display = "none";
             contAccButton.style.display = "none";
         } else {
             //Case 3.
+            block1.style.display = "none";
             signUpButton.style.display = "none";
         }
     }

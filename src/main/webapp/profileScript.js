@@ -1,24 +1,26 @@
 var jsonObject;
 
 function loadProfile() {
-    fetch("/getInfo").then(response => response.json()).then(object =>
+    fetch("/getUserInfo").then(response => response.json()).then(object =>
     {
         jsonObject = object;
         console.log(jsonObject);
+        console.log(typeof jsonObject)
         setUpUserPage(jsonObject);
         loadClasses();
     });
 }
 
-function setUpUserPage(jsonData){
+function setUpUserPage(json){
+    const jsonData = json;
     var name = document.createElement("h3");
-    name.innerText = String(jsonData.username);
+    name.innerText = String(jsonData.user.username);
     var uni = document.createElement("h6");
-    uni.innerText = jsonData.college.name;
+    uni.innerText = String(jsonData.user.college.name);
     var classification = document.createElement("h6");
     console.log(jsonData.classes);
     
-    if (jsonData.isProf)
+    if (jsonData?.isProf)
     {
         classification.innerText = "Professor";
     }
@@ -27,7 +29,7 @@ function setUpUserPage(jsonData){
         classification.innerText = "Student";
     }
     var email = document.createElement("h6");
-    email.innerText = String(jsonData.email);
+    email.innerText = String(jsonData.user.email);
     var spacer = document.createElement("BR");
 
     //change nickname link

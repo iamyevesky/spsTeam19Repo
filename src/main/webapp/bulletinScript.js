@@ -137,6 +137,12 @@ function createFormPost() {
 
 function createBody(bodyOutline, currPost) {
     console.log(currPost.date);
+    var utcseconds = currPost.date.seconds;
+    console.log(utcseconds);
+    var d = new Date(0);
+    d.setUTCSeconds(utcseconds);
+    console.log(d);
+
     var username = document.createElement("h6");
     username.className = "card-title";
     username.innerText = currPost.user.username;

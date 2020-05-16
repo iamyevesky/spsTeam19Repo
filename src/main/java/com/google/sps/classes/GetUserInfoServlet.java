@@ -70,7 +70,7 @@ public class GetUserInfoServlet extends HttpServlet {
             response.getWriter().println(gson.toJson(object));
             return;
         }
-
+        
         JsonObject userJson = gson.toJsonTree(user, User.class).getAsJsonObject();
         object.addProperty("status", true);
         object.addProperty("register", true);

@@ -86,6 +86,18 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
+        if (user != null)
+        {
+            object.add("login", new JsonPrimitive(""));
+            object.add("logout", new JsonPrimitive(logout));
+            object.add("status", new JsonPrimitive(true));
+            object.add("register", new JsonPrimitive(false));
+            object.add("user", JsonNull.INSTANCE);
+            object.add("continue", new JsonPrimitive(""));
+            out.println(gson.toJson(object));
+            return;
+        }
+        
         JsonObject userJson = gson.toJsonTree(user, User.class).getAsJsonObject();
         object.add("login", new JsonPrimitive(""));
         object.add("logout", new JsonPrimitive(logout));

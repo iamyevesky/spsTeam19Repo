@@ -86,7 +86,7 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        if (user != null)
+        if (user == null)
         {
             object.add("login", new JsonPrimitive(""));
             object.add("logout", new JsonPrimitive(logout));
@@ -97,7 +97,7 @@ public class LoginServlet extends HttpServlet {
             out.println(gson.toJson(object));
             return;
         }
-        
+
         JsonObject userJson = gson.toJsonTree(user, User.class).getAsJsonObject();
         object.add("login", new JsonPrimitive(""));
         object.add("logout", new JsonPrimitive(logout));

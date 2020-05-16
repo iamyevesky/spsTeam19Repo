@@ -40,13 +40,16 @@ public class GetUserInfoServlet extends HttpServlet {
         response.setContentType("application/json; charset=utf-8");
         PrintWriter out = response.getWriter();
         logout = userService.createLogoutURL("/index.html");
+        gson = new GsonBuilder().setPrettyPrinting().create();
+        object = new JsonObject(); 
+
         object.addProperty("redirect", "/index.html");
         object.addProperty("logout", logout);
         if(!userService.isUserLoggedIn()){
             object.addProperty("status", false);
             object.addProperty("register", false);
             object.add("user", JsonNull.INSTANCE);
-            response.getWriter().println(gson.toJson(object));
+            out.println(gson.toJson(object));
             return;
         }
         String email = userService.getCurrentUser().getEmail();
@@ -64,6 +67,15 @@ public class GetUserInfoServlet extends HttpServlet {
             return;
         }
         catch(ClassCastException f){
+            object.addProperty("status", true);
+            object.addProperty("register", false);
+            object.add("user", JsonNull.INSTANCE);
+            response.getWriter().println(gson.toJson(object));
+            return;
+        }
+
+        if (user == null)
+        {
             object.addProperty("status", true);
             object.addProperty("register", false);
             object.add("user", JsonNull.INSTANCE);

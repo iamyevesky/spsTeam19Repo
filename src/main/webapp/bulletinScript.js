@@ -141,11 +141,14 @@ function createBody(bodyOutline, currPost) {
     console.log(utcseconds);
     var d = new Date(0);
     d.setUTCSeconds(utcseconds);
-    console.log(d);
 
     var username = document.createElement("h6");
     username.className = "card-title";
     username.innerText = currPost.user.username;
+
+    var bulletinDate = document.createElement("h6");
+    bulletinDate.className = "card-title";
+    bulletinDate.innerText = d.toLocaleDateString();
 
     var title = document.createElement("h5");
     title.className = "card-title";
@@ -157,7 +160,8 @@ function createBody(bodyOutline, currPost) {
     text.style.textAlign = "center";
     text.innerText = currPost.body;
 
-    bodyOutline.appendChild(username)
+    bodyOutline.appendChild(username);
+    bodyOutline.appendChild(bulletinDate);
     bodyOutline.appendChild(title);
     bodyOutline.appendChild(text);
 }

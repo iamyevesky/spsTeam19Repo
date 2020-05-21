@@ -10,6 +10,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
+    <script src="logout.js"></script>
     <script src="chatScript.js"></script>
   </head>
   <body onload="loadChats()" style="overflow: hidden">
@@ -34,6 +35,11 @@
       </li>
       <li class="nav-item">
         <a class="nav-link" href="profile.html">Profile</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav navbar-right">
+      <li style="cursor: pointer" class="nav-item">
+        <a class="nav-link" onclick="logout()">Log out</a>
       </li>
     </ul>
   </div>

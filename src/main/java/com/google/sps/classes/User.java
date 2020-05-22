@@ -23,8 +23,8 @@ import java.util.ArrayList;
 public final class User{
     private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private final String email;
-    private final String username;
     private final College college;
+    private String username;
     private String key;
 
     //START OF PRODUCTION CODE
@@ -69,6 +69,10 @@ public final class User{
         return gson.toJson(this);
     }
 
+    public void setName(String name){
+        this.username = name;
+    }
+
     public static User getUser(String email) throws EntityNotFoundException{
         Query query =
         new Query("User")
@@ -106,8 +110,6 @@ public final class User{
         return new User(email, username, college);
     }
     //END OF PRODUCTION CODE
-
-
     //START OF DEVELOPMENT CODE
     //END OF DEVELOPMENT CODE
 } 

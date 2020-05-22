@@ -27,15 +27,32 @@ public class UpdateUserInfoServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
-        Gson gson = new Gson();
-        User user = gson.fromJson(request.getParameter("json"), User.class);
+        User user = null;
+        String email = userService.getCurrentUser().getEmail();
+        String name = request.getParameter("username");
+        try
+        {
+            user = User.getUser(email);
+        }
+        catch(EntityNotFoundException e)
+        {
+            response.sendRedirect("/index.html");
+            return;
+        }
+        catch(ClassCastException f){
+            response.sendRedirect("/index.html");
+            return;
+        }
+        user.setName(name);
+
         try
         {
             user.updateDatabase();
         }
         catch(EntityNotFoundException e)
         {
-
+            response.sendRedirect("/index.html");
+            return;
         }
     }
 }

@@ -43,17 +43,6 @@
         <version>1.93.4</version>
     </dependency>
 
-    <dependency>
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <version>29.0-jre</version>
-    </dependency>
-
-    <dependency>
-        <groupId>com.pusher</groupId>
-        <artifactId>pusher-java-client</artifactId>
-        <version>2.2.1</version>
-    </dependency>
   </dependencies>
 
   <build>

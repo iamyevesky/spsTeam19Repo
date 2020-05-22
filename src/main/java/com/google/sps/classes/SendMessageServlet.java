@@ -3,6 +3,13 @@ package com.google.sps.classes;
 import java.io.IOException;
 import java.io.PrintWriter;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonNull;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,16 +27,22 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.util.*;
 
-@WebServlet("/updateUserInfo")
-public class UpdateUserInfoServlet extends HttpServlet {
+@WebServlet("/sendMessage")
+public class SendMessageServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    Gson gson;
+    JsonObject object;
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        response.setContentType("application/json; charset=utf-8");
+        PrintWriter out = response.getWriter();
         User user = null;
         String email = userService.getCurrentUser().getEmail();
-        String name = request.getParameter("username");
+        gson = new GsonBuilder().setPrettyPrinting().create();
+        object = new JsonObject(); 
+
         try
         {
             user = User.getUser(email);
@@ -43,7 +56,28 @@ public class UpdateUserInfoServlet extends HttpServlet {
             response.sendRedirect("/index.html");
             return;
         }
-        user.setName(name);
+    }
+    
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        User user = null;
+        String email = userService.getCurrentUser().getEmail();
+        String key = request.getParameter("chatKey");
+        String message = request.getParameter("message");
+
+        try
+        {
+            user = User.getUser(email);
+        }
+        catch(EntityNotFoundException e)
+        {
+            response.sendRedirect("/index.html");
+            return;
+        }
+        catch(ClassCastException f){
+            response.sendRedirect("/index.html");
+            return;
+        }
 
         try
         {

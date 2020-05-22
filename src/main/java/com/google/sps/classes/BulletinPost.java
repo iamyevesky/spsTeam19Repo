@@ -14,6 +14,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.cloud.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 /*
  * This class represents a single bulletin post of the chatroom platform.
@@ -35,6 +36,14 @@ public final class BulletinPost{
         this.date = Timestamp.now();
     }
 
+    private BulletinPost(User user, String title, String body, Timestamp date){
+        this.title = title;
+        this.user = user;
+        this.college = user.getCollege();
+        this.body = body;
+        this.date = date;
+    }
+
     private void saveToDataBase(){
         Entity post = new Entity("BulletinPost");
         post.setProperty("title", this.title);
@@ -48,7 +57,8 @@ public final class BulletinPost{
     private static BulletinPost getPost(Entity entity) throws EntityNotFoundException{
         return new BulletinPost(User.getUser((Key) entity.getProperty("userID")), 
         (String) entity.getProperty("title"), 
-        (String) entity.getProperty("body"));
+        (String) entity.getProperty("body"),
+        Timestamp.of((Date) entity.getProperty("timestamp")));
     }
 
     public static void addPostToDatabase(User user, String title, String body){

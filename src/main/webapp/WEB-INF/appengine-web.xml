@@ -2,7 +2,13 @@
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
   <application>spsteam19</application>
   <version>1</version>
-  <threadsafe>false</threadsafe>
+  <threadsafe>true</threadsafe>
+  <env-variables>
+    <env-var name="PUSHER_APP_ID" value="1003650" />
+    <env-var name="PUSHER_APP_KEY" value = "14a22f96e44b381ce425" />
+    <env-var name="PUSHER_APP_SECRET" value = "64d51e91b9649ba9b739" />
+    <env-var name="PUSHER_CLUSTER" value="us2" />
+  </env-variables>
   <sessions-enabled>true</sessions-enabled>
   <runtime>java8</runtime>
   <static-files>

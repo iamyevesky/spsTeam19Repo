@@ -71,10 +71,6 @@ function controlButtonDisplay() {
     if (!status) {
         //Case 1.
         mainTitle.innerHTML = "Sign In"
-        block1.style.display = "none";
-        signUpButton.style.display = "none";
-        block2.style.display = "none";
-        contAccButton.style.display = "none";
     } else {
         if (!registered) {
             //Case 2.
@@ -82,15 +78,15 @@ function controlButtonDisplay() {
             subtitle.innerHTML = "Create an account to get started" 
             subtitle.classList.add("card-title", "text-center");
             mainTitle.appendChild(subtitle);
-            block2.style.display = "none";
-            contAccButton.style.display = "none";
+            block1.style.display = "block";
+            signUpButton.style.display = "block";
         } else {
             var user = jsonObject.user;
             var name = user.username;
             //Case 3.
             mainTitle.innerHTML = "Welcome " + name ;
-            block1.style.display = "none";
-            signUpButton.style.display = "none";
+            block2.style.display = "block";
+            contAccButton.style.display = "block";
         }
     }
 

@@ -144,3 +144,7 @@ img{ max-width:100%;}
     margin: 0 auto;
     margin-top: 30px;
 }
+.color_blue {
+    background-color: #05728f;
+    color: white;
+}

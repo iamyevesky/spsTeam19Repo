@@ -36,15 +36,15 @@ public class LoadCollege{
             {
                 College.saveCollege(scanner.nextLine());
             }
+            Entity entity = new Entity("data");
+            datastore.put(entity);
+            System.out.println("Done!");
         }
         catch(IOException e)
         {
             System.out.println("Could not load colleges");
             System.out.println(e);
         }
-        Entity entity = new Entity("data");
-        datastore.put(entity);
-        System.out.println("Done!");
     }
 
     private static boolean exists(){

@@ -52,7 +52,7 @@ public final class Message{
     }
 
     public static ArrayList<Message> getChatMessages(String chatKey) throws EntityNotFoundException{
-         Query query = 
+        Query query = 
         new Query("Message")
         .setFilter(new Query.
         FilterPredicate("chatID", Query.FilterOperator.EQUAL, KeyFactory.stringToKey(chatKey)))

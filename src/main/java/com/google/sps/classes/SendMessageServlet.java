@@ -41,7 +41,20 @@ public class SendMessageServlet extends HttpServlet {
         User user = null;
         String email = userService.getCurrentUser().getEmail();
         gson = new GsonBuilder().setPrettyPrinting().create();
-        object = new JsonObject(); 
+        object = new JsonObject();
+        logout = userService.createLogoutURL("/index.html");
+        object.addProperty("redirect", "/index.html");
+        object.addProperty("logout", logout); 
+        
+        if (!userService.isUserLoggedIn())
+        {
+            object.addProperty("status", false);
+            object.addProperty("register", false);
+            object.add("user", JsonNull.INSTANCE);
+            object.add("chats", JsonNull.INSTANCE);
+            response.getWriter().println(gson.toJson(object));
+            return;
+        }
 
         try
         {
@@ -49,11 +62,50 @@ public class SendMessageServlet extends HttpServlet {
         }
         catch(EntityNotFoundException e)
         {
-            response.sendRedirect("/index.html");
+            object.addProperty("status", false);
+            object.addProperty("register", false);
+            object.add("user", JsonNull.INSTANCE);
+            object.add("chats", JsonNull.INSTANCE);
+            response.getWriter().println(gson.toJson(object));
             return;
         }
         catch(ClassCastException f){
-            response.sendRedirect("/index.html");
+            object.addProperty("status", false);
+            object.addProperty("register", false);
+            object.add("user", JsonNull.INSTANCE);
+            object.add("chats", JsonNull.INSTANCE);
+            response.getWriter().println(gson.toJson(object));
+            return;
+        }
+        
+        try
+        {
+            ArrayList<Chatroom> chats  = user.getChats();
+            Type chatType = new TypeToken<ArrayList<Chatroom>>(){}.getType();
+            JsonArray chatsJson = gson.toJsonTree(chats, chatType).getAsJsonArray();
+            JsonObject userJson = gson.toJsonTree(user, User.class).getAsJsonObject();
+            for (int i = 0; i < chats.size(); i++){
+                JsonObject chat = chatsJson.get(i).getAsJsonObject();
+                Type messageType = new TypeToken<ArrayList<message>>(){}.getType();
+                JsonArray messages = gson.toJsonTree(array.get(i).getMessages(), messageType).getAsJsonArray();
+                chat.addProperty("messages", messages);
+                chatsJson.set(i, chat);
+            }
+            object.addProperty("status", true);
+            object.addProperty("register", true);
+            object.add("user", userJson);
+            object.add("chats", arrayJson);
+            response.getWriter().println(gson.toJson(object));
+            return;
+        }
+        catch(EntityNotFoundException e)
+        {
+            JsonObject userJson = gson.toJsonTree(user, User.class).getAsJsonObject();
+            object.addProperty("status", true);
+            object.addProperty("register", true);
+            object.add("user", userJson);
+            object.add("chats", JsonNull.INSTANCE);
+            response.getWriter().println(gson.toJson(object));
             return;
         }
     }
@@ -81,11 +133,12 @@ public class SendMessageServlet extends HttpServlet {
 
         try
         {
-            user.updateDatabase();
+            Chatroom chat = Chatroom.getChatRoom(KeyFactory.stringToKey(key));
+            Message.addMessageToDatabase(user, chat, message);
         }
         catch(EntityNotFoundException e)
         {
-            response.sendRedirect("/index.html");
+            response.sendRedirect("/chat.html");
             return;
         }
     }

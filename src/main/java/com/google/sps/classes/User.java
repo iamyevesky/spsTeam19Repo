@@ -26,6 +26,7 @@ public final class User{
     private final College college;
     private String username;
     private String key;
+    private transient ArrayList<Key> chat;
 
     //START OF PRODUCTION CODE
 
@@ -33,10 +34,20 @@ public final class User{
         this.email = email;
         this.username = username;
         this.college = college;
+        this.chat = new ArrayList<>();
     }
 
     private void setKey(Key key){
         this.key = KeyFactory.keyToString(key);
+    }
+
+    private void setChatKeys(ArrayList<Key> keys){
+        if (keys == null){
+            return;
+        }
+        for (Key key : keys){
+            chat.add(key);
+        }
     }
 
     public String getKey(){
@@ -53,6 +64,7 @@ public final class User{
         user.setProperty("username", this.username);
         user.setProperty("email", this.email);
         user.setProperty("collegeID", KeyFactory.stringToKey(this.college.getKey()));
+        user.setProperty("chatKeys", this.chat);
         datastore.put(user);
         this.key = KeyFactory.keyToString(user.getKey());
     }
@@ -61,6 +73,7 @@ public final class User{
         if (this.key == null) return;
         Entity user = datastore.get(KeyFactory.stringToKey(this.key));
         user.setProperty("username", this.username);
+        user.setProperty("chatKeys", this.chat);
         datastore.put(user);
     }
 
@@ -71,6 +84,21 @@ public final class User{
 
     public void setName(String name){
         this.username = name;
+    }
+
+    public void addChat(Chatroom chat){
+        Key key = KeyFactory.stringToKey(chat.getKey());
+        if (!this.chat.contains(key)){
+            this.chat.add(key);   
+        }
+    }
+
+    public ArrayList<Chatroom> getChats() throws EntityNotFoundException{
+        ArrayList<Chatroom> output = new ArrayList<>();
+        for (Key key : chat){
+            output.add(Chatroom.getChatroom(key));
+        }
+        return output;
     }
 
     public static User getUser(String email) throws EntityNotFoundException{
@@ -85,6 +113,7 @@ public final class User{
         }
 
         User output = new User((String) entity.getProperty("email"), (String) entity.getProperty("username"), College.getCollege((Key) entity.getProperty("collegeID")));
+        output.setChatKeys((ArrayList<Key>) entity.getProperty("chatKeys"));
         output.setKey((Key) entity.getKey());
         return output;
     }
@@ -95,6 +124,7 @@ public final class User{
             return null;
         }
         User output = new User((String) entity.getProperty("email"), (String) entity.getProperty("username"), College.getCollege((Key) entity.getProperty("collegeID")));
+        output.setChatKeys((ArrayList<Key>) entity.getProperty("chatKeys"));
         output.setKey((Key) entity.getKey());
         return output;
     }

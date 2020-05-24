@@ -20,8 +20,8 @@ public final class Chatroom{
     private final College college;
     private final boolean isDM;
     private String key;
-    private ArrayList<Key> adminKeys;
-    private ArrayList<Key> userKeys;
+    private transient ArrayList<Key> adminKeys;
+    private transient ArrayList<Key> userKeys;
 
     private Chatroom(String name, boolean isDM, Key adminKey, College college){
         this.name = name;
@@ -82,11 +82,21 @@ public final class Chatroom{
     }
 
     public void addAdmin(User user){
-        adminKeys.add(KeyFactory.stringToKey(user.getKey()));
+        Key key = KeyFactory.stringToKey(user.getKey());
+        if (!adminKeys.contains(key)){
+            adminKeys.add(key);   
+        }
     }
 
     public void addUser(User user){
-        userKeys.add(KeyFactory.stringToKey(user.getKey()));
+         Key key = KeyFactory.stringToKey(user.getKey());
+        if (!userKeys.contains(key)){
+            userKeys.add(key);   
+        }
+    }
+
+    public ArrayList<Message> getMessages() throws EntityNotFoundException{
+        return Message.getChatMessages(this.key);
     }
 
     public void saveToDatabase(){

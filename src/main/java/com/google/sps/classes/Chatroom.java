@@ -13,6 +13,7 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public final class Chatroom{
     private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -82,11 +83,21 @@ public final class Chatroom{
     }
 
     public void addAdmin(User user){
-        adminKeys.add(KeyFactory.stringToKey(user.getKey()));
+        Key key = KeyFactory.stringToKey(user.getKey());
+        if (!adminKeys.contains(key)){
+            adminKeys.add(key);   
+        }
     }
 
     public void addUser(User user){
-        userKeys.add(KeyFactory.stringToKey(user.getKey()));
+         Key key = KeyFactory.stringToKey(user.getKey());
+        if (!userKeys.contains(key)){
+            userKeys.add(key);   
+        }
+    }
+
+    public ArrayList<Message> getMessages() throws EntityNotFoundException{
+        return Message.getChatMessages(this.key);
     }
 
     public void saveToDatabase(){
@@ -120,6 +131,30 @@ public final class Chatroom{
         output.setUserKeys((ArrayList<Key>) chatroom.getProperty("userKeys"));
         output.setAdminKeys((ArrayList<Key>) chatroom.getProperty("adminKeys"));
         output.setKey(chatroom.getKey());
+        return output;
+    }
+
+    public static Chatroom get(Entity chatroom) throws EntityNotFoundException{
+        Chatroom output = new Chatroom((String) chatroom.getProperty("name"), (boolean) chatroom.getProperty("isDM"), College.getCollege((Key) chatroom.getProperty("collegeID")));
+        output.setUserKeys((ArrayList<Key>) chatroom.getProperty("userKeys"));
+        output.setAdminKeys((ArrayList<Key>) chatroom.getProperty("adminKeys"));
+        output.setKey(chatroom.getKey());
+        return output;
+    }
+    
+    public static ArrayList<Chatroom> getChats(College college) throws EntityNotFoundException{
+        Query query = 
+        new Query("Chatroom")
+        .setFilter(new Query.CompositeFilter(Query.CompositeFilterOperator.AND, Arrays.asList(
+        new Query.FilterPredicate("isDM", Query.FilterOperator.EQUAL, false),
+        new Query.FilterPredicate("collegeID", Query.FilterOperator.EQUAL, KeyFactory.stringToKey(college.getKey())))))
+        .addSort("timestamp", SortDirection.ASCENDING);
+        
+        PreparedQuery result = datastore.prepare(query);
+        ArrayList<Chatroom> output = new ArrayList<>();
+        for (Entity entity : result.asIterable()){
+            output.add(Chatroom.get(entity));    
+        }
         return output;
     }
 

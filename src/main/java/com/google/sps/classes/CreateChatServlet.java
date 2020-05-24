@@ -27,8 +27,8 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.util.*;
 
-@WebServlet("/sendMessage")
-public class SendMessageServlet extends HttpServlet {
+@WebServlet("/createChat")
+public class CreateChatServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Gson gson;
@@ -81,17 +81,10 @@ public class SendMessageServlet extends HttpServlet {
         
         try
         {
-            ArrayList<Chatroom> chats  = user.getChats();
+            ArrayList<Chatroom> chats  = Chatroom.getChats(user.getCollege());
             Type chatType = new TypeToken<ArrayList<Chatroom>>(){}.getType();
             JsonArray chatsJson = gson.toJsonTree(chats, chatType).getAsJsonArray();
             JsonObject userJson = gson.toJsonTree(user, User.class).getAsJsonObject();
-            for (int i = 0; i < chats.size(); i++){
-                JsonObject chat = chatsJson.get(i).getAsJsonObject();
-                Type messageType = new TypeToken<ArrayList<Message>>(){}.getType();
-                JsonArray messages = gson.toJsonTree(chats.get(i).getMessages(), messageType).getAsJsonArray();
-                chat.add("messages", messages);
-                chatsJson.set(i, chat);
-            }
             object.addProperty("status", true);
             object.addProperty("register", true);
             object.add("user", userJson);
@@ -115,8 +108,7 @@ public class SendMessageServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
         User user = null;
         String email = userService.getCurrentUser().getEmail();
-        String key = request.getParameter("chatKey");
-        String message = request.getParameter("message");
+        String name = request.getParameter("name");
 
         try
         {
@@ -131,16 +123,6 @@ public class SendMessageServlet extends HttpServlet {
             response.sendRedirect("/index.html");
             return;
         }
-
-        try
-        {
-            Chatroom chat = Chatroom.getChatroom(KeyFactory.stringToKey(key));
-            Message.addMessageToDatabase(user, chat, message);
-        }
-        catch(EntityNotFoundException e)
-        {
-            response.sendRedirect("/chat.html");
-            return;
-        }
+        Chatroom.createChat(name, user).saveToDatabase();
     }
 }

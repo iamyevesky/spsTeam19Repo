@@ -3,6 +3,13 @@ package com.google.sps.classes;
 import java.io.IOException;
 import java.io.PrintWriter;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonNull;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,19 +27,49 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.util.*;
 
-@WebServlet("/updateUserInfo")
-public class UpdateUserInfoServlet extends HttpServlet {
+@WebServlet("/joinChat")
+public class JoinChatServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    Gson gson;
+    JsonObject object;
+    
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        response.setContentType("application/json; charset=utf-8");
+        PrintWriter out = response.getWriter();
+        String chatKey = request.getParameter("chatKey");
+        gson = new GsonBuilder().setPrettyPrinting().create();
+        object = new JsonObject();
+        try
+        {
+            ArrayList<User> users  = Chatroom.getChatroom(KeyFactory.stringToKey(chatKey)).getUsers();
+            Type userType = new TypeToken<ArrayList<User>>(){}.getType();
+            JsonArray usersJson = gson.toJsonTree(users, userType).getAsJsonArray();
+            response.getWriter().println(gson.toJson(usersJson));
+        }
+        catch(EntityNotFoundException e)
+        {
+
+        }
+    }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
         User user = null;
+        Chatroom chat = null;
         String email = userService.getCurrentUser().getEmail();
-        String name = request.getParameter("username");
+        String chatKey = request.getParameter("chatKey");
+
         try
         {
             user = User.getUser(email);
+            chat = Chatroom.getChatroom(KeyFactory.stringToKey(chatKey));
+            user.addChat(chat);
+            user.saveToDatabase();
+            chat.addUser(user);
+            chat.addAdmin(user);
+            chat.saveToDatabase();
         }
         catch(EntityNotFoundException e)
         {
@@ -40,18 +77,6 @@ public class UpdateUserInfoServlet extends HttpServlet {
             return;
         }
         catch(ClassCastException f){
-            response.sendRedirect("/index.html");
-            return;
-        }
-        user.setName(name);
-
-        try
-        {
-            user.updateDatabase();
-            response.sendRedirect("/profile.html");
-        }
-        catch(EntityNotFoundException e)
-        {
             response.sendRedirect("/index.html");
             return;
         }

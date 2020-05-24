@@ -33,6 +33,7 @@ public class SendMessageServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Gson gson;
     JsonObject object;
+    String logout;
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
@@ -86,15 +87,15 @@ public class SendMessageServlet extends HttpServlet {
             JsonObject userJson = gson.toJsonTree(user, User.class).getAsJsonObject();
             for (int i = 0; i < chats.size(); i++){
                 JsonObject chat = chatsJson.get(i).getAsJsonObject();
-                Type messageType = new TypeToken<ArrayList<message>>(){}.getType();
-                JsonArray messages = gson.toJsonTree(array.get(i).getMessages(), messageType).getAsJsonArray();
-                chat.addProperty("messages", messages);
+                Type messageType = new TypeToken<ArrayList<Message>>(){}.getType();
+                JsonArray messages = gson.toJsonTree(chats.get(i).getMessages(), messageType).getAsJsonArray();
+                chat.add("messages", messages);
                 chatsJson.set(i, chat);
             }
             object.addProperty("status", true);
             object.addProperty("register", true);
             object.add("user", userJson);
-            object.add("chats", arrayJson);
+            object.add("chats", chatsJson);
             response.getWriter().println(gson.toJson(object));
             return;
         }
@@ -133,7 +134,7 @@ public class SendMessageServlet extends HttpServlet {
 
         try
         {
-            Chatroom chat = Chatroom.getChatRoom(KeyFactory.stringToKey(key));
+            Chatroom chat = Chatroom.getChatroom(KeyFactory.stringToKey(key));
             Message.addMessageToDatabase(user, chat, message);
         }
         catch(EntityNotFoundException e)

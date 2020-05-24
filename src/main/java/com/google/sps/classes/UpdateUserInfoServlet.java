@@ -55,5 +55,6 @@ public class UpdateUserInfoServlet extends HttpServlet {
             response.sendRedirect("/index.html");
             return;
         }
+        response.sendRedirect("/profile.html");
     }
 }

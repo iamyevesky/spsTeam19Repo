@@ -150,6 +150,11 @@ function createBody(bodyOutline, currPost) {
     bulletinDate.className = "card-title";
     bulletinDate.innerText = d.toLocaleDateString();
 
+    var bulletinTime = document.createElement("h6");
+    bulletinTime.className = "card-title";
+    timeNoSeconds = d.toLocaleTimeString().replace(/(.*)\D\d+/, '$1');
+    bulletinTime.innerText = timeNoSeconds;
+
     var title = document.createElement("h5");
     title.className = "card-title";
     title.style.textAlign = "center";
@@ -162,6 +167,7 @@ function createBody(bodyOutline, currPost) {
 
     bodyOutline.appendChild(username);
     bodyOutline.appendChild(bulletinDate);
+    bodyOutline.appendChild(bulletinTime);
     bodyOutline.appendChild(title);
     bodyOutline.appendChild(text);
 }

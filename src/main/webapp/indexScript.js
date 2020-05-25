@@ -26,6 +26,7 @@ function createPageHTML() {
     } else {
         loginButton.innerHTML = "Log in with Google account"
     }
+    loginButton.style.display = "block";
     controlButtonDisplay();
 }
 
@@ -38,8 +39,7 @@ function login() {
         location.replace(logout);
     } else {
         location.replace(login);
-    }
-    
+    }    
 }
 function signUp() {
     location.assign("createAccount.html");

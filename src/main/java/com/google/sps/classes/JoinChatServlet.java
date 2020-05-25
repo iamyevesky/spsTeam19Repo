@@ -80,5 +80,6 @@ public class JoinChatServlet extends HttpServlet {
             response.sendRedirect("/index.html");
             return;
         }
+        response.sendRedirect("/chatDemoPage.html");
     }
 }

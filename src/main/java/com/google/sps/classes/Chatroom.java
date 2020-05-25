@@ -110,8 +110,8 @@ public final class Chatroom{
         chatroom.setProperty("adminKeys", this.adminKeys);
         chatroom.setProperty("isDM", this.isDM);
         chatroom.setProperty("collegeID", KeyFactory.stringToKey(this.college.getKey()));
-        this.key = KeyFactory.keyToString(chatroom.getKey());
         datastore.put(chatroom);
+        this.key = KeyFactory.keyToString(chatroom.getKey());
     }
 
     public void updateDatabase() throws EntityNotFoundException{

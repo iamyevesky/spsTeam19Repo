@@ -142,5 +142,6 @@ public class SendMessageServlet extends HttpServlet {
             response.sendRedirect("/chat.html");
             return;
         }
+        response.sendRedirect("/chatDemoPage.html");
     }
 }

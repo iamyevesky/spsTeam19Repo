@@ -123,6 +123,19 @@ public class CreateChatServlet extends HttpServlet {
             response.sendRedirect("/index.html");
             return;
         }
-        Chatroom.createChat(name, user).saveToDatabase();
+        
+        try
+        {
+            Chatroom chat  = Chatroom.createChat(name, user);
+            chat.saveToDatabase();
+            user.addChat(chat);
+            user.updateDatabase();
+        }
+        catch(EntityNotFoundException e)
+        {
+            response.sendRedirect("/index.html");
+            return;
+        }
+        response.sendRedirect("/chatDemoPage.html");
     }
 }

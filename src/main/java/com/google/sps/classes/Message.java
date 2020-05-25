@@ -11,6 +11,7 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.cloud.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 public final class Message{
     private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -36,14 +37,14 @@ public final class Message{
     public void saveToDatabase(){
         Entity message = new Entity("Message");
         message.setProperty("chatID", KeyFactory.stringToKey(this.chat));
-        message.setProperty("userID", this.sender.getKey());
+        message.setProperty("userID", KeyFactory.stringToKey(this.sender.getKey()));
         message.setProperty("message", this.message);
-        message.setProperty("timestamp", this.time);
+        message.setProperty("timestamp", this.time.toDate());
         datastore.put(message);
     }
 
     public static Message get(Entity entity) throws EntityNotFoundException{
-        return new Message(User.getUser(KeyFactory.stringToKey((String) entity.getProperty("userID"))), (String) entity.getProperty("chatID"), (String) entity.getProperty("message"), (Timestamp) entity.getProperty("timestamp"));
+        return new Message(User.getUser((Key) entity.getProperty("userID")), KeyFactory.keyToString((Key) entity.getProperty("chatID")), (String) entity.getProperty("message"), Timestamp.of((Date) entity.getProperty("timestamp")));
     }
 
     public static void addMessageToDatabase(User user, Chatroom chatroom, String message){

@@ -126,6 +126,7 @@ function createFormPost() {
     var s = document.createElement("input");
     s.setAttribute('type',"submit");
     s.setAttribute('value',"Submit");
+    s.classList.add("btn","btn-success");
 
     f.appendChild(titleDiv);
     f.appendChild(bodyDiv);

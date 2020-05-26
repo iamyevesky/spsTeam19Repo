@@ -84,27 +84,36 @@ img{ max-width:100%;}
   color: #747474;
   display: block;
   font-size: 12px;
+  margin: 0 0 8px;
+}
+
+.chat_username {
+  color: #05728f;
+  display: block;
+  font-size: 12px;
   margin: 8px 0 0;
 }
+
 .received_withd_msg { width: 57%;}
 .mesgs {
   float: left;
   padding: 30px 15px 0 25px;
   width: 60%;
+  background: #F8F8F8;
 }
 
  .sent_msg p {
-  background: #05728f none repeat scroll 0 0;
+  background: none repeat scroll 0 0;
   border-radius: 3px;
-  font-size: 14px;
-  margin: 0; color:#fff;
-  padding: 5px 10px 5px 12px;
+  font-size: 20px;
+  margin: 0; color:rgb(104, 104, 104);
+  padding: 5px 10px 5px 0px;
   width:100%;
 }
 .outgoing_msg{ overflow:hidden; margin:26px 0 26px;}
 .sent_msg {
-  float: right;
-  width: 46%;
+  float: left;
+  width: 100%;
 }
 .input_msg_write input {
   background: rgba(0, 0, 0, 0) none repeat scroll 0 0;

@@ -89,21 +89,9 @@ function getChats(){
                 const parsed = getActiveChatIndex();
                 if (isNaN(parsed)) {return}
                 buildMsgHistory(jsonResponse.chats[parsed].messages);
-                // for (index in jsonResponse.chats[parsed].messages)
-                // {
-
-                //     var jsonMessage =  jsonResponse.chats[parsed].messages[index];
-                //     console.log(jsonMessage);
-                //     // var messageEntity = document.createElement("div");
-                //     // messageEntity.innerHTML = '';
-                //     // var name = document.createElement("p");
-                //     // name.innerText = jsonMessage.sender.username + "";
-                //     // messageEntity.appendChild(name);
-                //     // var messageText = document.createElement("p");
-                //     // messageText.innerText = jsonMessage.message + "";
-                //     // messageEntity.appendChild(messageText);
-                //     // divElement.appendChild(messageEntity);
-                // }
+                //if msg_history div overflows, keep scroll at bottom of page when refresh
+                var objDiv = document.getElementById("msg-container");
+                objDiv.scrollTop = objDiv.scrollHeight;
             }
             else
             {
@@ -125,10 +113,21 @@ function buildMsgHistory(pastMessageData) {
     for (i = 0; i < pastMessageData.length; i++) {
         var currMsgObj = pastMessageData[i];
         msg = currMsgObj.message;
-        
+        var senderUsername = currMsgObj.sender.username;
+
+        //get date and time in nice format
+        var timeSeconds = currMsgObj.time.seconds;
+        var d = new Date(0);
+        d.setUTCSeconds(timeSeconds);
+        var timeNoSeconds = d.toLocaleTimeString().replace(/(.*)\D\d+/, '$1');
+        var dayMY = d.toLocaleDateString();
+
         //create bootstrap outline
         var msgDiv = document.createElement("div");
         msgDiv.className = "outgoing_msg";
+
+        //TODO: CURRENTLY ONLY SHOWS AS IF USER SENT ALL MESSAGES
+        //CHANGE DEPENDING ON USER WHO SENT IT
         var innerTextDiv = document.createElement("div");
         innerTextDiv.className = "sent_msg";
 
@@ -136,13 +135,41 @@ function buildMsgHistory(pastMessageData) {
         var text = document.createElement("p");
         text.innerHTML = msg;
 
+        //add username above text
+        var spanUsername = document.createElement("span")
+        spanUsername.innerText = senderUsername;
+        spanUsername.classList.add("chat_username");
+
+        //add time/date below text
+        var spanTime = document.createElement("span")
+        spanTime.innerText = timeNoSeconds + " | " + dayMY;
+        spanTime.classList.add("time_date");
+
         //append text to bootstrap outline
+        innerTextDiv.appendChild(spanUsername);
         innerTextDiv.appendChild(text);
+        innerTextDiv.appendChild(spanTime);
         msgDiv.appendChild(innerTextDiv);
         outline.appendChild(msgDiv);
     }
 }
 
+function handleSend()
+{
+    const parsed = getActiveChatIndex();
+    if (isNaN(parsed)) {return false;}
+    var key = messageInfo.chats[parsed].key+"";
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/sendMessage?chatKey="+key+"&message="+document.messageForm.elements.namedItem('message').value+"", true);
+
+    xhr.onreadystatechange = function() { // Call a function when the state changes.
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        }
+    }
+    xhr.send();
+    console.log("Chat sent");
+    return false;    
+}
 
 
 

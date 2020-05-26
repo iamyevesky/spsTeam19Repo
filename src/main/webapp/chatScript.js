@@ -1,3 +1,66 @@
+var messageInfo;
+function loadChatsNew() {
+    fetch("/sendMessage").then(response => response.json()).then(object =>
+    {
+        console.log(object);
+        messageInfo = object;
+        appendChatNameToSidebar(object);
+    }
+    );
+}
+
+function appendChatNameToSidebar(jsonObj) {
+    console.log(jsonObj.chats);
+    const chatContainer = document.getElementById('chat-container');
+    for(index in jsonObj.chats)
+    {
+        console.log(index);
+        var outerContainer1 = document.createElement("div");
+        outerContainer1.className = "chat_list";
+
+        // //update the active chat when clicked on
+        // outerContainer1.addEventListener("click", function() {
+        //     //deactivate current active chat class
+        //     var activeChat = document.getElementsByClassName("chat_list active_chat");
+        //     if (activeChat[0] != null) {
+        //         activeChat[0].className = "chat_list";
+        //     }
+        //     //update chat that was clicked on to become active
+        //     this.className = "chat_list active_chat"; 
+        //     clearChatHistory();
+        //     var chatName = this.firstChild.firstChild.firstChild.innerText;
+        //     var arrayOfChats = findChatBackend(chatName);
+        //     buildChatHistory(arrayOfChats);
+        // });
+
+        var chatName = jsonObj.chats[index].name;
+        var chatValue = index;
+
+        //build bootstrap outline
+        var outerContainer2 = document.createElement("div");
+        outerContainer2.className = "chat_people";
+        var innerContainer = document.createElement("div")
+        innerContainer.className = "chat_ib";
+
+
+        outerContainer1.appendChild(outerContainer2);
+        outerContainer2.appendChild(innerContainer);
+
+        // buildSingleChat(innerContainer, exampleBackend[i]);
+        var title = document.createElement("h5");
+        title.innerText = chatName;
+        innerContainer.appendChild(title);
+
+        chatContainer.appendChild(outerContainer1);
+        
+    }
+}
+
+
+
+
+
+
 //EXAMPLE CHAT HISTORY DATA
     var s1 = [
         "hello",
@@ -90,11 +153,7 @@ function loadChats() {
 function buildSingleChat(innContainer, chatData) {
     var title = document.createElement("h5");
     title.innerText = chatData.Title;
-    var chatLast = document.createElement("p");
-    chatLast.innerText = chatData.LastChat;
-
     innContainer.appendChild(title);
-    innContainer.appendChild(chatLast);
 }
 
 function clearChatHistory() {

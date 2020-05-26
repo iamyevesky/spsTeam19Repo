@@ -59,6 +59,7 @@ function getChats(){
                 console.log(jsonResponse);
                 var divElement = document.getElementById("messages");
                 divElement.innerHTML = '';
+                console.log(document.getElementById("chatList").value);
                 const parsed = parseInt(document.getElementById("chatList").value, 10);
                 console.log(parsed);
                 if (isNaN(parsed)) {return}

@@ -93,6 +93,13 @@ public final class User{
         }
     }
 
+    public void leaveChat(Chatroom chat){
+        Key key = KeyFactory.stringToKey(chat.getKey());
+        if (this.chat.contains(key)){
+            this.chat.remove(key);   
+        }
+    }
+
     public ArrayList<Chatroom> getChats() throws EntityNotFoundException{
         ArrayList<Chatroom> output = new ArrayList<>();
         for (Key key : chat){

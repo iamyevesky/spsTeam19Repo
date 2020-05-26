@@ -27,7 +27,7 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.util.*;
 
-@WebServlet("/joinChat")
+@WebServlet("/updateChat")
 public class JoinChatServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -60,16 +60,26 @@ public class JoinChatServlet extends HttpServlet {
         Chatroom chat = null;
         String email = userService.getCurrentUser().getEmail();
         String chatKey = request.getParameter("chatKey");
-
+        boolean kind = true;
         try
         {
             user = User.getUser(email);
             chat = Chatroom.getChatroom(KeyFactory.stringToKey(chatKey));
-            user.addChat(chat);
-            user.saveToDatabase();
-            chat.addUser(user);
-            chat.addAdmin(user);
-            chat.saveToDatabase();
+            if (kind)
+            {
+                user.addChat(chat);
+                user.updateDatabase();
+                chat.addUser(user);
+                chat.addAdmin(user);
+                chat.updateDatabase();
+            }
+            else
+            {
+                user.leaveChat(chat);
+                user.saveToDatabase();
+                chat.removeUser(user);
+                chat.saveToDatabase();
+            }
         }
         catch(EntityNotFoundException e)
         {

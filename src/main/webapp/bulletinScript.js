@@ -153,7 +153,7 @@ function createBody(bodyOutline, currPost) {
 
     var bulletinTime = document.createElement("h6");
     bulletinTime.className = "card-title";
-    timeNoSeconds = d.toLocaleTimeString().replace(/(.*)\D\d+/, '$1');
+    var timeNoSeconds = d.toLocaleTimeString().replace(/(.*)\D\d+/, '$1');
     bulletinTime.innerText = timeNoSeconds;
 
     var title = document.createElement("h5");

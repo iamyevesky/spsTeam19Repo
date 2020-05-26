@@ -90,6 +90,7 @@ function getChats(){
                 var jsonResponse = JSON.parse(ajaxRequest.responseText);
                 console.log(jsonResponse);
                 var divElement = document.getElementById("messages");
+                divElement.innerHTML = '';
                 const parsed = parseInt(document.getElementById("chatList").value, 10);
                 console.log(parsed);
                 if (isNaN(parsed)) {return}

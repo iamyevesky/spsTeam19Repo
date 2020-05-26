@@ -1,62 +1,24 @@
-//EXAMPLE CHAT HISTORY DATA
-    var s1 = [
-        "hello",
-        "whats up",
-        "hello",
-        "whats up",
-        "hello",
-        "whats up",
-        "hello",
-        "whats up",
-        "hello",
-        "whats up",
-    ];
-    var s2 = [
-        "hows it going",
-        "pretty good",
-        "testing",
-        "testing1",
-        "hello1",
-        "hello1",
-        "whats up",
-        "hello",
-        "whats up",
-    ];
+var messageInfo;
+function loadChatsNew() {
+    fetch("/sendMessage").then(response => response.json()).then(object =>
+    {
+        console.log(object);
+        messageInfo = object;
+        appendChatNameToSidebar(object);
+    }
+    );
+}
 
-    //EXAMPLE DATA
-    var exampleChat1 = {
-        Title: "GT CS 1301",
-        LastChat: "When is the final?",
-        chatHistory: s1,
-    };
-    var exampleChat2 = {
-        Title: "GT CS 1331",
-        LastChat: "How are office hours going to be conducted",
-        chatHistory: s2,
-    };
-    var exampleChat3 = {
-        Title: "GT LMC 2500",
-        LastChat: "Where is the zoom link?",
-        chatHistory: s1,
-    };
-    var exampleChat4 = {
-        Title: "GT Computer Science Department",
-        LastChat: "New changes to grade modes and deadlines",
-        chatHistory: s2,
-    };
-    var exampleBackend = [exampleChat1, exampleChat2, exampleChat3, exampleChat4];
-
-
-
-
-function loadChats() {
+function appendChatNameToSidebar(jsonObj) {
+    console.log(jsonObj.chats);
     const chatContainer = document.getElementById('chat-container');
-
-    for (i = 0; i < exampleBackend.length; i++) {
+    for(index in jsonObj.chats)
+    {
+        console.log(index);
         var outerContainer1 = document.createElement("div");
         outerContainer1.className = "chat_list";
 
-        //update active chats when clicked on
+        //update the active chat when clicked on and load messages
         outerContainer1.addEventListener("click", function() {
             //deactivate current active chat class
             var activeChat = document.getElementsByClassName("chat_list active_chat");
@@ -65,11 +27,13 @@ function loadChats() {
             }
             //update chat that was clicked on to become active
             this.className = "chat_list active_chat"; 
-            clearChatHistory();
-            var chatName = this.firstChild.firstChild.firstChild.innerText;
-            var arrayOfChats = findChatBackend(chatName);
-            buildChatHistory(arrayOfChats);
+            var htmlColl = activeChat[0];
+            var chatName = htmlColl.firstChild.firstChild.firstChild.innerText;
+            console.log(getActiveChatIndex());
         });
+
+        var chatName = jsonObj.chats[index].name;
+        var chatValue = index;
 
         //build bootstrap outline
         var outerContainer2 = document.createElement("div");
@@ -81,33 +45,84 @@ function loadChats() {
         outerContainer1.appendChild(outerContainer2);
         outerContainer2.appendChild(innerContainer);
 
-        buildSingleChat(innerContainer, exampleBackend[i]);
+        // buildSingleChat(innerContainer, exampleBackend[i]);
+        var title = document.createElement("h5");
+        title.innerText = chatName;
+        innerContainer.appendChild(title);
 
         chatContainer.appendChild(outerContainer1);
+        
     }
+    getChats();
+}
+function getActiveChatIndex() {
+    //get name of currently clicked chat by class name "active_chat"
+    var activeChat = document.getElementsByClassName("chat_list active_chat");
+    var htmlColl = activeChat[0];
+    var chatName = htmlColl.firstChild.firstChild.firstChild.innerText;
+    console.log(chatName);
+
+    //search backend and find index based on name
+    var chatsArr = messageInfo.chats;
+    console.log(chatsArr);
+    for (i = 0; i < chatsArr.length; i++) {
+        if (chatName === chatsArr[i].name) {
+            return i;
+        }
+    }
+
+}
+function getChats(){
+    var ajaxRequest = new XMLHttpRequest();
+    ajaxRequest.onreadystatechange = function()
+    {
+        if(ajaxRequest.readyState == 4)
+        {
+            //the request is completed, now check its status
+            if(ajaxRequest.status == 200)
+            {
+                var jsonResponse = JSON.parse(ajaxRequest.responseText);
+                console.log(jsonResponse);
+                clearChatHistory();
+                const parsed = getActiveChatIndex();
+                if (isNaN(parsed)) {return}
+                buildMsgHistory(jsonResponse.chats[parsed].messages);
+            }
+            else
+            {
+                console.log("Status error: " + ajaxRequest.status);
+            }
+	    }
+        else
+        {
+            console.log("Ignored readyState: " + ajaxRequest.readyState);
+	    }
+	}
+    ajaxRequest.open('GET', '/sendMessage');
+    ajaxRequest.send();
+    setTimeout(getChats, 1000);
 }
 
-function buildSingleChat(innContainer, chatData) {
-    var title = document.createElement("h5");
-    title.innerText = chatData.Title;
-    var chatLast = document.createElement("p");
-    chatLast.innerText = chatData.LastChat;
-
-    innContainer.appendChild(title);
-    innContainer.appendChild(chatLast);
-}
-
-function clearChatHistory() {
-    var node = document.getElementById("msg-container");
-    node.innerHTML = "";
-}
-
-function buildChatHistory(pastMessageData) {
+function buildMsgHistory(pastMessageData) {
     var outline = document.getElementById("msg-container");
-    for (const msg of pastMessageData) {
+    for (i = 0; i < pastMessageData.length; i++) {
+        var currMsgObj = pastMessageData[i];
+        msg = currMsgObj.message;
+        var senderUsername = currMsgObj.sender.username;
+
+        //get date and time in nice format
+        var timeSeconds = currMsgObj.time.seconds;
+        var d = new Date(0);
+        d.setUTCSeconds(timeSeconds);
+        var timeNoSeconds = d.toLocaleTimeString().replace(/(.*)\D\d+/, '$1');
+        var dayMY = d.toLocaleDateString();
+
         //create bootstrap outline
         var msgDiv = document.createElement("div");
         msgDiv.className = "outgoing_msg";
+
+        //TODO: CURRENTLY ONLY SHOWS AS IF USER SENT ALL MESSAGES
+        //CHANGE DEPENDING ON USER WHO SENT IT
         var innerTextDiv = document.createElement("div");
         innerTextDiv.className = "sent_msg";
 
@@ -115,19 +130,43 @@ function buildChatHistory(pastMessageData) {
         var text = document.createElement("p");
         text.innerHTML = msg;
 
+        //add username above text
+        var spanUsername = document.createElement("span")
+        spanUsername.innerText = senderUsername;
+        spanUsername.classList.add("chat_username");
+
+        //add time/date below text
+        var spanTime = document.createElement("span")
+        spanTime.innerText = timeNoSeconds + " | " + dayMY;
+        spanTime.classList.add("time_date");
+
         //append text to bootstrap outline
+        innerTextDiv.appendChild(spanUsername);
         innerTextDiv.appendChild(text);
+        innerTextDiv.appendChild(spanTime);
         msgDiv.appendChild(innerTextDiv);
         outline.appendChild(msgDiv);
     }
 }
 
-function findChatBackend(chatName) {
-    for (i = 0; i < exampleBackend.length; i++) {
-        var backendChatName = exampleBackend[i].Title;
-        if (chatName == backendChatName) {
-            return exampleBackend[i].chatHistory;
+function handleSend()
+{
+    const parsed = getActiveChatIndex();
+    if (isNaN(parsed)) {return false;}
+    var key = messageInfo.chats[parsed].key+"";
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/sendMessage?chatKey="+key+"&message="+document.messageForm.elements.namedItem('message').value+"", true);
+
+    xhr.onreadystatechange = function() { // Call a function when the state changes.
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
         }
     }
-    return null;
+    xhr.send();
+    console.log("Chat sent");
+    return false;    
+}
+
+function clearChatHistory() {
+    var node = document.getElementById("msg-container");
+    node.innerHTML = "";
 }

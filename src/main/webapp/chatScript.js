@@ -78,13 +78,13 @@ function getChats(){
     {
         if(ajaxRequest.readyState == 4)
         {
+            const parsed = getActiveChatIndex();
             //the request is completed, now check its status
             if(ajaxRequest.status == 200)
             {
                 var jsonResponse = JSON.parse(ajaxRequest.responseText);
                 console.log(jsonResponse);
                 clearChatHistory();
-                const parsed = getActiveChatIndex();
                 if (isNaN(parsed)) {return}
                 buildMsgHistory(jsonResponse.chats[parsed].messages);
             }

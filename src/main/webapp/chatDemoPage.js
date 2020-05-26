@@ -1,5 +1,13 @@
 var messageInfo;
 function getRooms(){
+    fetch("/createChat").then(response => response.json()).then(object =>
+        {
+            console.log(object);
+            htmlObj = document.getElementById("collegeChat");
+            appendCollegeChat(htmlObj, object);
+        }
+    );
+
     fetch("/sendMessage").then(response => response.json()).then(object =>
     {
         console.log(object);
@@ -10,6 +18,30 @@ function getRooms(){
         appendChat(htmlObj, object);
     }
     );
+}
+
+function appendCollegeChat(htmlObj, object)
+{
+    for(index in object.chats){
+        const form = document.createElement("FORM");
+        form.action = "/updateChat";
+        form.method = "POST";
+        const input = document.createElement("input");
+        input.type = "submit";
+        input.value = "Join chat";
+        const chatKey = object.chats[index].key + "";
+        const chatName = object.chats[index].name + "";
+        const hidden = document.createElement("INPUT");
+        hidden.setAttribute("type", "hidden");
+        hidden.setAttribute("name", "chatKey");
+        hidden.setAttribute("value", chatKey);
+        form.appendChild(hidden);
+        const element = document.createElement("p");
+        element.innerText = chatName;
+        form.appendChild(element);
+        form.appendChild(input);
+        htmlObj.appendChild(form);
+    }
 }
 
 function handleSend()
@@ -59,10 +91,10 @@ function getChats(){
                 console.log(jsonResponse);
                 var divElement = document.getElementById("messages");
                 divElement.innerHTML = '';
-                console.log(document.getElementById("chatList").value);
                 const parsed = parseInt(document.getElementById("chatList").value, 10);
                 console.log(parsed);
                 if (isNaN(parsed)) {return}
+                divElement.innerHTML = '';
                 for (index in jsonResponse.chats[parsed].messages)
                 {
                     var jsonMessage =  jsonResponse.chats[parsed].messages[index];

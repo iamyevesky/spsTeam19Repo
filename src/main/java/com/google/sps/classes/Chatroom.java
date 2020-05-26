@@ -90,9 +90,26 @@ public final class Chatroom{
     }
 
     public void addUser(User user){
-         Key key = KeyFactory.stringToKey(user.getKey());
+        Key key = KeyFactory.stringToKey(user.getKey());
         if (!userKeys.contains(key)){
             userKeys.add(key);   
+        }
+    }
+
+    public void removeUser(User user)
+    {
+        this.removeAdmin(user);
+        Key key = KeyFactory.stringToKey(user.getKey());
+        if (userKeys.contains(key)){
+            userKeys.add(key);   
+        }
+    }
+
+    public void removeAdmin(User user)
+    {
+        Key key = KeyFactory.stringToKey(user.getKey());
+        if (adminKeys.contains(key)){
+            adminKeys.add(key);   
         }
     }
 
@@ -147,8 +164,8 @@ public final class Chatroom{
         new Query("Chatroom")
         .setFilter(new Query.CompositeFilter(Query.CompositeFilterOperator.AND, Arrays.asList(
         new Query.FilterPredicate("isDM", Query.FilterOperator.EQUAL, false),
-        new Query.FilterPredicate("collegeID", Query.FilterOperator.EQUAL, KeyFactory.stringToKey(college.getKey())))))
-        .addSort("timestamp", SortDirection.ASCENDING);
+        new Query.FilterPredicate("collegeID", Query.FilterOperator.EQUAL, KeyFactory.stringToKey(college.getKey())))));
+        /*.addSort("timestamp", SortDirection.ASCENDING);*/
         
         PreparedQuery result = datastore.prepare(query);
         ArrayList<Chatroom> output = new ArrayList<>();

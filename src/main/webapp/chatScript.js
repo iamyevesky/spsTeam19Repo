@@ -1,4 +1,4 @@
-    var messageInfo;
+var messageInfo;
 function loadChatsNew() {
     fetch("/sendMessage").then(response => response.json()).then(object =>
     {
@@ -83,25 +83,27 @@ function getChats(){
             {
                 var jsonResponse = JSON.parse(ajaxRequest.responseText);
                 console.log(jsonResponse);
+                clearChatHistory();
                 // var divElement = document.getElementById("messages");
                 // divElement.innerHTML = '';
                 const parsed = getActiveChatIndex();
                 if (isNaN(parsed)) {return}
-                for (index in jsonResponse.chats[parsed].messages)
-                {
+                buildMsgHistory(jsonResponse.chats[parsed].messages);
+                // for (index in jsonResponse.chats[parsed].messages)
+                // {
 
-                    var jsonMessage =  jsonResponse.chats[parsed].messages[index];
-                    console.log(jsonMessage);
-                    // var messageEntity = document.createElement("div");
-                    // messageEntity.innerHTML = '';
-                    // var name = document.createElement("p");
-                    // name.innerText = jsonMessage.sender.username + "";
-                    // messageEntity.appendChild(name);
-                    // var messageText = document.createElement("p");
-                    // messageText.innerText = jsonMessage.message + "";
-                    // messageEntity.appendChild(messageText);
-                    // divElement.appendChild(messageEntity);
-                }
+                //     var jsonMessage =  jsonResponse.chats[parsed].messages[index];
+                //     console.log(jsonMessage);
+                //     // var messageEntity = document.createElement("div");
+                //     // messageEntity.innerHTML = '';
+                //     // var name = document.createElement("p");
+                //     // name.innerText = jsonMessage.sender.username + "";
+                //     // messageEntity.appendChild(name);
+                //     // var messageText = document.createElement("p");
+                //     // messageText.innerText = jsonMessage.message + "";
+                //     // messageEntity.appendChild(messageText);
+                //     // divElement.appendChild(messageEntity);
+                // }
             }
             else
             {
@@ -118,6 +120,28 @@ function getChats(){
     setTimeout(getChats, 1000);
 }
 
+function buildMsgHistory(pastMessageData) {
+    var outline = document.getElementById("msg-container");
+    for (i = 0; i < pastMessageData.length; i++) {
+        var currMsgObj = pastMessageData[i];
+        msg = currMsgObj.message;
+        
+        //create bootstrap outline
+        var msgDiv = document.createElement("div");
+        msgDiv.className = "outgoing_msg";
+        var innerTextDiv = document.createElement("div");
+        innerTextDiv.className = "sent_msg";
+
+        //populate text with past message
+        var text = document.createElement("p");
+        text.innerHTML = msg;
+
+        //append text to bootstrap outline
+        innerTextDiv.appendChild(text);
+        msgDiv.appendChild(innerTextDiv);
+        outline.appendChild(msgDiv);
+    }
+}
 
 
 

@@ -46,68 +46,56 @@ function loadCollegePosts() {
 
 }
 
-
-function loadDepartments() {
-    var departmentsArr = jsonObject.departments;
-    console.log(departmentsArr);
-    const bulletinContainer = document.getElementById('bulletin-new-container');
-    for (i = 0; i < departmentsArr.length; i++) {
-        //title 
-        var departmentTitle = document.createElement("h4");
-        departmentTitle.innerHTML = departmentsArr[i].name;
-        //departmentTitle.style.marginTop = "70px";
-        console.log(departmentsArr[i]);
-        bulletinContainer.appendChild(departmentTitle);
-        //posts
-        createDepartmentPosts(departmentsArr[i], departmentTitle);
-        bulletinContainer.appendChild(document.createElement("BR"));
-        //form
-        var header = document.createElement("h5");
-        header.innerHTML = "Create a post in " + departmentsArr[i].name;
-        bulletinContainer.appendChild(header);
-        bulletinContainer.appendChild(document.createElement("BR"))
-        bulletinContainer.appendChild(createPostLink(departmentsArr[i]));
-        //spacer
-        var spacer = document.createElement("hr");
-        spacer.style.marginTop = "40px";
-        spacer.style.marginBottom = "40px";
-        bulletinContainer.appendChild(spacer);
-    }
-}
 function createFormPost() {
+    var singleCard = document.createElement("div");
+    singleCard.className = "card";
+    singleCard.style.width = "50rem";
+    singleCard.style.margin = "0 auto";
+    singleCard.style.marginTop = "30px";
+    var cardBody = document.createElement("div");
+    cardBody.className = "card-body";
+    singleCard.appendChild(cardBody);
 
     var f = document.createElement("form");
     f.setAttribute('method',"POST");
     f.setAttribute('action',"/getInfoPost");
 
-    //title
+    //User's name
+    var uName = document.createElement("h5");
+    uName.className = "card-title";
+    uName.innerText = jsonObject.user.username;
+
+    //title and row div
     var titleDiv = document.createElement("div");
-    titleDiv.setAttribute('class',"form-group");
+    titleDiv.classList.add("form-group", "row", "d-flex", "justify-content-center");
 
     var titleLabel = document.createElement("label");
     titleLabel.innerHTML = "Title:";
+    titleLabel.classList.add("col-sm-1", "col-form-label");
     titleDiv.appendChild(titleLabel);
+    
 
     var titleEntry = document.createElement("input"); //input element, text
     titleEntry.setAttribute('type',"text");
     titleEntry.setAttribute('name',"title");
-    titleEntry.setAttribute('class',"form-control");
-    titleEntry.setAttribute('placeholder', "Title");
+    titleEntry.classList.add("form-control", "col-sm-6");
+    titleEntry.setAttribute('placeholder', "Helpful study techniques");
     titleDiv.appendChild(titleEntry);
 
     //body
     var bodyDiv = document.createElement("div");
-    bodyDiv.setAttribute('class',"form-group");
+    bodyDiv.classList.add("form-group", "row", "d-flex", "justify-content-center");
 
     var bodyLabel = document.createElement("label");
     bodyLabel.innerHTML = "Text:";
+    bodyLabel.classList.add("col-sm-1", "col-form-label");
     bodyDiv.appendChild(bodyLabel);
 
-    var bodyEntry = document.createElement("input"); //input element, text
-    bodyEntry.setAttribute('type',"text");
+    var bodyEntry = document.createElement("textarea"); //input element, text
+    bodyEntry.setAttribute("rows","3");
     bodyEntry.setAttribute('name',"body");
-    bodyEntry.setAttribute('placeholder', "body");
-    bodyEntry.setAttribute('class',"form-control");
+    bodyEntry.setAttribute('placeholder', "I wanted to share some techniques that help me study at home...");
+    bodyEntry.classList.add("form-control", "col-sm-9");
     bodyDiv.appendChild(bodyEntry);
 
     //hidden college entry with value set as user's college
@@ -123,17 +111,23 @@ function createFormPost() {
     userEntry.setAttribute('value',jsonObject.user);
 
     //input element, Submit button
+    var sDiv = document.createElement("div");
+    sDiv.classList.add("text-center");
+
     var s = document.createElement("input");
     s.setAttribute('type',"submit");
-    s.setAttribute('value',"Submit");
-    s.classList.add("btn","btn-success");
+    s.setAttribute('value',"Submit Post");
+    s.classList.add("btn", "btn-success");
+    sDiv.appendChild(s);
 
+    f.appendChild(uName);
     f.appendChild(titleDiv);
     f.appendChild(bodyDiv);
     f.appendChild(collegeEntry);
     f.appendChild(userEntry);
-    f.appendChild(s);
-    return f;
+    f.appendChild(sDiv);
+    cardBody.appendChild(f);
+    return singleCard;
 }
 
 function createBody(bodyOutline, currPost) {

@@ -32,15 +32,19 @@ function createForm(jsonObject){
 
     var nameLabel = document.createElement("LABEL");
     var username = document.createElement("INPUT");
+
     username.setAttribute("type", "text");
     username.setAttribute("placeholder", "Your name here");
     username.setAttribute("autofocus", true);
     username.setAttribute("id", "username");
     username.setAttribute("name", "username");
+
     nameLabel.htmlFor = "username";
     nameLabel.innerText = "Name: ";
+
     nameLabel.classList.add('col-sm-3', 'col-form-label');
     username.classList.add("form-control");
+    
     inputDiv.appendChild(username);
     row1.appendChild(nameLabel);
     row1.appendChild(inputDiv);

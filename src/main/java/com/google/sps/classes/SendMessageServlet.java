@@ -1,5 +1,7 @@
 package com.google.sps.classes;
 
+import org.jsoup.safety.Whitelist;
+import org.jsoup.Jsoup;
 import java.io.IOException;
 import java.io.PrintWriter;
 import com.google.gson.Gson;
@@ -115,8 +117,8 @@ public class SendMessageServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
         User user = null;
         String email = userService.getCurrentUser().getEmail();
-        String key = request.getParameter("chatKey");
-        String message = request.getParameter("message");
+        String key = Jsoup.clean(request.getParameter("chatKey"), Whitelist.basic());
+        String message = Jsoup.clean(request.getParameter("message"), Whitelist.basic());
 
         try
         {

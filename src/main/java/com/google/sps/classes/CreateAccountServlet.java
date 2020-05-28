@@ -1,5 +1,7 @@
 package com.google.sps.classes;
 
+import org.jsoup.safety.Whitelist;
+import org.jsoup.Jsoup;
 import java.io.IOException;
 import java.io.PrintWriter;
 import com.google.gson.Gson;
@@ -18,7 +20,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import java.util.*;
+
 @WebServlet("/createAccount")
 public class CreateAccountServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
@@ -39,8 +41,8 @@ public class CreateAccountServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
-        String name = request.getParameter("username");
-        String key =  request.getParameter("college");
+        String name = Jsoup.clean(request.getParameter("username"), Whitelist.basic());
+        String key =  Jsoup.clean(request.getParameter("college"), Whitelist.basic());
         College college = null;
 
         if (!userService.isUserLoggedIn())

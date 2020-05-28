@@ -1,5 +1,7 @@
 package com.google.sps.classes;
 
+import org.jsoup.safety.Whitelist;
+import org.jsoup.Jsoup;
 import java.io.IOException;
 import java.io.PrintWriter;
 import com.google.gson.Gson;
@@ -25,7 +27,8 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import java.util.*;
+import java.util.ArrayList;
+
 @WebServlet("/getInfoPost")
 public class CollegePostServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
@@ -51,8 +54,8 @@ public class CollegePostServlet extends HttpServlet {
             response.sendRedirect("/bulletin.html");
             return;
         }
-        String title = request.getParameter("title");
-        String body = request.getParameter("body");
+        String title = Jsoup.clean(request.getParameter("title"), Whitelist.basic());
+        String body = Jsoup.clean(request.getParameter("body"), Whitelist.basic());
         BulletinPost.addPostToDatabase(user, title, body);
         response.sendRedirect("/bulletin.html");
     }

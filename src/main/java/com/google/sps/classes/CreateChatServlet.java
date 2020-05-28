@@ -136,6 +136,6 @@ public class CreateChatServlet extends HttpServlet {
             response.sendRedirect("/index.html");
             return;
         }
-        response.sendRedirect("/chatDemoPage.html");
+        response.sendRedirect("/chat.html");
     }
 }

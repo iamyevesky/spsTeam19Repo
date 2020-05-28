@@ -163,10 +163,17 @@ function handleSend()
     }
     xhr.send();
     console.log("Chat sent");
+    clearInputValue();
     return false;    
 }
 
 function clearChatHistory() {
     var node = document.getElementById("msg-container");
     node.innerHTML = "";
+}
+
+//used to clear input field for typing after submitting
+function clearInputValue() {
+    var msgInput = document.getElementById("messageField");
+    msgInput.value = "";
 }

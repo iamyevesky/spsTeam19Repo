@@ -98,24 +98,11 @@
         </div>
         <div class="mesgs">
           <div class="msg_history" id="msg-container">
-            <!-- HOW TO FORMAT MESSAGES: -->
-            <!-- <div class="incoming_msg">
-              <div class="received_msg">
-                <div class="received_withd_msg">
-                  <p>Does anyone know how to do the CS hw</p>
-                </div>
-              </div>
-            </div>
-            <div class="outgoing_msg">
-              <div class="sent_msg">
-                <p>I think so, just look it up on stack overflow</p>
-              </div>
-            </div> -->
           </div>
           <div class="type_msg">
             <div class="input_msg_write">
               <form name="messageForm" action="javascript:handleSend()" method="POST">
-                <input type="text" name="message" class="write_msg" placeholder="Type a message" />
+                <input type="text" id="messageField" name="message" class="write_msg" placeholder="Type a message" />
                 <button class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
               </form>
             </div>

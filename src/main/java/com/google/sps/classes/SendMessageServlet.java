@@ -27,7 +27,8 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import java.util.*;
+import java.util.ArrayList;
+import com.google.cloud.Timestamp;
 
 @WebServlet("/sendMessage")
 public class SendMessageServlet extends HttpServlet {
@@ -137,7 +138,10 @@ public class SendMessageServlet extends HttpServlet {
         try
         {
             Chatroom chat = Chatroom.getChatroom(KeyFactory.stringToKey(key));
+            chat.updateTime(Timestamp.now());
             Message.addMessageToDatabase(user, chat, message);
+            chat.updateTime(Timestamp.now());
+            chat.updateDatabase();
         }
         catch(EntityNotFoundException e)
         {

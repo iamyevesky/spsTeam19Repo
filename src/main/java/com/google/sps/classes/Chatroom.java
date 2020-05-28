@@ -12,8 +12,10 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.cloud.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 public final class Chatroom{
     private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -23,8 +25,9 @@ public final class Chatroom{
     private String key;
     private ArrayList<Key> adminKeys;
     private ArrayList<Key> userKeys;
+    private Timestamp timestamp;
 
-    private Chatroom(String name, boolean isDM, Key adminKey, College college){
+    private Chatroom(String name, boolean isDM, Key adminKey, College college, Timestamp timestamp){
         this.name = name;
         this.isDM = isDM;
         this.college = college;
@@ -32,14 +35,16 @@ public final class Chatroom{
         this.userKeys.add(adminKey);
         this.adminKeys = new ArrayList<>();
         this.adminKeys.add(adminKey);
+        this.timestamp = timestamp;
     }
 
-    private Chatroom(String name, boolean isDM, College college){
+    private Chatroom(String name, boolean isDM, College college, Timestamp timestamp){
         this.name = name;
         this.isDM = isDM;
         this.college = college;
         this.userKeys = new ArrayList<>();
         this.adminKeys = new ArrayList<>();
+        this.timestamp = timestamp;
     }
 
     private void setKey(Key key){
@@ -113,6 +118,10 @@ public final class Chatroom{
         }
     }
 
+    public void updateTime(Timestamp timestamp){
+        this.timestamp = timestamp;
+    }
+
     public ArrayList<Message> getMessages() throws EntityNotFoundException{
         return Message.getChatMessages(this.key);
     }
@@ -127,6 +136,7 @@ public final class Chatroom{
         chatroom.setProperty("adminKeys", this.adminKeys);
         chatroom.setProperty("isDM", this.isDM);
         chatroom.setProperty("collegeID", KeyFactory.stringToKey(this.college.getKey()));
+        chatroom.setProperty("timestamp", this.timestamp.toDate());
         datastore.put(chatroom);
         this.key = KeyFactory.keyToString(chatroom.getKey());
     }
@@ -139,12 +149,13 @@ public final class Chatroom{
         chatroom.setProperty("name", this.name);
         chatroom.setProperty("userKeys", this.userKeys);
         chatroom.setProperty("adminKeys", this.adminKeys);
+        chatroom.setProperty("timestamp", this.timestamp.toDate());
         datastore.put(chatroom);
     }
     
     public static Chatroom getChatroom(Key chatroomKey) throws EntityNotFoundException{
         Entity chatroom = datastore.get(chatroomKey);
-        Chatroom output = new Chatroom((String) chatroom.getProperty("name"), (boolean) chatroom.getProperty("isDM"), College.getCollege((Key) chatroom.getProperty("collegeID")));
+        Chatroom output = new Chatroom((String) chatroom.getProperty("name"), (boolean) chatroom.getProperty("isDM"), College.getCollege((Key) chatroom.getProperty("collegeID")), Timestamp.of((Date) chatroom.getProperty("timestamp")));
         output.setUserKeys((ArrayList<Key>) chatroom.getProperty("userKeys"));
         output.setAdminKeys((ArrayList<Key>) chatroom.getProperty("adminKeys"));
         output.setKey(chatroom.getKey());
@@ -152,7 +163,7 @@ public final class Chatroom{
     }
 
     public static Chatroom get(Entity chatroom) throws EntityNotFoundException{
-        Chatroom output = new Chatroom((String) chatroom.getProperty("name"), (boolean) chatroom.getProperty("isDM"), College.getCollege((Key) chatroom.getProperty("collegeID")));
+        Chatroom output = new Chatroom((String) chatroom.getProperty("name"), (boolean) chatroom.getProperty("isDM"), College.getCollege((Key) chatroom.getProperty("collegeID")), Timestamp.of((Date) chatroom.getProperty("timestamp")));
         output.setUserKeys((ArrayList<Key>) chatroom.getProperty("userKeys"));
         output.setAdminKeys((ArrayList<Key>) chatroom.getProperty("adminKeys"));
         output.setKey(chatroom.getKey());
@@ -176,12 +187,12 @@ public final class Chatroom{
     }
 
     public static Chatroom createChat(String name, User first){
-        Chatroom output = new Chatroom(name, false, KeyFactory.stringToKey(first.getKey()), first.getCollege());
+        Chatroom output = new Chatroom(name, false, KeyFactory.stringToKey(first.getKey()), first.getCollege(), Timestamp.now());
         return output;
     }
 
     public static Chatroom createDM(User first, User second){
-        Chatroom output = new Chatroom("", true, first.getCollege());
+        Chatroom output = new Chatroom("", true, first.getCollege(), Timestamp.now());
         ArrayList<Key> keys = new ArrayList<>();
         keys.add(KeyFactory.stringToKey(first.getKey()));
         keys.add(KeyFactory.stringToKey(second.getKey()));

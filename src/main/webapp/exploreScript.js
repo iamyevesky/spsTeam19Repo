@@ -1,9 +1,29 @@
+var chatsUserJoined;
+
 function getAvailableChats() {
+    checkLogin();
+}
+
+function checkLogin() {
     fetch("/getInfoPost").then(response => response.json()).then(object =>
     {
-        checkIfLoggedIn(object);
+        if (!object.status) {
+        window.location.replace("index.html");
+        }
+        instantiateVar();
     });
+}
 
+function instantiateVar() {
+    fetch("/sendMessage").then(response => response.json()).then(object =>
+    {
+        console.log(object);
+        chatsUserJoined = object.chats;
+        loadChatsToJoin();
+    });
+}
+
+function loadChatsToJoin() {
     fetch("/createChat").then(response => response.json()).then(object =>
         {
             console.log(object);
@@ -25,7 +45,13 @@ function appendCollegeChat(jsonObj) {
     var chatContainer = document.createElement("div");
     chatContainer.classList.add("row");
     chatInitial.appendChild(chatContainer);
+    console.log(jsonObj.chats);
+
     for (i = 0; i < jsonObj.chats.length; i++){
+        const currChat = jsonObj.chats[i];
+        console.log(currChat);
+        //console.log(isUserAlreadyInChat(currChat));
+
         var colContainer = document.createElement("div");
         colContainer.classList.add("column");
         var singleCard = document.createElement("div");
@@ -36,7 +62,6 @@ function appendCollegeChat(jsonObj) {
         cardBody.className = "card-body";
         singleCard.appendChild(cardBody);
 
-        const currChat = jsonObj.chats[i];
         createBody(cardBody, currChat);
         chatContainer.appendChild(colContainer);
     }
@@ -81,9 +106,15 @@ function createBody(bodyOutline, currPost) {
     bodyOutline.appendChild(form);
 }
 
-function checkIfLoggedIn(jsonObj) {
-    //redirects to home page if not logged in
-    if (!jsonObj.status) {
-        window.location.replace("index.html");
+
+function isUserAlreadyInChat(chatObj) {
+    console.log(chatsUserJoined);
+    for (i = 0; i < chatsUserJoined.length; i++) {
+        if (chatObj.key === chatsUserJoined[i].key) {
+            console.log(chatsUserJoined[i].key);
+            console.log(chatObj.key);
+            return true;
+        }
     }
+    return false;
 }

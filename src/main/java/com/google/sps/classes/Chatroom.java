@@ -71,6 +71,10 @@ public final class Chatroom{
         return this.key;
     }
 
+    public Timestamp getTime(){
+        return this.timestamp;
+    }
+
     public ArrayList<User> getUsers() throws EntityNotFoundException{
         ArrayList<User> output = new ArrayList<>();
         for(Key userKey : userKeys){

@@ -1,5 +1,7 @@
 package com.google.sps.classes;
 
+import org.jsoup.safety.Whitelist;
+import org.jsoup.Jsoup;
 import java.io.IOException;
 import java.io.PrintWriter;
 import com.google.gson.Gson;
@@ -29,7 +31,7 @@ public class UpdateUserInfoServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
         User user = null;
         String email = userService.getCurrentUser().getEmail();
-        String name = request.getParameter("username");
+        String name = Jsoup.clean(request.getParameter("username"), Whitelist.basic());
         try
         {
             user = User.getUser(email);

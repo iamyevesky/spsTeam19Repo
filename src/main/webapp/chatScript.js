@@ -5,6 +5,7 @@ function loadChatsNew() {
         console.log(object);
         messageInfo = object;
         appendChatNameToSidebar(object);
+        getChats();
     }
     );
 }
@@ -12,6 +13,7 @@ function loadChatsNew() {
 function appendChatNameToSidebar(jsonObj) {
     console.log(jsonObj.chats);
     const chatContainer = document.getElementById('chat-container');
+    chatContainer.innerHTML = '';
     for(index in jsonObj.chats)
     {
         console.log(index);
@@ -53,7 +55,6 @@ function appendChatNameToSidebar(jsonObj) {
         chatContainer.appendChild(outerContainer1);
         
     }
-    getChats();
 }
 function getActiveChatIndex() {
     //get name of currently clicked chat by class name "active_chat"
@@ -86,6 +87,7 @@ function getChats(){
                 console.log(jsonResponse);
                 clearChatHistory();
                 if (isNaN(parsed)) {return}
+                appendChatNameToSidebar(jsonResponse);
                 buildMsgHistory(jsonResponse.chats[parsed].messages);
             }
             else

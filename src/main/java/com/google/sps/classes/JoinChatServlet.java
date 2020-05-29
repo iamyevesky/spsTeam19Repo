@@ -25,7 +25,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import java.util.*;
+import java.util.ArrayList;
 
 @WebServlet("/updateChat")
 public class JoinChatServlet extends HttpServlet {

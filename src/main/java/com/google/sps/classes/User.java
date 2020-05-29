@@ -13,8 +13,9 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.gson.Gson;
-
+import com.google.cloud.Timestamp;
 import java.util.ArrayList;
+
 
 /*
  * This class represents a single user of the chatroom platform.
@@ -105,6 +106,7 @@ public final class User{
         for (Key key : chat){
             output.add(Chatroom.getChatroom(key));
         }
+        output.sort(new ChatComparator());
         return output;
     }
 
@@ -149,4 +151,4 @@ public final class User{
     //END OF PRODUCTION CODE
     //START OF DEVELOPMENT CODE
     //END OF DEVELOPMENT CODE
-} 
+}

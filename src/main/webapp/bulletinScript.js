@@ -1,6 +1,6 @@
 var jsonObject;
 
-function loadBulletinPage() {
+function loadBulletinPage() { 
     fetch("/getInfoPost").then(response => response.json()).then(object =>
     {
         jsonObject = object;

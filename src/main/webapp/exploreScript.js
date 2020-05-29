@@ -1,4 +1,9 @@
 function getAvailableChats() {
+    fetch("/getInfoPost").then(response => response.json()).then(object =>
+    {
+        checkIfLoggedIn(object);
+    });
+
     fetch("/createChat").then(response => response.json()).then(object =>
         {
             console.log(object);
@@ -74,4 +79,11 @@ function createBody(bodyOutline, currPost) {
     form.appendChild(chatNameTitle);
     form.appendChild(sDiv);
     bodyOutline.appendChild(form);
+}
+
+function checkIfLoggedIn(jsonObj) {
+    //redirects to home page if not logged in
+    if (!jsonObj.status) {
+        window.location.replace("index.html");
+    }
 }

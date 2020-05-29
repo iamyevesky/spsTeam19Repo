@@ -1,5 +1,10 @@
 var messageInfo;
 function loadChatsNew() {
+    fetch("/getInfoPost").then(response => response.json()).then(object =>
+    {
+        checkIfLoggedIn(object);
+    });
+
     fetch("/sendMessage").then(response => response.json()).then(object =>
     {
         console.log(object);
@@ -7,6 +12,7 @@ function loadChatsNew() {
         appendChatNameToSidebar(object);
     }
     );
+    
 }
 
 function appendChatNameToSidebar(jsonObj) {
@@ -176,4 +182,11 @@ function clearChatHistory() {
 function clearInputValue() {
     var msgInput = document.getElementById("messageField");
     msgInput.value = "";
+}
+
+function checkIfLoggedIn(jsonObj) {
+    //redirects to home page if not logged in
+    if (!jsonObj.status) {
+        window.location.replace("index.html");
+    }
 }

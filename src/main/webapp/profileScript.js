@@ -3,11 +3,11 @@ var jsonObject;
 function loadProfile() {
     fetch("/getUserInfo").then(response => response.json()).then(object =>
     {
+        checkIfLoggedIn(object);
         jsonObject = object;
         console.log(jsonObject);
         console.log(typeof jsonObject)
         setUpUserPage(jsonObject);
-        //loadClasses();
     });
 }
 
@@ -69,4 +69,11 @@ function createSingleCourseCard(course) {
     outerBox.appendChild(coursename);
     outerBox.appendChild(textOuterBox);
     return outerBox;
+}
+
+function checkIfLoggedIn(jsonObj) {
+    //redirects to home page if not logged in
+    if (!jsonObj.status) {
+        window.location.replace("index.html");
+    }
 }

@@ -79,6 +79,7 @@ function getActiveChatIndex() {
     console.log(chatsArr);
     for (i = 0; i < chatsArr.length; i++) {
         if (chatName === chatsArr[i].name) {
+            console.log(chatsArr[i]);
             return i;
         }
     }

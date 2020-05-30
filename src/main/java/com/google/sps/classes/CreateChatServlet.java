@@ -1,5 +1,7 @@
 package com.google.sps.classes;
 
+import org.jsoup.safety.Whitelist;
+import org.jsoup.Jsoup;
 import java.io.IOException;
 import java.io.PrintWriter;
 import com.google.gson.Gson;
@@ -25,7 +27,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import java.util.*;
+import java.util.ArrayList;
 
 @WebServlet("/createChat")
 public class CreateChatServlet extends HttpServlet {
@@ -108,7 +110,7 @@ public class CreateChatServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
         User user = null;
         String email = userService.getCurrentUser().getEmail();
-        String name = request.getParameter("name");
+        String name = Jsoup.clean(request.getParameter("name"), Whitelist.basic());
 
         try
         {

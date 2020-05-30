@@ -60,13 +60,14 @@ public class JoinChatServlet extends HttpServlet {
         Chatroom chat = null;
         String email = userService.getCurrentUser().getEmail();
         String chatKey = request.getParameter("chatKey");
-        boolean kind = true;
+        boolean alreadyInChat = Boolean.parseBoolean(request.getParameter("userChoice"));
         try
         {
             user = User.getUser(email);
             chat = Chatroom.getChatroom(KeyFactory.stringToKey(chatKey));
-            if (kind)
+            if (!alreadyInChat)
             {
+                System.out.println("testingJoin");
                 user.addChat(chat);
                 user.updateDatabase();
                 chat.addUser(user);
@@ -76,9 +77,10 @@ public class JoinChatServlet extends HttpServlet {
             else
             {
                 user.leaveChat(chat);
-                user.saveToDatabase();
+                user.updateDatabase();
                 chat.removeUser(user);
-                chat.saveToDatabase();
+                chat.updateDatabase();
+                System.out.println("testingLeave");
             }
         }
         catch(EntityNotFoundException e)

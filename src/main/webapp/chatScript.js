@@ -102,6 +102,7 @@ function getChats(){
                 console.log(jsonResponse);
                 clearChatHistory();
                 if (isNaN(parsed)) {return}
+                updateChatNamesSidebar(jsonResponse.chats);
                 //appendChatNameToSidebar(jsonResponse);
                 buildMsgHistory(jsonResponse.chats[parsed].messages);
             }
@@ -199,5 +200,18 @@ function checkIfLoggedIn(jsonObj) {
     //redirects to home page if not logged in
     if (!jsonObj.status) {
         window.location.replace("index.html");
+    }
+}
+
+function updateChatNamesSidebar(jsonChats) {
+    var currChatNames = document.getElementById("chat-container").childNodes;
+    console.log(currChatNames);
+    console.log(jsonChats);
+    console.log(currChatNames[0].firstChild.firstChild.firstChild);
+    for (i = 0; i < currChatNames.length; i++) {
+        chatHeaderElement = currChatNames[i].firstChild.firstChild.firstChild;
+        console.log(chatHeaderElement);
+        chatHeaderElement.innerText = jsonChats[i].name;
+        //chatHeaderElement.setAttribute("id", jsonChats[i].key);
     }
 }

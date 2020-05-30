@@ -27,6 +27,7 @@ function appendChatNameToSidebar(jsonObj) {
         //update the active chat when clicked on and load messages
         outerContainer1.addEventListener("click", function() {
             //deactivate current active chat class
+            console.log("testing deactivation");
             var activeChat = document.getElementsByClassName("chat_list active_chat");
             if (activeChat[0] != null) {
                 activeChat[0].className = "chat_list";
@@ -47,7 +48,7 @@ function appendChatNameToSidebar(jsonObj) {
         });
 
         var chatName = jsonObj.chats[index].name;
-        var chatValue = index;
+        var chatKey = jsonObj.chats[index].key;
 
         //build bootstrap outline
         var outerContainer2 = document.createElement("div");
@@ -59,8 +60,8 @@ function appendChatNameToSidebar(jsonObj) {
         outerContainer1.appendChild(outerContainer2);
         outerContainer2.appendChild(innerContainer);
 
-        // buildSingleChat(innerContainer, exampleBackend[i]);
         var title = document.createElement("h5");
+        title.setAttribute("id", chatKey);
         title.innerText = chatName;
         innerContainer.appendChild(title);
 
@@ -73,14 +74,15 @@ function getActiveChatIndex() {
     var activeChat = document.getElementsByClassName("chat_list active_chat");
     var htmlColl = activeChat[0];
     var chatName = htmlColl.firstChild.firstChild.firstChild.innerText;
-    console.log(chatName);
+    var activeChatIdKey  = htmlColl.firstChild.firstChild.firstChild.id;
 
-    //search backend and find index based on name
+    //search backend and find index based on chat Key
     var chatsArr = messageInfo.chats;
     console.log(chatsArr);
     for (i = 0; i < chatsArr.length; i++) {
-        if (chatName === chatsArr[i].name) {
+        if (activeChatIdKey === chatsArr[i].key) {
             console.log(chatsArr[i]);
+            console.log(i);
             return i;
         }
     }
@@ -97,10 +99,12 @@ function getChats(){
             if(ajaxRequest.status == 200)
             {
                 var jsonResponse = JSON.parse(ajaxRequest.responseText);
+                messageInfo = jsonResponse;
                 console.log(jsonResponse);
                 clearChatHistory();
                 if (isNaN(parsed)) {return}
-                appendChatNameToSidebar(jsonResponse);
+                updateChatNamesSidebar(jsonResponse.chats);
+                //appendChatNameToSidebar(jsonResponse);
                 buildMsgHistory(jsonResponse.chats[parsed].messages);
             }
             else
@@ -191,11 +195,25 @@ function clearChatHistory() {
 function clearInputValue() {
     var msgInput = document.getElementById("messageField");
     msgInput.value = "";
+
+    //also set active chat correctly
+    var allChats = document.getElementsByClassName("chat_list");
+    allChats[0].click();
+
 }
 
 function checkIfLoggedIn(jsonObj) {
     //redirects to home page if not logged in
     if (!jsonObj.status) {
         window.location.replace("index.html");
+    }
+}
+
+function updateChatNamesSidebar(jsonChats) {
+    var currChatNames = document.getElementById("chat-container").childNodes;
+    for (i = 0; i < currChatNames.length; i++) {
+        chatHeaderElement = currChatNames[i].firstChild.firstChild.firstChild;
+        chatHeaderElement.innerText = jsonChats[i].name;
+        chatHeaderElement.setAttribute("id", jsonChats[i].key);
     }
 }

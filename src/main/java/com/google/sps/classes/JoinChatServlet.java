@@ -25,7 +25,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import java.util.ArrayList;
+import java.util.*;
 
 @WebServlet("/updateChat")
 public class JoinChatServlet extends HttpServlet {
@@ -67,7 +67,6 @@ public class JoinChatServlet extends HttpServlet {
             chat = Chatroom.getChatroom(KeyFactory.stringToKey(chatKey));
             if (!alreadyInChat)
             {
-                System.out.println("testingJoin");
                 user.addChat(chat);
                 user.updateDatabase();
                 chat.addUser(user);
@@ -80,7 +79,6 @@ public class JoinChatServlet extends HttpServlet {
                 user.updateDatabase();
                 chat.removeUser(user);
                 chat.updateDatabase();
-                System.out.println("testingLeave");
             }
         }
         catch(EntityNotFoundException e)

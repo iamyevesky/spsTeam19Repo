@@ -99,6 +99,7 @@ function getChats(){
             if(ajaxRequest.status == 200)
             {
                 var jsonResponse = JSON.parse(ajaxRequest.responseText);
+                messageInfo = jsonResponse;
                 console.log(jsonResponse);
                 clearChatHistory();
                 if (isNaN(parsed)) {return}
@@ -194,6 +195,10 @@ function clearChatHistory() {
 function clearInputValue() {
     var msgInput = document.getElementById("messageField");
     msgInput.value = "";
+
+    //also set active chat correctly
+    var allChats = document.getElementsByClassName("chat_list");
+
 }
 
 function checkIfLoggedIn(jsonObj) {
@@ -205,13 +210,9 @@ function checkIfLoggedIn(jsonObj) {
 
 function updateChatNamesSidebar(jsonChats) {
     var currChatNames = document.getElementById("chat-container").childNodes;
-    console.log(currChatNames);
-    console.log(jsonChats);
-    console.log(currChatNames[0].firstChild.firstChild.firstChild);
     for (i = 0; i < currChatNames.length; i++) {
         chatHeaderElement = currChatNames[i].firstChild.firstChild.firstChild;
-        console.log(chatHeaderElement);
         chatHeaderElement.innerText = jsonChats[i].name;
-        //chatHeaderElement.setAttribute("id", jsonChats[i].key);
+        chatHeaderElement.setAttribute("id", jsonChats[i].key);
     }
 }

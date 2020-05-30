@@ -198,6 +198,7 @@ function clearInputValue() {
 
     //also set active chat correctly
     var allChats = document.getElementsByClassName("chat_list");
+    allChats[0].click();
 
 }
 

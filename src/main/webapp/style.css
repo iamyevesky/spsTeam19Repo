@@ -1,3 +1,11 @@
+body {
+    background-color: #f8f8f8;
+}
+
+.navbar-styling {
+    background-color: #eef2f3;
+}
+
 .downsize{
     zoom: .865;
 }
@@ -97,7 +105,7 @@ img{ max-width:100%;}
 .received_withd_msg { width: 57%;}
 .mesgs {
   float: left;
-  padding: 30px 15px 0 25px;
+  padding: 12px 15px 0 25px;
   width: 60%;
   background: #F8F8F8;
 }
@@ -124,7 +132,11 @@ img{ max-width:100%;}
   width: 100%;
 }
 
-.type_msg {border-top: 1px solid #c4c4c4;position: relative;}
+.type_msg {
+    border-top: 1px solid #c4c4c4;
+    position: relative;
+    display: none;
+}
 .msg_send_btn {
   background: #05728f none repeat scroll 0 0;
   border: medium none;
@@ -140,8 +152,18 @@ img{ max-width:100%;}
 }
 .messaging { padding: 0 0 0 0;}
 .msg_history {
-  height: 520px;
+  height: 500px;
   overflow-y: auto;
+}
+
+.dropdown-title {
+    width: 100%;
+}
+
+#dropdown-title-options {
+    width: 100%;
+    will-change: transform !important;
+    transform: translate3d(0px, 37px, 0px) !important;
 }
 
 .card {

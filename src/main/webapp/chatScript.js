@@ -1,13 +1,17 @@
 var messageInfo;
 function loadChatsNew() {
+    fetch("/getInfoPost").then(response => response.json()).then(object =>
+    {
+        checkIfLoggedIn(object);
+    });
+
     fetch("/sendMessage").then(response => response.json()).then(object =>
     {
         console.log(object);
         messageInfo = object;
         appendChatNameToSidebar(object);
-        getChats();
-    }
-    );
+        getChats(); 
+    });
 }
 
 function appendChatNameToSidebar(jsonObj) {
@@ -27,11 +31,19 @@ function appendChatNameToSidebar(jsonObj) {
             if (activeChat[0] != null) {
                 activeChat[0].className = "chat_list";
             }
-            //update chat that was clicked on to become active
+            //update chat that was clicked on to become
             this.className = "chat_list active_chat"; 
+
+            //update chat name dropdown title
             var htmlColl = activeChat[0];
             var chatName = htmlColl.firstChild.firstChild.firstChild.innerText;
-            console.log(getActiveChatIndex());
+            var chatTitleDropdown = document.getElementById("dropdownMenuButton");
+            chatTitleDropdown.innerText = chatName;
+            chatTitleDropdown.style.display = "block";
+
+            //show text ability only after user clicks a chat
+            var textInput = document.getElementById("typeChatInput");
+            textInput.style.display = "block";
         });
 
         var chatName = jsonObj.chats[index].name;
@@ -68,6 +80,7 @@ function getActiveChatIndex() {
     console.log(chatsArr);
     for (i = 0; i < chatsArr.length; i++) {
         if (chatName === chatsArr[i].name) {
+            console.log(chatsArr[i]);
             return i;
         }
     }
@@ -178,4 +191,11 @@ function clearChatHistory() {
 function clearInputValue() {
     var msgInput = document.getElementById("messageField");
     msgInput.value = "";
+}
+
+function checkIfLoggedIn(jsonObj) {
+    //redirects to home page if not logged in
+    if (!jsonObj.status) {
+        window.location.replace("index.html");
+    }
 }

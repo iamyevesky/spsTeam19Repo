@@ -9,6 +9,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.DatastoreNeedIndexException;
 import com.google.cloud.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,13 +53,10 @@ public final class Message{
         newPost.saveToDatabase();
     }
 
+    @SuppressWarnings("DatastoreNeedIndexException")
     public static ArrayList<Message> getChatMessages(String chatKey) throws EntityNotFoundException{
-        Query query = 
-        new Query("Message")
-        .setFilter(new Query.
-        FilterPredicate("chatID", Query.FilterOperator.EQUAL, KeyFactory.stringToKey(chatKey)))
-        .addSort("timestamp", SortDirection.ASCENDING);
-        
+        Query query = new Query("Message").setFilter(new Query.FilterPredicate("chatID", Query.FilterOperator.EQUAL, KeyFactory.stringToKey(chatKey)));
+        query.addSort("timestamp", SortDirection.ASCENDING);
         PreparedQuery result = datastore.prepare(query);
         ArrayList<Message> output = new ArrayList<>();
         for (Entity entity : result.asIterable()){

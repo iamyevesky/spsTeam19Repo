@@ -217,3 +217,14 @@ function updateChatNamesSidebar(jsonChats) {
         chatHeaderElement.setAttribute("id", jsonChats[i].key);
     }
 }
+
+function loadPeopleModal() {
+    var peopleArray = ["jake", "alex", "Alan"];
+    var pplContainer = document.getElementById("modal-ppl-container");
+    for (i = 0; i < peopleArray.length; i++) {
+        var singlePerson = document.createElement("p");
+        singlePerson.innerText = peopleArray[i];
+        pplContainer.appendChild(singlePerson);
+        console.log(pplContainer);
+    }
+}

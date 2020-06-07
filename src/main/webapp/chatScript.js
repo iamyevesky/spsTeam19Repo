@@ -219,12 +219,50 @@ function updateChatNamesSidebar(jsonChats) {
 }
 
 function loadPeopleModal() {
-    var peopleArray = ["jake", "alex", "Alan"];
+
+    //load members of chat
     var pplContainer = document.getElementById("modal-ppl-container");
-    for (i = 0; i < peopleArray.length; i++) {
-        var singlePerson = document.createElement("p");
-        singlePerson.innerText = peopleArray[i];
-        pplContainer.appendChild(singlePerson);
-        console.log(pplContainer);
+    pplContainer.innerText = "";
+    var k = getActiveChatIndex();
+    var currChat = messageInfo.chats[k];
+    var chatPeopleArr = currChat.userKeys;
+    for (j = 0; j < chatPeopleArr.length; j++) {
+        // create row div
+        var rdiv = document.createElement("div");
+        rdiv.classList.add("row");
+        rdiv.style.padding = "0px 0px 15px 0px";
+
+        // create column for name
+        var nameCDiv = document.createElement("div");
+        nameCDiv.classList.add("col");
+
+        // get name and instantiate in p element
+        var name = chatPeopleArr[j].id;
+        var nameP = document.createElement("p");
+        nameP.innerText = name;
+
+        // create column for dm form
+        var dmCdiv = document.createElement("div");
+        dmCdiv.classList.add("col");
+
+        //create dm button
+        var dmButton = document.createElement("BUTTON");
+        dmButton.innerHTML = "Direct Message"
+        dmButton.classList.add("btn", "color_blue")
+        dmButton.setAttribute("type", "submit");
+
+        // set up html
+        nameCDiv.appendChild(nameP);
+        dmCdiv.appendChild(dmButton);
+        rdiv.appendChild(nameCDiv);
+        rdiv.appendChild(dmCdiv);
+
+        pplContainer.appendChild(rdiv);
+        console.log(chatPeopleArr);
     }
+
+    //update chat title
+    var pplTitle = document.getElementById("peopleModalTitle");
+    var currChatName = currChat.name;
+    pplTitle.innerText = "Members of " + currChatName;
 }

@@ -8,6 +8,13 @@ function loadProfile() {
         console.log(jsonObject);
         console.log(typeof jsonObject)
         setUpUserPage(jsonObject);
+        
+    });
+
+    fetch("/sendMessage").then(response => response.json()).then(object =>
+    {
+        console.log(object);
+        loadChats(object);
     });
 }
 
@@ -38,20 +45,23 @@ function setUpUserPage(json){
     profileContainer.appendChild(classification);
     profileContainer.appendChild(email);
     profileContainer.appendChild(spacer);
+
+    loadChats();
 }
 
-function loadClasses() {
-    var classContainer = document.getElementById("classes-container");
-    console.log(jsonObject);
-    var classArray = jsonObject.classes;
+function loadChats(chatsObj) {
+    var classContainer = document.getElementById("chatsContainer");
+    var classArray = chatsObj.chats;
+    console.log(classArray);
     for (i = 0; i < classArray.length; i++) {
         classContainer.append(createSingleCourseCard(classArray[i]));
     }
-}
+} 
 
 function createSingleCourseCard(course) {
-    var outerBox = document.createElement("div");
-    outerBox.classList.add("card", "mb-3");
+    var outerBox = document.createElement("div"); 
+    outerBox.classList.add("card", "mb-4");
+    outerBox.style.width = "30rem";
 
     var coursename = document.createElement("div");
     coursename.className = "card-header";

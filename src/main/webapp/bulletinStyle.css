@@ -10,3 +10,12 @@ body {
     background-color: #05728f;
     color: white;
 }
+
+.chat-sentiment {
+    padding-top: 55px;
+}
+
+.card {
+    margin: 0 auto; 
+    float: none;
+}

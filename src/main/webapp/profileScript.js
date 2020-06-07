@@ -15,6 +15,7 @@ function loadProfile() {
     {
         console.log(object);
         loadChats(object);
+        loadModalProfileData(object);
     });
 }
 
@@ -25,7 +26,6 @@ function setUpUserPage(json){
     var uni = document.createElement("h6");
     uni.innerText = String(jsonData.user.college.name);
     var classification = document.createElement("h6");
-    console.log(jsonData.classes);
     
     if (jsonData?.isProf)
     {
@@ -45,8 +45,6 @@ function setUpUserPage(json){
     profileContainer.appendChild(classification);
     profileContainer.appendChild(email);
     profileContainer.appendChild(spacer);
-
-    loadChats();
 }
 
 function loadChats(chatsObj) {
@@ -86,4 +84,10 @@ function checkIfLoggedIn(jsonObj) {
     if (!jsonObj.status) {
         window.location.replace("index.html");
     }
+}
+
+function loadModalProfileData(jsonObj) {
+    var name = jsonObj.user.username;
+    var profInput = document.getElementById("inputName");
+    profInput.value = name;
 }

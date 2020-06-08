@@ -62,7 +62,7 @@
             <button type="button" class="btn color_blue" data-toggle="modal" data-target="#exampleModal">
                 Create a chat
             </button>
-            <!-- Modal -->
+            <!-- Modal create a chat-->
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -90,6 +90,24 @@
                     </div>
                 </div>
             </div>
+            <!-- Modal people -->
+            <div class="modal fade" id="peopleModal" tabindex="-1" role="dialog" aria-labelledby="peopleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="peopleModalTitle"></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="modal-ppl-container">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             </div>
           </div>
           <div id="chat-container" class="inbox_chat">
@@ -101,7 +119,7 @@
             <button class="btn btn-secondary dropdown-toggle dropdown-title color_blue" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display: none">
             </button>
             <div class="dropdown-menu" id="dropdown-title-options" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" onclick="#">People</a>
+                <a class="dropdown-item" data-toggle="modal" href="#peopleModal" onclick="loadPeopleModal()">People</a>
             </div>
           </div>
 

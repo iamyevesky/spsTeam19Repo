@@ -8,6 +8,14 @@ function loadProfile() {
         console.log(jsonObject);
         console.log(typeof jsonObject)
         setUpUserPage(jsonObject);
+        
+    });
+
+    fetch("/sendMessage").then(response => response.json()).then(object =>
+    {
+        console.log(object);
+        loadChats(object);
+        loadModalProfileData(object);
     });
 }
 
@@ -18,7 +26,6 @@ function setUpUserPage(json){
     var uni = document.createElement("h6");
     uni.innerText = String(jsonData.user.college.name);
     var classification = document.createElement("h6");
-    console.log(jsonData.classes);
     
     if (jsonData?.isProf)
     {
@@ -40,18 +47,19 @@ function setUpUserPage(json){
     profileContainer.appendChild(spacer);
 }
 
-function loadClasses() {
-    var classContainer = document.getElementById("classes-container");
-    console.log(jsonObject);
-    var classArray = jsonObject.classes;
+function loadChats(chatsObj) {
+    var classContainer = document.getElementById("chatsContainer");
+    var classArray = chatsObj.chats;
+    console.log(classArray);
     for (i = 0; i < classArray.length; i++) {
         classContainer.append(createSingleCourseCard(classArray[i]));
     }
-}
+} 
 
 function createSingleCourseCard(course) {
-    var outerBox = document.createElement("div");
-    outerBox.classList.add("card", "mb-3");
+    var outerBox = document.createElement("div"); 
+    outerBox.classList.add("card", "mb-4");
+    outerBox.style.width = "30rem";
 
     var coursename = document.createElement("div");
     coursename.className = "card-header";
@@ -76,4 +84,10 @@ function checkIfLoggedIn(jsonObj) {
     if (!jsonObj.status) {
         window.location.replace("index.html");
     }
+}
+
+function loadModalProfileData(jsonObj) {
+    var name = jsonObj.user.username;
+    var profInput = document.getElementById("inputName");
+    profInput.value = name;
 }

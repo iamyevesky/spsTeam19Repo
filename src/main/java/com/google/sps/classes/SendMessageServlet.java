@@ -92,7 +92,10 @@ public class SendMessageServlet extends HttpServlet {
                 JsonObject chat = chatsJson.get(i).getAsJsonObject();
                 Type messageType = new TypeToken<ArrayList<Message>>(){}.getType();
                 JsonArray messages = gson.toJsonTree(chats.get(i).getMessages(), messageType).getAsJsonArray();
+                Type userType = new TypeToken<ArrayList<User>>(){}.getType();
+                JsonArray users = gson.toJsonTree(chats.get(i).getUsers(), userType).getAsJsonArray();
                 chat.add("messages", messages);
+                chat.add("users", users);
                 chatsJson.set(i, chat);
             }
             object.addProperty("status", true);

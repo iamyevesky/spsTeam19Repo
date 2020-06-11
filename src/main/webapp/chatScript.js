@@ -119,7 +119,7 @@ function getChats(){
 	}
     ajaxRequest.open('GET', '/sendMessage');
     ajaxRequest.send();
-    setTimeout(getChats, 1000);
+    setTimeout(getChats, 100);
 }
 
 function buildMsgHistory(pastMessageData) {

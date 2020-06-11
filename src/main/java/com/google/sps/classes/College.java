@@ -13,7 +13,9 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.gson.Gson;
-import java.util.*;
+import com.google.appengine.api.datastore.FetchOptions;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * This class represents a single college of the chatroom platform.
@@ -60,9 +62,9 @@ public final class College{
     public static String getAllCollegesJson() throws EntityNotFoundException{
         Query query = new Query("College");
         query.addSort("name", Query.SortDirection.ASCENDING);
-        PreparedQuery result = datastore.prepare(query);
+        List<Entity> result = datastore.prepare(query).asList(FetchOptions.Builder.withChunkSize(5000));
         ArrayList<College> output = new ArrayList<College>();
-        for (Entity entity : result.asIterable()){
+        for (Entity entity : result){
             output.add(College.getCollege(entity.getKey()));    
         }
         Gson gson = new Gson();

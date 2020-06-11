@@ -219,14 +219,19 @@ function updateChatNamesSidebar(jsonChats) {
 }
 
 function loadPeopleModal() {
+    //get user info to ensure they cannot DM themself
+    var userKey = messageInfo.user.key;
 
     //load members of chat
     var pplContainer = document.getElementById("modal-ppl-container");
     pplContainer.innerText = "";
     var k = getActiveChatIndex();
     var currChat = messageInfo.chats[k];
-    var chatPeopleArr = currChat.userKeys;
+    var chatPeopleArr = currChat.users;
     for (j = 0; j < chatPeopleArr.length; j++) {
+        var currUserKey = chatPeopleArr[j].key;
+
+        
         // create row div
         var rdiv = document.createElement("div");
         rdiv.classList.add("row");
@@ -237,7 +242,7 @@ function loadPeopleModal() {
         nameCDiv.classList.add("col");
 
         // get name and instantiate in p element
-        var name = chatPeopleArr[j].id;
+        var name = chatPeopleArr[j].username;
         var nameP = document.createElement("p");
         nameP.innerText = name;
 
@@ -245,15 +250,19 @@ function loadPeopleModal() {
         var dmCdiv = document.createElement("div");
         dmCdiv.classList.add("col");
 
-        //create dm button
-        var dmButton = document.createElement("BUTTON");
-        dmButton.innerHTML = "Direct Message"
-        dmButton.classList.add("btn", "color_blue")
-        dmButton.setAttribute("type", "submit");
+        // skip user's ability to DM themself
+        if (currUserKey != userKey) {
+            //create dm button
+            var dmButton = document.createElement("BUTTON");
+            dmButton.innerHTML = "Direct Message"
+            dmButton.classList.add("btn", "color_blue")
+            dmButton.setAttribute("type", "submit");
+            dmCdiv.appendChild(dmButton);
+        }
+        
 
         // set up html
         nameCDiv.appendChild(nameP);
-        dmCdiv.appendChild(dmButton);
         rdiv.appendChild(nameCDiv);
         rdiv.appendChild(dmCdiv);
 

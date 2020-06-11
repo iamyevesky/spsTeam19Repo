@@ -39,6 +39,10 @@ public class CreateChatServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        if(!userService.isUserLoggedIn()){
+            sendRedirect("/")
+            return;
+        }
         response.setContentType("application/json; charset=utf-8");
         PrintWriter out = response.getWriter();
         User user = null;
@@ -109,6 +113,10 @@ public class CreateChatServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
         User user = null;
+        if(!userService.isUserLoggedIn()){
+            sendRedirect("/")
+            return;
+        }
         String email = userService.getCurrentUser().getEmail();
         String name = Jsoup.clean(request.getParameter("name"), Whitelist.basic());
 

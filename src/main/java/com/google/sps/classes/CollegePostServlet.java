@@ -40,7 +40,7 @@ public class CollegePostServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!userService.isUserLoggedIn())
         {
-            response.sendRedirect("/bulletin.html");
+            response.sendRedirect("/");
             return;
         }
 

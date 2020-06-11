@@ -36,6 +36,10 @@ public class JoinChatServlet extends HttpServlet {
     
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        if(!userService.isUserLoggedIn()){
+            sendRedirect("/")
+            return;
+        }
         response.setContentType("application/json; charset=utf-8");
         PrintWriter out = response.getWriter();
         String chatKey = request.getParameter("chatKey");
@@ -56,6 +60,10 @@ public class JoinChatServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        if(!userService.isUserLoggedIn()){
+            sendRedirect("/")
+            return;
+        }
         User user = null;
         Chatroom chat = null;
         String email = userService.getCurrentUser().getEmail();

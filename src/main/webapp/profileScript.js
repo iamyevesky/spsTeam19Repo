@@ -17,6 +17,13 @@ function loadProfile() {
         loadChats(object);
         loadModalProfileData(object);
     });
+
+    fetch("/createAccount").then(response => response.json()).then(object =>
+    {
+        console.log(object);
+        var infoSection = document.getElementById("infoSection");
+        createForm(object);
+    });
 }
 
 function setUpUserPage(json){
@@ -90,4 +97,28 @@ function loadModalProfileData(jsonObj) {
     var name = jsonObj.user.username;
     var profInput = document.getElementById("inputName");
     profInput.value = name;
+}
+
+// Create dropdown options for all colleges
+function createForm(obj){
+    // set curr uni as the set value
+    var currCollegeKey = jsonObject.user.college.key;
+    console.log(currCollegeKey);
+
+    var list = document.getElementById("inputUni");
+
+    list.setAttribute("name", "college");
+    list.classList.add("form-control");
+
+    //add college option from list to select tag
+    for(i = 0; i < obj.length; i++) {
+        var singleCollegeOption = document.createElement("OPTION");
+        singleCollegeOption.innerHTML = obj[i].name;
+        singleCollegeOption.setAttribute("value", obj[i].key);
+        if (currCollegeKey == obj[i].key) {
+            singleCollegeOption.setAttribute("selected", "selected");
+        }
+        list.appendChild(singleCollegeOption);
+    }
+
 }

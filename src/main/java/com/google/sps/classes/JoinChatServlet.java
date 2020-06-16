@@ -37,7 +37,7 @@ public class JoinChatServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
         if(!userService.isUserLoggedIn()){
-            sendRedirect("/")
+            response.sendRedirect("/");
             return;
         }
         response.setContentType("application/json; charset=utf-8");
@@ -61,7 +61,7 @@ public class JoinChatServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
         if(!userService.isUserLoggedIn()){
-            sendRedirect("/")
+            response.sendRedirect("/");
             return;
         }
         User user = null;

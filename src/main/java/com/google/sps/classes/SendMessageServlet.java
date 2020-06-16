@@ -43,8 +43,9 @@ public class SendMessageServlet extends HttpServlet {
         response.setContentType("application/json; charset=utf-8");
         PrintWriter out = response.getWriter();
         User user = null;
-        if(!userService.isUserLoggedIn()){
-            sendRedirect("/")
+        if(!userService.isUserLoggedIn())
+        {
+            response.sendRedirect("/");
             return;
         }
         String email = userService.getCurrentUser().getEmail();
@@ -124,7 +125,7 @@ public class SendMessageServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
         if(!userService.isUserLoggedIn()){
-            sendRedirect("/")
+            response.sendRedirect("/");
             return;
         }
         User user = null;

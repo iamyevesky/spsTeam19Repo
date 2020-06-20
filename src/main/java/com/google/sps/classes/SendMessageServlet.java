@@ -43,6 +43,11 @@ public class SendMessageServlet extends HttpServlet {
         response.setContentType("application/json; charset=utf-8");
         PrintWriter out = response.getWriter();
         User user = null;
+        if(!userService.isUserLoggedIn())
+        {
+            response.sendRedirect("/");
+            return;
+        }
         String email = userService.getCurrentUser().getEmail();
         gson = new GsonBuilder().setPrettyPrinting().create();
         object = new JsonObject();
@@ -119,6 +124,10 @@ public class SendMessageServlet extends HttpServlet {
     
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        if(!userService.isUserLoggedIn()){
+            response.sendRedirect("/");
+            return;
+        }
         User user = null;
         String email = userService.getCurrentUser().getEmail();
         String key = Jsoup.clean(request.getParameter("chatKey"), Whitelist.basic());

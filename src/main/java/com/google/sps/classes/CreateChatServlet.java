@@ -39,6 +39,10 @@ public class CreateChatServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        if(!userService.isUserLoggedIn()){
+            response.sendRedirect("/");
+            return;
+        }
         response.setContentType("application/json; charset=utf-8");
         PrintWriter out = response.getWriter();
         User user = null;
@@ -109,8 +113,13 @@ public class CreateChatServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
         User user = null;
+        if(!userService.isUserLoggedIn()){
+            response.sendRedirect("/");
+            return;
+        }
         String email = userService.getCurrentUser().getEmail();
         String name = Jsoup.clean(request.getParameter("name"), Whitelist.basic());
+        Boolean kind = Boolean.parseBoolean(request.getParameter("isDM"));
 
         try
         {
@@ -128,10 +137,19 @@ public class CreateChatServlet extends HttpServlet {
         
         try
         {
-            Chatroom chat  = Chatroom.createChat(name, user);
-            chat.saveToDatabase();
-            user.addChat(chat);
-            user.updateDatabase();
+            if (!kind)
+            {
+                Chatroom chat  = Chatroom.createChat(name, user);
+                chat.saveToDatabase();
+                user.addChat(chat);
+                user.updateDatabase();
+            }
+            else
+            {
+                String otherKey = Jsoup.clean(request.getParameter("to"), Whitelist.basic());
+                User other = User.getUser(KeyFactory.stringToKey(otherKey));
+                Chatroom.createDM(user, other);
+            }
         }
         catch(EntityNotFoundException e)
         {

@@ -30,11 +30,14 @@ public class UpdateUserInfoServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
         User user = null;
+        College college = null;
         String email = userService.getCurrentUser().getEmail();
         String name = Jsoup.clean(request.getParameter("username"), Whitelist.basic());
+        String collegeKey = Jsoup.clean(request.getParameter("collegeKey"), Whitelist.basic());
         try
         {
             user = User.getUser(email);
+            college = College.getCollege(collegeKey);
         }
         catch(EntityNotFoundException e)
         {
@@ -46,6 +49,7 @@ public class UpdateUserInfoServlet extends HttpServlet {
             return;
         }
         user.setName(name);
+        user.setCollege(college);
 
         try
         {

@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public final class User{
     private final static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private final String email;
-    private final College college;
+    private College college;
     private String username;
     private String key;
     private transient ArrayList<Key> chat;
@@ -75,6 +75,7 @@ public final class User{
         Entity user = datastore.get(KeyFactory.stringToKey(this.key));
         user.setProperty("username", this.username);
         user.setProperty("chatKeys", this.chat);
+        user.setProperty("collegeID", KeyFactory.stringToKey(this.college.getKey()));
         datastore.put(user);
     }
 
@@ -85,6 +86,11 @@ public final class User{
 
     public void setName(String name){
         this.username = name;
+    }
+
+    public void setCollege(College college)
+    {
+        this.college = college;
     }
 
     public void addChat(Chatroom chat){

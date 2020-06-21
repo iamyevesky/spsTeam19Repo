@@ -252,12 +252,44 @@ function loadPeopleModal() {
 
         // skip user's ability to DM themself
         if (currUserKey != userKey) {
+
+            //create form to send to create chat servlet
+            var f = document.createElement("form");
+            f.setAttribute('method',"POST");
+            f.setAttribute('action',"/createChat");
+
+            //hidden name attribute change this in servlet bc not used
+            var tempName = document.createElement("input"); //input element, text
+            tempName.setAttribute('type',"hidden");
+            tempName.setAttribute('name',"name");
+            tempName.setAttribute('value', "DM Name");
+
+            //hidden isDm attribute set to true
+            var isDMAttr = document.createElement("input"); //input element, text
+            isDMAttr.setAttribute('type',"hidden");
+            isDMAttr.setAttribute('name',"isDM");
+            isDMAttr.setAttribute('value', true);
+
+            //hidden key of person getting DM'd
+            var targetPerson = document.createElement("input"); //input element, text
+            targetPerson.setAttribute('type',"hidden");
+            targetPerson.setAttribute('name',"to");
+            targetPerson.setAttribute('value', currUserKey);
+
             //create dm button
             var dmButton = document.createElement("BUTTON");
             dmButton.innerHTML = "Direct Message"
             dmButton.classList.add("btn", "color_blue")
             dmButton.setAttribute("type", "submit");
-            dmCdiv.appendChild(dmButton);
+
+            //add elements to form
+            f.appendChild(isDMAttr);
+            f.appendChild(tempName);
+            f.appendChild(targetPerson);
+            f.appendChild(dmButton);
+
+            //add form to dm column div
+            dmCdiv.appendChild(f);
         }
         
 

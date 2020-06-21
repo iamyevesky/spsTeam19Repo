@@ -148,7 +148,12 @@ public class CreateChatServlet extends HttpServlet {
             {
                 String otherKey = Jsoup.clean(request.getParameter("to"), Whitelist.basic());
                 User other = User.getUser(KeyFactory.stringToKey(otherKey));
-                Chatroom.createDM(user, other);
+                Chatroom chat = Chatroom.createDM(user, other);
+                chat.saveToDatabase();
+                user.addChat(chat);
+                other.addChat(chat);
+                user.updateDatabase();
+                other.updateDatabase();
             }
         }
         catch(EntityNotFoundException e)

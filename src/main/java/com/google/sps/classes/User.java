@@ -55,6 +55,10 @@ public final class User{
         return this.key;
     }
 
+    public String getName() {
+        return this.username;
+    }
+
     public College getCollege(){
         return this.college;
     }

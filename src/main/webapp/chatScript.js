@@ -227,11 +227,13 @@ function loadPeopleModal() {
     pplContainer.innerText = "";
     var k = getActiveChatIndex();
     var currChat = messageInfo.chats[k];
+    console.log(currChat);
+    var isCurrChatDM = currChat.isDM;
+    console.log(isCurrChatDM);
     var chatPeopleArr = currChat.users;
     for (j = 0; j < chatPeopleArr.length; j++) {
         var currUserKey = chatPeopleArr[j].key;
 
-        
         // create row div
         var rdiv = document.createElement("div");
         rdiv.classList.add("row");
@@ -250,10 +252,10 @@ function loadPeopleModal() {
         var dmCdiv = document.createElement("div");
         dmCdiv.classList.add("col");
 
-        // skip user's ability to DM themself
-        if (currUserKey != userKey) {
-
-            //create form to send to create chat servlet
+        // skip user's ability to DM themself or if it is a DM chat
+        if (currUserKey != userKey)  {
+            if (!isCurrChatDM) {
+                //create form to send to create chat servlet
             var f = document.createElement("form");
             f.setAttribute('method',"POST");
             f.setAttribute('action',"/createChat");
@@ -290,6 +292,9 @@ function loadPeopleModal() {
 
             //add form to dm column div
             dmCdiv.appendChild(f);
+            }
+
+           
         }
         
 

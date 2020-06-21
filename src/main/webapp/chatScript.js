@@ -227,11 +227,13 @@ function loadPeopleModal() {
     pplContainer.innerText = "";
     var k = getActiveChatIndex();
     var currChat = messageInfo.chats[k];
+    console.log(currChat);
+    var isCurrChatDM = currChat.isDM;
+    console.log(isCurrChatDM);
     var chatPeopleArr = currChat.users;
     for (j = 0; j < chatPeopleArr.length; j++) {
         var currUserKey = chatPeopleArr[j].key;
 
-        
         // create row div
         var rdiv = document.createElement("div");
         rdiv.classList.add("row");
@@ -250,14 +252,49 @@ function loadPeopleModal() {
         var dmCdiv = document.createElement("div");
         dmCdiv.classList.add("col");
 
-        // skip user's ability to DM themself
-        if (currUserKey != userKey) {
+        // skip user's ability to DM themself or if it is a DM chat
+        if (currUserKey != userKey)  {
+            if (!isCurrChatDM) {
+                //create form to send to create chat servlet
+            var f = document.createElement("form");
+            f.setAttribute('method',"POST");
+            f.setAttribute('action',"/createChat");
+
+            //hidden name attribute change this in servlet bc not used
+            var tempName = document.createElement("input"); //input element, text
+            tempName.setAttribute('type',"hidden");
+            tempName.setAttribute('name',"name");
+            tempName.setAttribute('value', "DM Name");
+
+            //hidden isDm attribute set to true
+            var isDMAttr = document.createElement("input"); //input element, text
+            isDMAttr.setAttribute('type',"hidden");
+            isDMAttr.setAttribute('name',"isDM");
+            isDMAttr.setAttribute('value', true);
+
+            //hidden key of person getting DM'd
+            var targetPerson = document.createElement("input"); //input element, text
+            targetPerson.setAttribute('type',"hidden");
+            targetPerson.setAttribute('name',"to");
+            targetPerson.setAttribute('value', currUserKey);
+
             //create dm button
             var dmButton = document.createElement("BUTTON");
             dmButton.innerHTML = "Direct Message"
             dmButton.classList.add("btn", "color_blue")
             dmButton.setAttribute("type", "submit");
-            dmCdiv.appendChild(dmButton);
+
+            //add elements to form
+            f.appendChild(isDMAttr);
+            f.appendChild(tempName);
+            f.appendChild(targetPerson);
+            f.appendChild(dmButton);
+
+            //add form to dm column div
+            dmCdiv.appendChild(f);
+            }
+
+           
         }
         
 

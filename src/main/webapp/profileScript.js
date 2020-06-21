@@ -107,7 +107,7 @@ function createForm(obj){
 
     var list = document.getElementById("inputUni");
 
-    list.setAttribute("name", "college");
+    list.setAttribute("name", "collegeKey");
     list.classList.add("form-control");
 
     //add college option from list to select tag

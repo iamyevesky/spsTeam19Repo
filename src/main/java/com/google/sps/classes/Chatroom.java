@@ -196,8 +196,7 @@ public final class Chatroom{
     }
 
     public static Chatroom createDM(User first, User second){
-        String chatName = first.getName() + " // " + second.getName();
-        Chatroom output = new Chatroom(chatName, true, first.getCollege(), Timestamp.now());
+        Chatroom output = new Chatroom("", true, first.getCollege(), Timestamp.now());
         ArrayList<Key> keys = new ArrayList<>();
         keys.add(KeyFactory.stringToKey(first.getKey()));
         keys.add(KeyFactory.stringToKey(second.getKey()));

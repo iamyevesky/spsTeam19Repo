@@ -1,4 +1,6 @@
 var messageInfo;
+var totalUserSentiment;
+
 function loadChatsNew() {
     fetch("/getInfoPost").then(response => response.json()).then(object =>
     {

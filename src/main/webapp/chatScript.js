@@ -1,4 +1,6 @@
 var messageInfo;
+var totalUserSentiment;
+
 function loadChatsNew() {
     fetch("/getInfoPost").then(response => response.json()).then(object =>
     {
@@ -48,6 +50,19 @@ function appendChatNameToSidebar(jsonObj) {
         });
 
         var chatName = jsonObj.chats[index].name;
+        //if chat is a DM, make chatName be the other person's Name
+        if (jsonObj.chats[index].isDM) {
+            var currUsersInChat = jsonObj.chats[index].users;
+            var userKey = messageInfo.user.key;
+            //find the name of the other person in the DM 
+            for (k = 0; k < currUsersInChat.length; k++) {
+                if (userKey != currUsersInChat[k].key) {
+                    console.log(currUsersInChat[k].key);
+                    chatName = currUsersInChat[k].username;
+                }
+            }
+        }
+
         var chatKey = jsonObj.chats[index].key;
 
         //build bootstrap outline
@@ -214,6 +229,19 @@ function updateChatNamesSidebar(jsonChats) {
     for (i = 0; i < currChatNames.length; i++) {
         chatHeaderElement = currChatNames[i].firstChild.firstChild.firstChild;
         chatHeaderElement.innerText = jsonChats[i].name;
+        console.log(jsonChats[i]);
+
+        //if DM make chat name be other persons name
+        if (jsonChats[i].isDM) {
+            var currUsersInChat = jsonChats[i].users;
+            var userKey = messageInfo.user.key;
+            //find the name of the other person in the DM 
+            for (k = 0; k < currUsersInChat.length; k++) {
+                if (userKey != currUsersInChat[k].key) {
+                    chatHeaderElement.innerText = currUsersInChat[k].username;
+                }
+            }
+        }
         chatHeaderElement.setAttribute("id", jsonChats[i].key);
     }
 }

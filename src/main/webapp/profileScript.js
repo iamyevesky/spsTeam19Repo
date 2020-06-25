@@ -1,4 +1,6 @@
 var jsonObject;
+var totalUserSentimentScore = 0;
+var totalUserComments = 0;
 function loadProfile() {
     fetch("/getUserInfo").then(response => response.json()).then(object =>
     {
@@ -56,7 +58,7 @@ function setUpUserPage(json){
 function loadChats(chatsObj) {
     var classContainer = document.getElementById("chatsContainer");
     var classArray = chatsObj.chats;
-    console.log(classArray);
+    classContainer.append(createUserSentimentScore());
     for (i = 0; i < classArray.length; i++) {
         classContainer.append(createSingleCourseCard(classArray[i]));
     }
@@ -114,6 +116,8 @@ function calculateSentimentScore(course) {
         if (courseMessageArr[m].sender.key == jsonObject.user.key) {
             console.log(courseMessageArr[m]);
             userSentiment += courseMessageArr[m].sentiment;
+            totalUserComments++;
+            totalUserSentimentScore += courseMessageArr[m].sentiment;
         }
     }
 
@@ -162,4 +166,35 @@ function createForm(obj){
         list.appendChild(singleCollegeOption);
     }
 
+}
+
+function createUserSentimentScore() {
+    var outerBox = document.createElement("div"); 
+    outerBox.classList.add("card", "mb-4");
+    outerBox.style.width = "30rem";
+
+    var coursename = document.createElement("div");
+    coursename.className = "card-header";
+    coursename.innerText = jsonObject.user.username;
+
+    var textOuterBox = document.createElement("div");
+    textOuterBox.classList.add("card-body", "text-secondary");
+
+    // avoid divide by zero error
+    console.log(totalUserComments);
+    console.log(totalUserSentimentScore);
+    if (totalUserComments != 0) {
+        totalUserSentimentScore /= totalUserComments;
+    } else {
+        totalUserSentimentScore = 0;
+    }
+
+    var userCourseSentiment = document.createElement("h5");
+    userCourseSentiment.className = "card-title";
+    userCourseSentiment.innerText = "Your Overall Sentiment Score: " + totalUserSentimentScore;
+
+    textOuterBox.appendChild(userCourseSentiment);
+    outerBox.appendChild(coursename);
+    outerBox.appendChild(textOuterBox);
+    return outerBox;
 }

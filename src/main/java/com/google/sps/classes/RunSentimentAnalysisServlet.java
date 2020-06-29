@@ -30,7 +30,7 @@ public class RunSentimentAnalysisServlet extends HttpServlet
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
         Query query = new Query("Message");
         List<Entity> result = datastore.prepare(query).asList(FetchOptions.Builder.withChunkSize(5000));
         LanguageServiceClient languageService = LanguageServiceClient.create();

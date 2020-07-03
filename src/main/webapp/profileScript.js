@@ -18,7 +18,8 @@ function loadProfile() {
         loadChats(object);
         loadModalProfileData(object);
     });
-
+}
+function loadCollegesForm() {
     fetch("/createAccount").then(response => response.json()).then(object =>
     {
         console.log(object);

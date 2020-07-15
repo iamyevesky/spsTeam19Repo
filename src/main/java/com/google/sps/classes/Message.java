@@ -12,9 +12,6 @@ import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.DatastoreNeedIndexException;
 import java.io.IOException;
 import com.google.cloud.Timestamp;
-import com.google.cloud.language.v1.Document;
-import com.google.cloud.language.v1.LanguageServiceClient;
-import com.google.cloud.language.v1.Sentiment;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,7 +58,7 @@ public final class Message{
         Message output = new Message(User.getUser((Key) entity.getProperty("userID")), KeyFactory.keyToString((Key) entity.getProperty("chatID")), (String) entity.getProperty("message"), Timestamp.of((Date) entity.getProperty("timestamp")));
         if (entity.hasProperty("sentiment"))
         {
-            output.setSentiment((float) entity.getProperty("sentiment"));
+            output.setSentiment(((Double)entity.getProperty("sentiment")).floatValue());
         }
         else
         {
